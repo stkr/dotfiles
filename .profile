@@ -58,3 +58,9 @@ if command -v startx >/dev/null 2>&1; then
         exec startx
     fi
 fi
+
+# The default color for ls in ubuntu for a dir that is writeable by others but not setuid is a blue
+# text on a green background. Whoever did this is a sadistic person. Change this to something that
+# is at least somewhat readable:
+export LS_COLORS+=':ow=30;42'
+
