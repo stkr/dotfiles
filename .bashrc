@@ -127,6 +127,13 @@ fi
 export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 export LD_LIBRARY_PATH="$HOME/lib:$HOME/.local/lib:$LD_LIBRARY_PATH"
 
+
+# Project aliases (for particular host):
+alias idl="cd /c/LocalData/data/iot/iothub/iothub-device-link"
+alias icm="cd /c/LocalData/data/iot/iothub/iothub-device-link-commons"
+alias iag="cd /c/LocalData/data/iot/iothub/iothub-device-link-agent"
+alias irs="cd /c/LocalData/data/iot/iothub/edge-lock-device-link-rtp-server"
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
