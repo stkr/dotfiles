@@ -58,6 +58,8 @@ fi
 
 if [ -f /usr/share/git/completion/git-completion.bash ]; then
      . /usr/share/git/completion/git-completion.bash
+elif [ -f /mingw64/share/git/completion/git-completion.bash ]; then
+     . /mingw64/share/git/completion/git-completion.bash
 fi
 
 if [ -f ~/.git-prompt.sh ]; then
