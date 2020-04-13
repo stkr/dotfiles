@@ -6,6 +6,9 @@
 	tool = bc
 [mergetool "bc"]
 	path = c:/Program Files/Beyond Compare 4/bcomp.exe
+[core]
+	eol = lf
+	autocrlf = input
 [alias]
     co = checkout
     ci = commit
