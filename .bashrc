@@ -138,6 +138,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
+alias edgelock-keytools='java -jar /c/LocalData/data/iot/iothub/edgelock-keytools/target/edgelock-keytools-1.0-SNAPSHOT.jar'
+if [ -f ~/.edgelock-keytools-completion ]; then
+    source ~/.edgelock-keytools-completion
+fi
+
 # Set shell into vi mode
 set -o vi
 

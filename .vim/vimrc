@@ -65,6 +65,10 @@ endif
     abbr attribtue attribute
     abbr attribuet attribute
 
+    abbr elg EdgeLock 2GO
+    abbr elga EdgeLock 2GO agent
+    abbr elgs EdgeLock 2GO cloud service
+
     set autoread " detect when a file is changed
     " https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/149214
     " Triger `autoread` when files changes on disk
