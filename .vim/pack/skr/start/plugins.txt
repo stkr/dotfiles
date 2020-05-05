@@ -5,3 +5,7 @@ eef50f9  https://github.com/prabirshrestha/asyncomplete-tags.vim.git
 5713fa6  https://github.com/prabirshrestha/asyncomplete.vim.git
 fcce70f  https://github.com/tpope/vim-vinegar.git
 
+c029ce1  https://github.com/prabirshrestha/vim-lsp.git
+
+b3e2d847 https://github.com/vim-syntastic/syntastic.git
+
