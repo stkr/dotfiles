@@ -288,8 +288,8 @@ endif
     inoremap <expr> <C-k> pumvisible() ? "\<C-P>" : "\<C-k>"
 
     "" from http://vim.wikia.com/wiki/Quickly_adding_and_deleting_empty_lines
-    nnoremap <silent><C-k> m`:silent -g/\m^\s*$/d<CR>``:noh<CR>
-    nnoremap <silent><C-j> :set paste<CR>m`O<Esc>``:set nopaste<CR>
+    " nnoremap <silent><C-k> m`:silent -g/\m^\s*$/d<CR>``:noh<CR>
+    " nnoremap <silent><C-j> :set paste<CR>m`O<Esc>``:set nopaste<CR>
 
     nmap <leader>l :set list!<cr>
     set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:␣
@@ -337,6 +337,10 @@ endif
     nnoremap <C-e> 3<C-e>
     nnoremap <C-y> 3<C-y>
 
+    " Open new split panes to right and bottom, which feels more natural.
+    set splitbelow
+    set splitright
+
     autocmd! BufWinLeave * let b:winview = winsaveview()
     autocmd! BufWinEnter * if exists('b:winview') | call winrestview(b:winview) | unlet b:winview
 
@@ -355,10 +359,10 @@ endif
     " vnoremap <space> zf
 
     " Super fast window movement shortcuts
-    " nmap <C-j> <C-W>j
-    " nmap <C-k> <C-W>k
-    " nmap <C-h> <C-W>h
-    " nmap <C-l> <C-W>l
+    nmap <C-j> <C-W>j
+    nmap <C-k> <C-W>k
+    nmap <C-h> <C-W>h
+    nmap <C-l> <C-W>l
 
 
     " helpers for dealing with other people's code
@@ -592,5 +596,7 @@ endif
     nnoremap <C-i>r :LspReferences<CR>
     nnoremap <C-i>d :LspDocumentDiagnostics<CR>
     nnoremap <C-i>s :LspDocumentSymbol<CR>
+
+    nnoremap <silent> gh :LspHover<CR>
 
 " }}}
