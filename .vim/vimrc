@@ -284,8 +284,6 @@ endif
     nmap <leader><space> :%s/\s\+$<cr>
     nmap <leader><space><space> :%s/\n\{2,}/\r\r/g<cr>
 
-    inoremap <expr> <C-j> pumvisible() ? "\<C-N>" : "\<C-j>"
-    inoremap <expr> <C-k> pumvisible() ? "\<C-P>" : "\<C-k>"
 
     "" from http://vim.wikia.com/wiki/Quickly_adding_and_deleting_empty_lines
     " nnoremap <silent><C-k> m`:silent -g/\m^\s*$/d<CR>``:noh<CR>
@@ -448,108 +446,46 @@ endif
 
 " Code completion {{{
 
-    if g:vim_hostname == 'NXL64850'
-        let &pythonthreedll='c:\Users\nxp29037\AppData\Local\Programs\Python\Python37-32\python37.dll'
-        let g:clangd_executable='c:\msys64\mingw64\bin\clangd.exe'
-    elseif g:vim_hostname == 'STEFAN-ASROCK'
-        let g:clangd_executable='g:\applications\LLVM\bin\clangd.exe'
-        let g:rls_executable='g:\applications\rust\rustup\toolchains\stable-x86_64-pc-windows-msvc\bin\rls.exe'
-        " Unfortunately the language server seems to be broken...
-        " let g:omnisharp_sample_server_executable='g:\applications\csharp-language-server-protocol\sample\SampleServer\bin\Release\netcoreapp2.0\win7-x64\SampleServer.exe'
-    endif
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['rustup', 'run', 'stable', 'rls'],
+    \ 'cpp': ['clangd'],
+    \ 'c': ['clangd'],
+    \ }
 
-    let g:asyncomplete_remove_duplicates = 1
-    let g:asyncomplete_auto_popup = 0
-    " let g:asyncomplete_log_file = expand('c:/tmp/asyncomplete.log')
-
-
-    let g:asyncomplete_buffer_clear_cache = 1
-
-    " Clangd Language Server Protocol via vim-lsp:
-    if exists('g:clangd_executable') && executable(g:clangd_executable)
-        au User lsp_setup call lsp#register_server({
-            \ 'name': 'clangd',
-            \ 'cmd': {server_info->[g:clangd_executable]},
-            \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
-            \ })
-    endif
-
-
-    if exists('g:rls_executable') && executable(g:rls_executable)
-        au user lsp_setup call lsp#register_server({
-            \ 'name': 'rls',
-            \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
-            \ 'workspace_config': {'rust': {'clippy_preference': 'on'}},
-            \ 'whitelist': ['rust'],
-            \ })
-    endif
-
-    " Omnisharp Language Server Protocol via vim-lsp:
-    " g:omnisharp_sample_server_executablejj
-    " g:omnisharp_sample_server_executable
-    if exists("g:omnisharp_sample_server_executable") && executable(g:omnisharp_sample_server_executable)
-        au User lsp_setup call lsp#register_server({
-            \ 'name': 'omisharp',
-            \ 'cmd': {server_info->[g:omnisharp_sample_server_executable]},
-            \ 'whitelist': ['cs'],
-            \ })
-    endif
-
-
-    let g:lsp_diagnostics_enabled = 1
-
-    let g:lsp_highlights_enabled = 0
-    let g:lsp_textprop_enabled = 0
-
-    let g:lsp_highlight_references_enabled = 1
-
-    " let g:lsp_log_verbose = 1
-    " let g:lsp_log_file = expand('c:/tmp/vim-lsp.log')
-
-
-    " Register tags for autocompletion
-    au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#tags#get_source_options({
-        \ 'name': 'tags',
-        \ 'whitelist': ['c'],
-        \ 'completor': function('asyncomplete#sources#tags#completor'),
-        \ 'config': {
-        \    'max_file_size': 50000000,
-        \  },
-        \ }))
-
-    " Register filenames for autocompletion
-    au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
-        \ 'name': 'file',
-        \ 'whitelist': ['*'],
-        \ 'priority': 10,
-        \ 'completor': function('asyncomplete#sources#file#completor')
-        \ }))
-
+    set completeopt-=preview
+    set completeopt+=menuone
+    set completeopt+=noselect
+    let g:mucomplete#always_use_completeopt = 0
+    let g:mucomplete#no_mappings = 1
 
     " Trigger code completion with tab:
     function! s:check_back_space() abort
         let col = col('.') - 1
         return !col || getline('.')[col - 1]  =~ '\s'
     endfunction
-    inoremap <silent><expr> <TAB>
+    imap <silent><expr> <TAB>
         \ pumvisible() ? "\<C-n>" :
         \ <SID>check_back_space() ? "\<TAB>" :
-        \ asyncomplete#force_refresh()
+        \ "\<plug>(MUcompleteFwd)"
     inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 
     " The next binding makes a difference only when autocompletion is enabled. If the popup is shown
     " and an entry is selected, per default ESC would close the popup but keep the selected entry
-    " inserted. With this binding, the selection is cancelled and no text is inserted. However, for
-    " some reason (yet to be understood) this is causing issues when using vim in MSYS. Therefore,
-    " we disable it for now, as it also seems not to be the most important feature.
-    " inoremap <expr> <Esc>      pumvisible() ? "\<C-e>" : "\<Esc>"
+    " inserted. With this binding, the selection is cancelled and no text is inserted. Note, for
+    " some reason (yet to be understood) this is causing issues when using vim in MSYS. 
+    inoremap <expr> <Esc>      pumvisible() ? "\<C-e>" : "\<Esc>"
     
     inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
     inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
     inoremap <expr> <Up>       pumvisible() ? "\<C-p>" : "\<Up>"
     inoremap <expr> <PageDown> pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<PageDown>"
     inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
+
+    inoremap <expr> <C-j>      pumvisible() ? "\<C-N>" : "\<C-j>"
+    inoremap <expr> <C-k>      pumvisible() ? "\<C-P>" : "\<C-k>"
+    inoremap <expr> <C-d>      pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<C-d>"
+    inoremap <expr> <C-u>      pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<C-u>"
 
 " }}}
 
@@ -598,13 +534,14 @@ endif
     nnoremap <silent> [l :call WrapCommand('up', 'l')<CR>
     nnoremap <silent> ]l  :call WrapCommand('down', 'l')<CR>
 
-    nnoremap <silent> [r :LspNextReference<CR>
-    nnoremap <silent> ]r :LspPreviousReference<CR>
+    " nnoremap <silent> [r :LspNextReference<CR>
+    " nnoremap <silent> ]r :LspPreviousReference<CR>
+ 
+     nnoremap <silent> <leader>ir :call LanguageClient_textDocument_references()<CR>
+     nnoremap <silent> <leader>id :copen<CR>
+     nnoremap <silent> <leader>is :call LanguageClient_textDocument_documentSymbol()<CR>
 
-    nnoremap <C-i>r :LspReferences<CR>
-    nnoremap <C-i>d :LspDocumentDiagnostics<CR>
-    nnoremap <C-i>s :LspDocumentSymbol<CR>
-
-    nnoremap <silent> gh :LspHover<CR>
+     nnoremap <silent> gh :call LanguageClient_textDocument_hover()<CR>
+     nnoremap <silent> <leader>c :call LanguageClient_contextMenu()<CR>
 
 " }}}
