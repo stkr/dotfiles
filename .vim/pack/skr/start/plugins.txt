@@ -2,7 +2,7 @@ fcce70f  https://github.com/tpope/vim-vinegar.git
 4b35f5d  https://github.com/autozimu/LanguageClient-neovim.git 
 f133579  https://github.com/lifepillar/vim-mucomplete.git
 
-
+7e4da6e  https://github.com/tpope/vim-abolish.git
 
 deprecated:
 f67ecb5  https://github.com/prabirshrestha/async.vim.git
