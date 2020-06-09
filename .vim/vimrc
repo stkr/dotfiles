@@ -408,7 +408,7 @@ endif
     noremap L $
 
     " Ctrl h, l to move between words
-    noremap <C-h> b 
+    noremap <C-h> b
     noremap <C-l> w
 
     " Syntastic setting to always report errors in the location list.
