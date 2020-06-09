@@ -357,10 +357,10 @@ endif
     " vnoremap <space> zf
 
     " Super fast window movement shortcuts
-    nmap <C-j> <C-W>j
-    nmap <C-k> <C-W>k
-    nmap <C-h> <C-W>h
-    nmap <C-l> <C-W>l
+    nmap <Leader>wj <C-W>j
+    nmap <Leader>wk <C-W>k
+    nmap <Leader>wh <C-W>h
+    nmap <Leader>wl <C-W>l
 
 
     " helpers for dealing with other people's code
@@ -402,6 +402,14 @@ endif
     vnoremap y y`]
     vnoremap <expr> p 'pgv"'.v:register.'y`]'
     nnoremap p p`]
+
+    " Shift h, l to move to beginning and end of line
+    noremap H ^
+    noremap L $
+
+    " Ctrl h, l to move between words
+    noremap <C-h> b 
+    noremap <C-l> w
 
     " Syntastic setting to always report errors in the location list.
     let g:syntastic_always_populate_loc_list = 1
