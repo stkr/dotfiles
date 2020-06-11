@@ -378,7 +378,11 @@ endif
     " nmap <Leader>c :Colors<CR>
 
     nmap gqq :call FormatDocument()<CR>
-
+    
+    " shortcuts for 3-way merge
+    map <Leader>1 :diffget 1<CR>
+    map <Leader>2 :diffget 2<CR>
+    map <Leader>3 :diffget 3<CR>
 " }}}
 
 " General Functionality {{{
