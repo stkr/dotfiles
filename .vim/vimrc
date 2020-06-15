@@ -442,7 +442,7 @@ endif
 if has("gui_running")
 	" GUI is running or is about to start.
 	" Maximize gvim window (for an alternative on Windows, see simalt below).
-	set lines=37 columns=140
+	set lines=999 columns=999
     set guioptions-=e
     set guioptions-=t
     set guioptions-=T
