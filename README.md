@@ -101,6 +101,31 @@ necessary. In addition, the --height argument to fzf is not supported for window
 some script files that come with fzf to be changed for msys environment. It is not 100% the same
 experience as running if from linux, but coming rather close.
 
+
+## Using vimdiff as diff and mergetool
+
+### From git commandline
+
+Git commandline has support for using vim built-in. However, when used as difftool, it opens the
+working copy file in readonly mode which is slightly annoying. Therefore it is advised to manually
+configure a difftool.
+
+### From TortoiseGit:
+
+For diffing, use:
+
+    gvim.exe -d %base %mine -O2 -c "wincmd l"
+
+Explanation: open vim with 2 vertical splits, open the files, jump to the right to get to the
+working copy.
+
+For merging, use:
+
+    gvim.exe -d %mine %base %theirs %merged -O4 -c "3wincmd l" -c "wincmd J"
+
+Explanation: open vim with 4 vertical splits, open the files, jump 3 times to the right, and
+position the current window at the bottom of the screen. 
+
 ## 
 
 

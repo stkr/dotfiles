@@ -104,7 +104,7 @@ endif
     set linebreak " set soft wrapping
     set autoindent " automatically set indent of new line
     set ttyfast " faster redrawing
-    set diffopt+=vertical
+    set diffopt+=vertical,algorithm:patience
     set laststatus=2 " show the satus line all the time
     set scrolloff=2 " Set scroll offset so the active line stays towards the center.
     set wildmenu " enhanced command line completion

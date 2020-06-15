@@ -30,11 +30,16 @@
 [credential]
 	helper = manager
 
+[difftool "gvim"]
+    cmd = "gvim -f -d -O2 -c \"wincmd l\" \"$LOCAL\" \"$REMOTE\""
+
+
 [merge]
 	tool = gvimdiff
 	conflictstyle = diff3
 [mergetool]
 	prompt = false
+
 [diff]
-	tool = gvimdiff
+	tool = gvim
 
