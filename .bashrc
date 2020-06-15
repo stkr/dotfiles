@@ -69,7 +69,7 @@ if [ -f ~/.git-prompt.sh ]; then
      . ~/.git-prompt.sh
 fi
 
-source <(cat ~/.bashrc.d/*.bash)
+for f in ~/.bashrc.d/*.bash; do source "$f"; done
 
 if [ "$color_prompt" = yes ]; then
     PS1='${debian_chroot:+($debian_chroot)}\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\[$(__git_ps1)\]'$'\n$ '
