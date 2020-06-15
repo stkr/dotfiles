@@ -1,11 +1,3 @@
-[diff]
-	tool = bc
-[difftool "bc"]
-	path = c:/Program Files/Beyond Compare 4/bcomp.exe
-[merge]
-	tool = bc
-[mergetool "bc"]
-	path = c:/Program Files/Beyond Compare 4/bcomp.exe
 [core]
 	eol = lf
 	autocrlf = input
@@ -28,6 +20,9 @@
     la = "!git config -l | grep alias | cut -c 7-"
     f = "!git ls-files | grep -i"
 
+    dt = difftool
+    mt = mergetool
+
     unstage = reset --soft HEAD^
     delete-nontracking-branches = "! git branch --list --format \"%(if:equals=[gone])%(upstream:track)%(then)%(refname:short)%(end)\" | sed '/^$/d' | xargs git branch -d "
     sync = "!f() { git checkout --quiet --detach; git fetch origin $1:$1; git checkout --quiet -; }; f"
@@ -35,6 +30,11 @@
 [credential]
 	helper = manager
 
-[user]
-	name = Stefan Krug
-	email = stefan.krug@nxp.com
+[merge]
+	tool = gvimdiff
+	conflictstyle = diff3
+[mergetool]
+	prompt = false
+[diff]
+	tool = gvimdiff
+
