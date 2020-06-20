@@ -308,10 +308,10 @@ endif
     vnoremap . :normal .<cr>
 
     " Navigation cursors in insert mode
-    inoremap <C-k> <Up>
-    inoremap <C-j> <Down>
-    inoremap <C-l> <Right>
-    inoremap <C-h> <Left>
+    " inoremap <C-k> <Up>
+    " inoremap <C-j> <Down>
+    " inoremap <C-l> <Right>
+    " inoremap <C-h> <Left>
 
     " map <silent> <C-h> :call functions#WinMove('h')<cr>
     " map <silent> <C-j> :call functions#WinMove('j')<cr>
@@ -462,16 +462,41 @@ endif
 
 " Code completion {{{
 
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-    \ 'cpp': ['clangd'],
-    \ 'c': ['clangd'],
-    \ }
+    let g:LanguageClient_serverCommands = {
+        \ 'rust': ['rustup', 'run', 'stable', 'rls'],
+        \ 'cpp': ['clangd'],
+        \ 'c': ['clangd'],
+        \ }
+
+    " let g:LanguageClient_loggingLevel = 'DEBUG'
+    " let g:LanguageClient_virtualTextPrefix = ''
+    " let g:LanguageClient_loggingFile =  expand('c:/tmp/LanguageClient.log')
+    " let g:LanguageClient_serverStderr = expand('c:/tmp/LanguageServer.log')
+
+    " The LSP plugins typically offer a lot of functionality.
+    " Some of which replaces original vim functionality (e.g. goto definition from LSP can replace
+    " the goto definition from tags). However, there are usecases for ctags as well (LSP is fragile
+    " at times. So the question is wheter it is clever to replace all the regular vim mappings with
+    " LC mappings or create alternate ones. While the first breaks on bad (or not present) language
+    " server implementations, the second one needs the user to decide upfront which one he wants and
+    " requires to memorize more mappings.
+
+    " An approach to map keys only for filetypes wich have a language server registered (this does
+    " not mean that it is working, nor that it produces meaningful responses) is illustrated below:
+    " function LC_maps()
+    "   if has_key(g:LanguageClient_serverCommands, &filetype)
+    "     nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>
+    "     nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
+    "     nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+    "   endif
+    " endfunction
+
+    " autocmd FileType * call LC_maps()
 
     set completeopt-=preview
     set completeopt+=menuone
     set completeopt+=noselect
-    let g:mucomplete#always_use_completeopt = 0
+    let g:mucomplete#always_use_completeopt = 1
     let g:mucomplete#no_mappings = 1
 
     " Trigger code completion with tab:
@@ -483,8 +508,6 @@ let g:LanguageClient_serverCommands = {
         \ pumvisible() ? "\<C-n>" :
         \ <SID>check_back_space() ? "\<TAB>" :
         \ "\<plug>(MUcompleteFwd)"
-    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
 
     " The next binding makes a difference only when autocompletion is enabled. If the popup is shown
     " and an entry is selected, per default ESC would close the popup but keep the selected entry
@@ -498,10 +521,13 @@ let g:LanguageClient_serverCommands = {
     inoremap <expr> <PageDown> pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<PageDown>"
     inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
 
-    inoremap <expr> <C-j>      pumvisible() ? "\<C-N>" : "\<C-j>"
-    inoremap <expr> <C-k>      pumvisible() ? "\<C-P>" : "\<C-k>"
+    inoremap <expr> <C-j>      pumvisible() ? "\<C-n>" : "\<C-j>"
+    inoremap <expr> <C-k>      pumvisible() ? "\<C-p>" : "\<C-k>"
     inoremap <expr> <C-d>      pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<C-d>"
     inoremap <expr> <C-u>      pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<C-u>"
+
+    imap <expr> <C-h>          pumvisible() ? "\<plug>(MUcompleteCycFwd)" : "\<C-h>"
+    imap <expr> <C-l>          pumvisible() ? "\<plug>(MUcompleteCycBwd)" : "\<C-l>"
 
 " }}}
 
