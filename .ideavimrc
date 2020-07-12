@@ -1,13 +1,43 @@
 source ~/vimfiles/vimrc
 
-nnoremap <Leader>t :action GotoSymbol<CR>
-nnoremap <Leader>f :action GotoFile<CR>
-nnoremap <Leader>b :action RecentChangedFiles<CR>
+set showmode
+set surround
 
 nnoremap <Leader>q :action CloseEditor<CR>
 
-set showmode
-set surround
+
+" Finding stuff
+nnoremap <Leader>ff :action GotoFile<CR>
+nnoremap <Leader>fc :action GotoClass<CR>
+nnoremap <Leader>fs :action GotoSymbol<CR>
+nnoremap <Leader>fb :action RecentChangedFiles<CR>
+nnoremap <Leader>fr :action FindUsages<CR>
+nnoremap <Leader>fu :action FindUsages<CR>
+
+" Going to stuff
+nnoremap <Leader>gd :action GotoDeclaration<CR>
+nnoremap <Leader>gi :action GotoImplementation<CR>
+nnoremap [q :action GotoPreviousError<CR>
+nnoremap ]q :action GotoNextError<CR>
+nnoremap <C-]> :action GotoDeclaration<CR>
+
+" Refactoring stuff
+nnoremap <Leader>rr :action RenameElement<CR>
+nnoremap <Leader>rm :action RefactoringMenu<CR>
+nnoremap <Leader>rf :action ReformatCode<CR>
+vnoremap <Leader>rf :action ReformatCode<CR>
+
+" Overlays / context menus
+nnoremap <Leader>ce :action ShowErrorDescription<CR>
+    
+
+" Useful common substitution commands
+" ideavim is a bit crazy about backslash escaping here, hence these need to be redefined (they are
+" in .vimrc as well but with sane escaping)
+nnoremap <leader>ssu :%s!\\\\!/!g<CR>
+vnoremap <leader>ssu :s!\\\\!/!g<CR>
+nnoremap <leader>ssw :%s!/!\\\\!g<CR>
+vnoremap <leader>ssw :s!/!\\\\!g<CR>
 
 
 " Move between open buffers.
@@ -21,11 +51,6 @@ inoremap <C-k> <Up>
 inoremap <C-j> <Down>
 inoremap <C-l> <Right>
 inoremap <C-h> <Left>
-
-
-" Reformat code
-nnoremap gqq :action ReformatCode<CR>
-vnoremap gqq :action ReformatCode<CR>
 
 
 " When pasing text over a selection, do keep the original text in the clipboard. Note, we have a
