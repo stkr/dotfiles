@@ -414,14 +414,22 @@ endif
     " Substitute slashes
     let g:which_key_map.s.s = { 'name' : '+slashes' }
     let g:which_key_map.s.s.u = 'unix'
+    let g:which_key_map.s.s.l = 'linux'
     let g:which_key_map.s.s.w = 'windows'
-    " Convert backslashes to forward slashes (windows->linux)
+    " Convert backslashes to forward slashes (windows->unix)
     nnoremap <leader>ssu :%s!\\!/!g<CR>
     vnoremap <leader>ssu :s!\\!/!g<CR>
+    " Convert backslashes to forward slashes (windows->linux)
+    nnoremap <leader>ssl :%s!\\!/!g<CR>
+    vnoremap <leader>ssl :s!\\!/!g<CR>
     " Convert forward slashes to backslashes (linux->windows)
     nnoremap <leader>ssw :%s!/!\\!g<CR>
     vnoremap <leader>ssw :s!/!\\!g<CR>
-
+    " Convert a hex string to comma separated list of bytes
+    let g:which_key_map.s.h = { 'name' : '+hex' }
+    let g:which_key_map.s.h.b = 'bytes (c)'
+    nnoremap <leader>shb :%s!\([0-9a-fA-F][0-9a-fA-F]\)!0x\1, !g<CR>
+    vnoremap <leader>shb :s!\([0-9a-fA-F][0-9a-fA-F]\)!0x\1, !g<CR>
 
     " Substitute whitespace
     let g:which_key_map.s.w = { 'name' : '+whitespace' }
