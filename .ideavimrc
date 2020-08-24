@@ -1,5 +1,11 @@
 source ~/vimfiles/vimrc
 
+" In pure vim a timeout on the leader key results in a menu being displayed, hence we have a VERY
+" low timeout setting. Since that menu is not available in ideavim, the timeout has to be increased
+" in order to have a more realistic chance on hitting key combinations.
+
+set timeoutlen=1000
+
 set showmode
 set surround
 
@@ -23,7 +29,9 @@ nnoremap <C-]> :action GotoDeclaration<CR>
 
 " Refactoring stuff
 nnoremap <Leader>rr :action RenameElement<CR>
+vnoremap <Leader>rr :action RenameElement<CR>
 nnoremap <Leader>rm :action RefactoringMenu<CR>
+vnoremap <Leader>rm :action RefactoringMenu<CR>
 nnoremap <Leader>rf :action ReformatCode<CR>
 vnoremap <Leader>rf :action ReformatCode<CR>
 
@@ -61,3 +69,4 @@ vnoremap p "_dP`]
 
 
 set clipboard+=ideaput
+set idearefactormode=keep
