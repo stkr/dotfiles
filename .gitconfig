@@ -1,6 +1,7 @@
 [core]
 	eol = lf
 	autocrlf = input
+	editor = gvim
 [alias]
     co = checkout
     ci = commit

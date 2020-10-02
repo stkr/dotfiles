@@ -6,6 +6,7 @@ f133579  https://github.com/lifepillar/vim-mucomplete.git
 31aee09  https://github.com/junegunn/vim-slash.git
 
 b940914  https://github.com/liuchengxu/vim-which-key.git
+1217520  https://github.com/inkarkat/vim-ReplaceWithRegister.git
 
 deprecated:
 f67ecb5  https://github.com/prabirshrestha/async.vim.git
@@ -16,5 +17,7 @@ eef50f9  https://github.com/prabirshrestha/asyncomplete-tags.vim.git
 5713fa6  https://github.com/prabirshrestha/asyncomplete.vim.git
 c029ce1  https://github.com/prabirshrestha/vim-lsp.git
 b3e2d847 https://github.com/vim-syntastic/syntastic.git
+
+
 
 
