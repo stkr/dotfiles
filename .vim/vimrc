@@ -337,11 +337,10 @@ endif
     autocmd! BufWinLeave * let b:winview = winsaveview()
     autocmd! BufWinEnter * if exists('b:winview') | call winrestview(b:winview) | unlet b:winview
 
-    " Turn off linewise keys. Normally, the `j' and `k' keys move the cursor down one entire line. with
-    " line wrapping on, this can cause the cursor to actually skip a few lines on the screen because
-    " it's moving from line N to line N+1 in the file. I want this to act more visually -- I want `down'
-    " to mean the next line on the screen
-    " moving up and down work as you would expect
+    " Turn off linewise keys. Normally, the `j' and `k' keys move the cursor down one entire line.
+    " with line wrapping on, this can cause the cursor to actually skip a few lines on the screen
+    " because it's moving from line N to line N+1 in the file. I want this to act more visually -- I
+    " want `down' to mean the next line on the screen moving up and down work as you would expect
     nnoremap <silent> j gj
     nnoremap <silent> k gk
     nnoremap <silent> ^ g^
@@ -398,7 +397,7 @@ endif
     let g:which_key_map.r.f = 'format'
     nnoremap <Leader>rr :<C-u>call LanguageClient_textDocument_rename()<CR>
     nnoremap <Leader>rm :<C-u>call LanguageClient_contextMenu()<CR>
-    nnoremap <Leader>rf :<C-u>call LanguageClient#textDocument_formatting()<CR>
+    nnoremap <Leader>rf :<C-u>call FormatDocument()<CR>
     vnoremap <Leader>rf :<C-u>call LanguageClient#textDocument_rangeFormatting()<CR>
 
     " Overlays / context menus
@@ -417,18 +416,18 @@ endif
     let g:which_key_map.s.s.l = 'linux'
     let g:which_key_map.s.s.w = 'windows'
     " Convert backslashes to forward slashes (windows->unix)
-    nnoremap <leader>ssu :%s!\\!/!g<CR>
+    nnoremap <leader>ssu :s!\\!/!g<CR>
     vnoremap <leader>ssu :s!\\!/!g<CR>
     " Convert backslashes to forward slashes (windows->linux)
-    nnoremap <leader>ssl :%s!\\!/!g<CR>
+    nnoremap <leader>ssl :s!\\!/!g<CR>
     vnoremap <leader>ssl :s!\\!/!g<CR>
     " Convert forward slashes to backslashes (linux->windows)
-    nnoremap <leader>ssw :%s!/!\\!g<CR>
+    nnoremap <leader>ssw :s!/!\\!g<CR>
     vnoremap <leader>ssw :s!/!\\!g<CR>
     " Convert a hex string to comma separated list of bytes
     let g:which_key_map.s.h = { 'name' : '+hex' }
     let g:which_key_map.s.h.b = 'bytes (c)'
-    nnoremap <leader>shb :%s!\([0-9a-fA-F][0-9a-fA-F]\)!0x\1, !g<CR>
+    nnoremap <leader>shb :s!\([0-9a-fA-F][0-9a-fA-F]\)!0x\1, !g<CR>
     vnoremap <leader>shb :s!\([0-9a-fA-F][0-9a-fA-F]\)!0x\1, !g<CR>
 
     " Substitute whitespace
@@ -437,9 +436,9 @@ endif
     let g:which_key_map.s.w.n = 'consecutive newlines'
     let g:which_key_map.s.w.u = 'unix eol'
     let g:which_key_map.s.w.w = 'windows eol'
-    nnoremap <leader>swe :%s/\s\+$<cr>
+    nnoremap <leader>swe :s/\s\+$<cr>
     vnoremap <leader>swe :s/\s\+$<cr>
-    nnoremap <leader>swn :%s/\n\{2,}/\r\r/g<cr>
+    nnoremap <leader>swn :s/\n\{2,}/\r\r/g<cr>
     vnoremap <leader>swn :s/\n\{2,}/\r\r/g<cr>
     nnoremap <leader>swu :<C-u>set ff=unix<cr>
     nnoremap <leader>sww :<C-u>set ff=dos<cr>
@@ -610,14 +609,17 @@ endif
 " }}}
 
 " {{{ Formatting of a document
-
     function! FormatDocument()
-        write
         let filename = expand("%:p")
         if &filetype ==# 'rust'
+            write
             let format_command = "rustfmt " . fnameescape(filename)
             let output = system(format_command)
             edit
+        elseif &filetype ==# 'json'
+            :% !python -m json.tool
+        else
+            LanguageClient#textDocument_formatting()
         endif
     endfunction
 " }}}
