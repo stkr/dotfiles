@@ -1,6 +1,8 @@
-language messages en_US.UTF-8
 
 if has('win32') || has ('win64')
+    " On windows, force the language to english.
+    language messages en
+
 	let g:vim_home = $HOME."/vimfiles/"
     let g:vim_hostname = $COMPUTERNAME
     set clipboard=unnamed
