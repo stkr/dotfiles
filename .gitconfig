@@ -44,3 +44,5 @@
 [diff]
 	tool = gvim
 
+[pull]
+	rebase = false
