@@ -158,16 +158,6 @@ function! fzf#vim#complete#buffer_line(...)
   \ 'source': fzf#vim#_uniq(getline(1, '$'))}, get(a:000, 0, fzf#wrap())))
 endfunction
 
-
-
-function! fzf#vim#complete#tag(...)
-  return fzf#vim#complete(s:extend({
-    \ 'source':  taglist(),
-    \ 'options': '--tiebreak=index --ansi --nth '.nth.'.. --tabstop=1'}),
-    \ get(a:000, 0, fzf#wrap())))
-endfunction
-
-
 let &cpo = s:cpo_save
 unlet s:cpo_save
 

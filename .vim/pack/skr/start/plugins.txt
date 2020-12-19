@@ -7,6 +7,7 @@ f133579  https://github.com/lifepillar/vim-mucomplete.git
 
 b940914  https://github.com/liuchengxu/vim-which-key.git
 1217520  https://github.com/inkarkat/vim-ReplaceWithRegister.git
+e9d62b4  https://github.com/junegunn/fzf.vim.git
 
 deprecated:
 f67ecb5  https://github.com/prabirshrestha/async.vim.git
