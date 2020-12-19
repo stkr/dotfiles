@@ -526,7 +526,7 @@ if has("gui_running")
     set guioptions-=t
     set guioptions-=T
 	if has("gui_gtk2") || has("gui_gtk3")
-        set guifont=Consolas\ 11,Inconsolata\ 11
+        set guifont=JetBrains\ Mono\ 11,Inconsolata\ 11
     elseif has("gui_photon")
         set guifont=Consolas:s11
     elseif has("gui_kde")
