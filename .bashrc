@@ -109,6 +109,7 @@ alias la='ls -A'
 
 # the dotfile alias for git:
 alias dotfiles='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias dt='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
