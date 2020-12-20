@@ -126,9 +126,12 @@ For merging, use:
 Explanation: open vim with 4 vertical splits, open the files, jump 3 times to the right, and
 position the current window at the bottom of the screen. 
 
-## 
+## Copying within tmux
+
+[3]
 
 
 [1]: https://www.atlassian.com/git/tutorials/dotfiles
 [2]: https://github.com/microsoft/Git-Credential-Manager-for-Windows
+[3]: https://medium.com/free-code-camp/tmux-in-practice-integration-with-system-clipboard-bcd72c62ff7b
 
