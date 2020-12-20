@@ -8,7 +8,7 @@ repository.
 
 Sumarizing, to bootstrap:
 
-	git clone --bare https://github.com/stkr/dotfiles.git $HOME/.dotfiles
+	git clone --bare ssh://git@github.com/stkr/dotfiles.git $HOME/.dotfiles
 	alias dotfiles="git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 	dotfiles checkout
 	dotfiles config --local status.showUntrackedFiles no
@@ -26,7 +26,7 @@ In case files are existing, move them out of the way and redo the checkout.
         bare = true
         ignorecase = true
     [remote "origin"]
-        url = https://github.com/stkr/dotfiles.git
+        url = ssh://git@github.com/stkr/dotfiles.git
         fetch = +refs/heads/*:refs/remotes/origin/* 
     [status]
         showUntrackedFiles = no
