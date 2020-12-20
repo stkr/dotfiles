@@ -28,9 +28,6 @@
     delete-nontracking-branches = "! git branch --list --format \"%(if:equals=[gone])%(upstream:track)%(then)%(refname:short)%(end)\" | sed '/^$/d' | xargs git branch -d "
     sync = "!f() { git checkout --quiet --detach; git fetch origin $1:$1; git checkout --quiet -; }; f"
 
-[credential]
-	helper = manager
-
 [difftool "gvim"]
     cmd = "gvim -f -d -O2 -c \"wincmd l\" \"$LOCAL\" \"$REMOTE\""
 
