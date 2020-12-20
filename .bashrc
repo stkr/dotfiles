@@ -111,6 +111,17 @@ alias la='ls -A'
 alias dotfiles='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias dt='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
+# This is a bit convoluted, the goal is to fix man pages - per default they use 
+# some highlights which do clash with colorschemes that have a bright background.
+# In order to fix that, we make less use a terminfo that sets those highlights to 
+# sane values. The source of the terminfo is in ~/.terminfo/.src, to comile it, 
+# use
+#     tic ~/.terminfo/.src/mostlike.txt
+# The following alias takes use of that compiles terminfo, makes man use less for 
+# the output and shall result in a colored man page that is readable on all 
+# sane terminal colorschemes.
+alias man="TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man" 
+
 # Alias definitions.
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
