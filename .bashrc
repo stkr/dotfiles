@@ -102,6 +102,41 @@ fi
 # colored GCC warnings and errors
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
+# based on the hostame, set up a few environment variables for colorization
+case "$( hostname )" in
+    la-5410*)
+        export TMUX_STATUS_BG="cyan"
+        export TMUX_STATUS_FG="colour255"
+        ;;
+
+    graz-pi3*)
+        export TMUX_STATUS_BG="blue"
+        export TMUX_STATUS_FG="colour255"
+        ;;
+
+    ardning-pi3*)
+        export TMUX_STATUS_BG="green"
+        export TMUX_STATUS_FG="colour255"
+        ;;
+
+    atlanta*)
+        export TMUX_STATUS_BG="yellow"
+        export TMUX_STATUS_FG="colour255"
+        ;;
+
+    *)
+        export TMUX_STATUS_BG="black"
+        export TMUX_STATUS_FG="white"
+        ;;
+
+# Other possibilities:
+# export TMUX_STATUS_BG="red"
+# export TMUX_STATUS_FG="colour255"
+
+# export TMUX_STATUS_BG="magenta"
+# export TMUX_STATUS_FG="colour255"
+esac
+
 # some more ls aliases
 alias ll='ls -lA'
 alias la='ls -A'
