@@ -478,7 +478,13 @@ nnoremap <a-i> :sync<cr>
 " Open directory under cursor in the other pane
 nnoremap <a-o> :sync %c<cr>
 " Swap panes
-nnoremap <c-u> <c-w>x
+" nnoremap <c-u> <c-w>x
+
+" Use / for filtering instead of =
+nmap / =
+
+" Open bookmarks menu
+nnoremap <c-b> :bmarks<cr>
 
 " ------------------------------------------------------------------------------
 
