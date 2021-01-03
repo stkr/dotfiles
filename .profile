@@ -32,18 +32,18 @@ if [ -d "${home}/info" ]; then
 fi 
 
 # set PATH so it includes user's local bin if it exists
-if [ -d "$HOME/local/bin" ] ; then
-    PATH="$HOME/local/bin:$PATH"
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
 fi
 
 # set manpath so it includes users' private man if it exists
-if [ -d "${home}/local/man" ]; then
-  manpath="${home}/local/man:${manpath}"
+if [ -d "${home}/.local/man" ]; then
+  manpath="${home}/.local/man:${manpath}"
 fi
 
 # set infopath so it includes users' private info if it exists
-if [ -d "${home}/local/info" ]; then
-  infopath="${home}/local/info:${infopath}"
+if [ -d "${home}/.local/info" ]; then
+  infopath="${home}/.local/info:${infopath}"
 fi 
 
 #  make vim the default editor if it exists
