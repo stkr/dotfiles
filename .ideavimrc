@@ -1,4 +1,4 @@
-source ~/vimfiles/vimrc
+source ~/.vim/vimrc
 
 " In pure vim a timeout on the leader key results in a menu being displayed, hence we have a VERY
 " low timeout setting. Since that menu is not available in ideavim, the timeout has to be increased
