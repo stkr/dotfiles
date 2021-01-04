@@ -464,13 +464,26 @@ nnoremap ,C :!gvim --remote-tab-silent $MYVIFMRC &<cr>
 " Toggle wrap setting on ,w key
 nnoremap ,w :set wrap!<cr>
 
-" Example of standard two-panel file managers mappings
+" Total commander key bindings:
 nnoremap <f3> :!less %f<cr>
 nnoremap <f4> :edit<cr>
+vnoremap <f4> :edit<cr>
 nnoremap <f5> :copy<cr>
+vnoremap <f5> :copy<cr>
 nnoremap <f6> :move<cr>
-nnoremap <f7> :mkdir<space>
+vnoremap <f6> :move<cr>
+nnoremap <s-f6> :rename<cr>
+vnoremap <s-f6> :rename<cr>
+nnoremap <f7> :mkdir<space>""<left>
 nnoremap <f8> :delete<cr>
+
+" Yank the directory path
+nnoremap yd :!echo -n %d | xclip -selection clipboard %i<cr>:echo expand('%"d') "is yanked to clipboard"<cr>
+nnoremap <s-f11> :!echo -n %d | xclip -selection clipboard %i<cr>:echo expand('%"d') "is yanked to clipboard"<cr>
+
+" Yank the absolute path to the file 
+nnoremap yf :!echo -n %c:p | xclip -selection clipboard %i<cr>:echo expand('%"c:p') "is yanked to clipboard"<cr>
+nnoremap <s-f12> :!echo -n %c:p | xclip -selection clipboard %i<cr>:echo expand('%"c:p') "is yanked to clipboard"<cr>
 
 " Midnight commander alike mappings
 " Open current directory in the other pane
