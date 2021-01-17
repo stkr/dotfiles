@@ -11,6 +11,38 @@ let s:TYPE = {
 let s:FLOAT_WINDOW_AVAILABLE = exists('*nvim_open_win')
 let s:POPUP_WINDOW_AVAILABLE = exists('*popup_atcursor')
 
+" timers to control throttling
+let s:timers = {}
+
+if !hlexists('LanguageClientCodeLens')
+  hi link LanguageClientCodeLens Title
+endif
+
+if !hlexists('LanguageClientWarningSign')
+  hi link LanguageClientWarningSign todo
+endif
+
+if !hlexists('LanguageClientWarning')
+  hi link LanguageClientWarning SpellCap
+endif
+
+if !hlexists('LanguageClientInfoSign')
+  hi link LanguageClientInfoSign LanguageClientWarningSign
+endif
+
+if !hlexists('LanguageClientInfo')
+  hi link LanguageClientInfo LanguageClientWarning
+endif
+
+if !hlexists('LanguageClientErrorSign')
+  hi link LanguageClientErrorSign error
+endif
+
+if !hlexists('LanguageClientError')
+  hi link LanguageClientError SpellBad
+endif
+
+
 function! s:AddPrefix(message) abort
     return '[LC] ' . a:message
 endfunction
@@ -117,6 +149,14 @@ function! s:hasSnippetSupport() abort
     return 0
 endfunction
 
+function! s:getSelectionUI() abort
+	if type(get(g:, 'LanguageClient_selectionUI', v:null)) is s:TYPE.funcref
+		return 'funcref'
+	else
+		return get(g:, 'LanguageClient_selectionUI', v:null)
+	endif
+endfunction
+
 function! s:useVirtualText() abort
     let l:use = s:GetVar('LanguageClient_useVirtualText')
     if l:use isnot v:null
@@ -169,15 +209,33 @@ function! s:set_virtual_texts(buf_id, ns_id, line_start, line_end, virtual_texts
     endfor
 endfunction
 
-function! s:set_signs(file, signs_to_add, signs_to_delete) abort
-    " TODO: Optimize to update sign instead of add + remove sign.
-    for l:sign in a:signs_to_add
-        let l:line = l:sign['line'] + 1
-        execute ':sign place ' . l:sign['id'] . ' line=' . l:line . ' name=' . l:sign['name'] . ' file=' . a:file
-    endfor
-    for l:sign in a:signs_to_delete
-        execute ':sign unplace ' . l:sign['id']
-    endfor
+function! s:place_sign(id, name, file, line) abort
+  if !exists('*sign_place')
+    execute 'sign place id=' . a:id . ' name=' . a:name . ' file=' . a:file . ' line=' . a:line
+  endif
+
+  call sign_place(0, 'LanguageClientNeovim', a:name, a:file, { 'lnum': a:line })
+endfunction
+
+" clears all signs on the buffer with the given name
+function! s:clear_buffer_signs(file) abort
+  if !exists('*sign_unplace')
+    execute 'sign unplace * group=LanguageClientNeovim buffer=' . a:file
+  else
+    call sign_unplace('LanguageClientNeovim', { 'buffer': a:file })
+  endif
+endfunction
+
+" replaces the signs on a file with the ones passed as an argument
+function! s:set_signs(file, signs) abort
+  call s:clear_buffer_signs(a:file)
+
+  for l:sign in a:signs
+    let l:line = l:sign['line'] + 1
+    let l:name = l:sign['name']
+    let l:id = l:sign['id']
+    call s:place_sign(l:id, l:name, a:file, l:line)
+  endfor
 endfunction
 
 " Execute serious of ex commands.
@@ -199,6 +257,18 @@ function! s:inputlist(...) abort
     let l:selection = inputlist(a:000)
     call inputrestore()
     return l:selection
+endfunction
+
+function! s:selectionUI_funcref(source, sink) abort
+    if type(get(g:, 'LanguageClient_selectionUI')) is s:TYPE.funcref
+        call call(g:LanguageClient_selectionUI, [a:source, function(a:sink)])
+    elseif get(g:, 'LanguageClient_selectionUI', 'FZF') ==? 'FZF'
+                \ && get(g:, 'loaded_fzf')
+        call s:FZF(a:source, a:sink)
+    else
+        call s:Echoerr('Unsupported selection UI, use "FZF" or a funcref')
+        return
+    endif
 endfunction
 
 function! s:FZF(source, sink) abort
@@ -252,6 +322,11 @@ function! s:MatchDelete(ids) abort
 endfunction
 
 function! s:ApplySemanticHighlights(bufnr, ns_id, clears, highlights) abort
+    " TODO: implement this for vim8
+    if !has('nvim')
+      return
+    endif
+
     for clear in a:clears
         call nvim_buf_clear_namespace(a:bufnr, a:ns_id, clear.line_start, clear.line_end)
     endfor
@@ -262,10 +337,41 @@ function! s:ApplySemanticHighlights(bufnr, ns_id, clears, highlights) abort
 endfunction
 
 " Batch version of nvim_buf_add_highlight
-function! s:AddHighlights(source, highlights) abort
+function! s:AddHighlights(namespace, highlights) abort
+  if has('nvim')
+    let l:namespace_id = nvim_create_namespace(a:namespace)
     for hl in a:highlights
-        call nvim_buf_add_highlight(0, a:source, hl.group, hl.line, hl.character_start, hl.character_end)
+        call nvim_buf_add_highlight(0, l:namespace_id, hl.group, hl.line, hl.character_start, hl.character_end)
     endfor
+  else
+    let match_ids = []
+    for hl in a:highlights
+      let match_id = matchaddpos(hl.group, [[hl.line + 1, hl.character_start + 1, hl.character_end - hl.character_start]])
+      let match_ids = add(match_ids, match_id)
+    endfor
+
+    call setbufvar(bufname(), a:namespace . '_IDS', match_ids)
+  endif
+endfunction
+
+function! s:SetHighlights(highlights, namespace) abort
+  call s:ClearHighlights(a:namespace)
+  call s:AddHighlights(a:namespace, a:highlights)
+endfunction
+
+function! s:ClearHighlights(namespace) abort
+  if has('nvim')
+    let l:namespace_id = nvim_create_namespace(a:namespace)
+    call nvim_buf_clear_namespace(0, l:namespace_id, 0, -1)
+  else
+    let match_ids = get(b:, a:namespace . '_IDS', [])
+    for mid in match_ids
+      " call inside a try/catch to avoid error for manually cleared matches
+      try | call matchdelete(mid) | catch
+      endtry
+    endfor
+    call setbufvar(bufname(), a:namespace . '_IDS', [])
+  endif
 endfunction
 
 " Get an variable value.
@@ -348,7 +454,9 @@ endfunction
 "   - Floating window on Neovim (0.4.0 or later)
 "   - popup window on vim (8.2 or later)
 "   - Preview window on Neovim (0.3.0 or earlier) or Vim
-function! s:OpenHoverPreview(bufname, lines, filetype) abort
+"
+" Receives two optional arguments which are the X and Y position 
+function! s:OpenHoverPreview(bufname, lines, filetype, ...) abort
     " Use local variable since parameter is not modifiable
     let lines = a:lines
     let bufnr = bufnr('%')
@@ -372,14 +480,14 @@ function! s:OpenHoverPreview(bufname, lines, filetype) abort
         call s:CloseFloatingHover()
 
         let pos = getpos('.')
-
+        let l:hoverMarginSize = s:GetVar('LanguageClient_hoverMarginSize', 1)
         " Calculate width and height and give margin to lines
         let width = 0
         for index in range(len(lines))
             let line = lines[index]
             if line !=# ''
                 " Give a left margin
-                let line = ' ' . line
+                let line = repeat(' ', l:hoverMarginSize) . line
             endif
             let lw = strdisplaywidth(line)
             if lw > width
@@ -389,8 +497,9 @@ function! s:OpenHoverPreview(bufname, lines, filetype) abort
         endfor
 
         " Give margin
-        let width += 1
-        let lines = [''] + lines + ['']
+        let width += l:hoverMarginSize
+        let l:topBottom = repeat([''], l:hoverMarginSize)
+        let lines = l:topBottom + lines + l:topBottom
         let height = len(lines)
 
         " Calculate anchor
@@ -413,13 +522,21 @@ function! s:OpenHoverPreview(bufname, lines, filetype) abort
             let col = 1
         endif
 
+        let relative = 'cursor'
+        let col = get(a:000, 0, col)
+        let row = get(a:000, 1, row)
+        if get(a:000, 0, v:null) isnot v:null && get(a:000, 1, v:null) isnot v:null
+          let relative = 'win'
+        endif
+
         let s:float_win_id = nvim_open_win(bufnr, v:true, {
-        \   'relative': 'cursor',
+        \   'relative': relative,
         \   'anchor': vert . hor,
         \   'row': row,
         \   'col': col,
         \   'width': width,
         \   'height': height,
+        \   'style': s:GetVar('LanguageClient_floatingWindowStyle', 'minimal'),
         \ })
 
         execute 'noswapfile edit!' a:bufname
@@ -427,8 +544,20 @@ function! s:OpenHoverPreview(bufname, lines, filetype) abort
         let float_win_highlight = s:GetVar('LanguageClient_floatingHoverHighlight', 'Normal:CursorLine')
         execute printf('setlocal winhl=%s', float_win_highlight)
     elseif display_approach ==# 'popup_win'
-        let pop_win_id = popup_atcursor(a:lines, {})
+        let l:padding = [1, 1, 1, 1]
+        if get(a:000, 0, v:null) isnot v:null && get(a:000, 1, v:null) isnot v:null
+          let pop_win_id = popup_create(a:lines, {
+                \ 'line': get(a:000, 1) + 1,
+                \ 'col': get(a:000, 0) + 1,
+                \ 'padding': l:padding,
+                \ 'moved': 'any'
+                \ })
+        else
+          let pop_win_id = popup_atcursor(a:lines, { 'padding': l:padding })
+        endif
         call setbufvar(winbufnr(pop_win_id), '&filetype', a:filetype)
+        " trigger refresh on plasticboy/vim-markdown
+        call win_execute(pop_win_id, 'doautocmd InsertLeave')
     elseif display_approach ==# 'preview'
         execute 'silent! noswapfile pedit!' a:bufname
         wincmd P
@@ -444,6 +573,8 @@ function! s:OpenHoverPreview(bufname, lines, filetype) abort
         endif
 
         call setline(1, lines)
+        " trigger refresh on plasticboy/vim-markdown
+        doautocmd InsertLeave
         setlocal nomodified nomodifiable
 
         wincmd p
@@ -461,9 +592,9 @@ function! s:OpenHoverPreview(bufname, lines, filetype) abort
     endif
 endfunction
 
-function! s:MoveIntoHoverPreview() abort
+function! s:MoveIntoHoverPreview(bufname) abort
     for bufnr in range(1, bufnr('$'))
-        if bufname(bufnr) ==# '__LanguageClient__'
+        if bufname(bufnr) ==# a:bufname
             let winnr = bufwinnr(bufnr)
             if winnr != -1
                 execute winnr . 'wincmd w'
@@ -620,6 +751,11 @@ endfunction
 
 let s:root = expand('<sfile>:p:h:h')
 function! LanguageClient#binaryPath() abort
+    let l:path = s:GetVar('LanguageClient_binaryPath')
+    if l:path isnot v:null
+        return l:path
+    endif
+
     let l:filename = 'languageclient'
     if has('win32')
         let l:filename .= '.exe'
@@ -682,6 +818,11 @@ endfunction
 function! LanguageClient#Write(message) abort
     let l:message = a:message . "\n"
     if has('nvim')
+        " abort write if nvim is exiting
+        if get(v:, 'exiting', v:null) isnot v:null
+          return
+        endif
+
         " jobsend respond 1 for success.
         return !jobsend(s:job, l:message)
     elseif has('channel')
@@ -696,12 +837,18 @@ function! s:SkipSendingMessage() abort
         return v:false
     endif
 
-    return &buftype !=# '' || &filetype ==# '' || expand('%') ==# ''
+    let l:has_command = LanguageClient#HasCommand(&filetype)
+    return !l:has_command || &buftype !=# '' || &filetype ==# '' || expand('%') ==# ''
+endfunction
+
+function! LanguageClient#HasCommand(filetype) abort
+  let l:commands = s:GetVar('LanguageClient_serverCommands', {})
+  return has_key(l:commands, a:filetype)
 endfunction
 
 function! LanguageClient#Call(method, params, callback, ...) abort
     if s:SkipSendingMessage()
-        " call s:Debug('Skip sending message')
+        echo '[LC] Server not configured for filetype ' . &filetype
         return
     endif
 
@@ -750,7 +897,7 @@ function! LanguageClient#Notify(method, params) abort
 endfunction
 
 function! LanguageClient#textDocument_hover(...) abort
-    if s:ShouldUseFloatWindow() && s:MoveIntoHoverPreview()
+    if s:ShouldUseFloatWindow() && s:MoveIntoHoverPreview('__LCNHover__')
         return
     endif
     let l:Callback = get(a:000, 1, v:null)
@@ -782,12 +929,27 @@ function! LanguageClient#findLocations(...) abort
     return LanguageClient#Call('languageClient/findLocations', l:params, l:Callback)
 endfunction
 
-function! LanguageClient#textDocument_definition(...) abort
+function! LanguageClient#textDocument_switchSourceHeader(...) abort
+    let l:Callback = get(a:000, 1, v:null)
     let l:params = {
-                \ 'method': 'textDocument/definition',
+                \ 'filename': LSP#filename(),
                 \ }
     call extend(l:params, get(a:000, 0, {}))
-    return call('LanguageClient#findLocations', [l:params] + a:000[1:])
+    return LanguageClient#Call('textDocument/switchSourceHeader', l:params, l:Callback)
+endfunction
+
+function! LanguageClient#textDocument_definition(...) abort
+    let l:Callback = get(a:000, 1, v:null)
+    let l:params = {
+                \ 'filename': LSP#filename(),
+                \ 'text': LSP#text(),
+                \ 'line': LSP#line(),
+                \ 'character': LSP#character(),
+                \ 'handle': s:IsFalse(l:Callback),
+                \ 'gotoCmd': v:null,
+                \ }
+    call extend(l:params, get(a:000, 0, {}))
+    return LanguageClient#Call('textDocument/definition', l:params, l:Callback)
 endfunction
 
 function! LanguageClient#textDocument_typeDefinition(...) abort
@@ -871,16 +1033,39 @@ function! LanguageClient#textDocument_codeLens(...) abort
     return LanguageClient#Call('textDocument/codeLens', l:params, l:Callback)
 endfunction
 
-function! LanguageClient#textDocument_codeAction(...) abort
-    let l:Callback = get(a:000, 1, v:null)
+function! s:do_codeAction(mode, ...) abort
+    let l:Callback = get(a:000, 2, v:null)
     let l:params = {
                 \ 'filename': LSP#filename(),
                 \ 'line': LSP#line(),
                 \ 'character': LSP#character(),
                 \ 'handle': s:IsFalse(l:Callback),
+                \ 'range': LSP#range(a:mode),
                 \ }
-    call extend(l:params, get(a:000, 0, {}))
+    call extend(l:params, get(a:000, 1, {}))
     return LanguageClient#Call('textDocument/codeAction', l:params, l:Callback)
+endfunction
+
+function! LanguageClient#textDocument_visualCodeAction(...) range abort
+  call s:do_codeAction('v', a:000)
+endfunction
+
+function! LanguageClient#textDocument_codeAction(...) abort
+  call s:do_codeAction('n', a:000)
+endfunction
+
+function! LanguageClient#executeCodeAction(kind, ...) abort
+  let l:Callback = get(a:000, 1, v:null)
+  let l:params = {
+              \ 'filename': LSP#filename(),
+              \ 'line': LSP#line(),
+              \ 'character': LSP#character(),
+              \ 'handle': s:IsFalse(l:Callback),
+              \ 'range': LSP#range('n'),
+              \ 'kind': a:kind,
+              \ }
+  call extend(l:params, get(a:000, 0, {}))
+  return LanguageClient#Call('languageClient/executeCodeAction', l:params, l:Callback)
 endfunction
 
 function! LanguageClient#textDocument_completion(...) abort
@@ -937,7 +1122,7 @@ function! LanguageClient#completionItem_resolve(completion_item, ...) abort
                 \ 'completionItem': a:completion_item,
                 \ 'handle': s:IsFalse(l:Callback)
                 \ }
-    call extend(l:params, get(a:000, 0, {}))
+    call extend(l:params, get(a:000, 0, {})) " extend with pumpos params
     return LanguageClient#Call('completionItem/resolve', l:params, l:Callback)
 endfunction
 
@@ -948,7 +1133,7 @@ function! LanguageClient#textDocument_rangeFormatting_sync(...) abort
     return l:result isnot v:null
 endfunction
 
-function! LanguageClient#textDocument_didOpen() abort
+function! LanguageClient#textDocument_didOpen(...) abort
     return LanguageClient#Notify('textDocument/didOpen', {
                 \ 'filename': LSP#filename(),
                 \ 'text': LSP#text(),
@@ -1005,7 +1190,7 @@ function! LanguageClient#startServer(...) abort
                 \ 'cmdargs': [],
                 \ }
     call extend(l:params, a:0 > 0 ? {'cmdargs': a:000} : {})
-    return LanguageClient#Call('languageClient/startServer', l:params, v:null)
+    return LanguageClient#Call('languageClient/startServer', l:params, funcref('LanguageClient#textDocument_didOpen'))
 endfunction
 
 function! LanguageClient#registerServerCommands(cmds, ...) abort
@@ -1018,6 +1203,22 @@ function! LanguageClient#setLoggingLevel(level) abort
                 \ 'loggingLevel': a:level,
                 \ }
     return LanguageClient#Call('languageClient/setLoggingLevel', l:params, v:null)
+endfunction
+
+function! LanguageClient#diagnosticsPrevious() abort
+    let l:params = {
+                \ 'filename': LSP#filename(),
+                \ 'position': LSP#position(),
+                \ }
+    return LanguageClient#Notify('languageClient/diagnosticsPrevious', l:params)
+endfunction
+
+function! LanguageClient#diagnosticsNext() abort
+    let l:params = {
+                \ 'filename': LSP#filename(),
+                \ 'position': LSP#position(),
+                \ }
+    return LanguageClient#Notify('languageClient/diagnosticsNext', l:params)
 endfunction
 
 function! LanguageClient#setDiagnosticsList(diagnosticsList) abort
@@ -1130,6 +1331,9 @@ endfunction
 " there will Mutex poison error.
 let s:last_cursor_line = -1
 function! LanguageClient#handleCursorMoved() abort
+  call s:timer_stop('LanguageClient#handleCursorMoved')
+
+  function! DebounceHandleCursorMoved() abort
     let l:cursor_line = getcurpos()[1] - 1
     if l:cursor_line == s:last_cursor_line
         return
@@ -1146,11 +1350,18 @@ function! LanguageClient#handleCursorMoved() abort
     catch
         call s:Debug('LanguageClient caught exception: ' . string(v:exception))
     endtry
+  endfunction
+
+  call s:timer_start_store(100, { -> DebounceHandleCursorMoved() }, 'LanguageClient#handleCursorMoved')
 endfunction
 
 function! LanguageClient#handleCompleteDone() abort
+    " close any hovers that may have been opened for example for completion
+    " item documentation.
+    call s:ClosePopups()
+
     let user_data = get(v:completed_item, 'user_data', '')
-    if user_data ==# ''
+    if len(user_data) ==# 0
         return
     endif
 
@@ -1200,6 +1411,12 @@ function! LanguageClient_NCM2OnComplete(context) abort
 endfunction
 
 function! LanguageClient#explainErrorAtPoint(...) abort
+    let extra = get(a:000, 0, {})
+    let silent_mode = get(extra, 'silent', v:false)
+    if s:ShouldUseFloatWindow() && !silent_mode && s:MoveIntoHoverPreview('__LCNExplainError__')
+        return
+    endif
+
     let l:Callback = get(a:000, 1, v:null)
     let l:params = {
                 \ 'buftype': &buftype,
@@ -1208,7 +1425,7 @@ function! LanguageClient#explainErrorAtPoint(...) abort
                 \ 'character': LSP#character(),
                 \ 'handle': s:IsFalse(l:Callback),
                 \ }
-    call extend(l:params, get(a:000, 0, {}))
+    call extend(l:params, extra)
     return LanguageClient#Call('languageClient/explainErrorAtPoint', l:params, l:Callback)
 endfunction
 
@@ -1299,6 +1516,18 @@ function! LanguageClient#workspace_executeCommand(command, ...) abort
     return LanguageClient#Call('workspace/executeCommand', l:params, l:Callback)
 endfunction
 
+function! s:shutdownCallback(...) abort
+    call LanguageClient#exit()
+    echom '[LC] Server shutdown complete'
+endfunction
+
+function! LanguageClient#shutdown() abort
+    return LanguageClient#Call('shutdown', {
+                \ 'languageId': &filetype,
+                \ },
+                \ function('s:shutdownCallback'))
+endfunction
+
 function! LanguageClient#exit() abort
     return LanguageClient#Notify('exit', {
                 \ 'languageId': &filetype,
@@ -1318,7 +1547,7 @@ function! LanguageClient#serverStatusMessage() abort
 endfunction
 
 function! LanguageClient#isServerRunning() abort
-    return b:LanguageClient_isServerRunning
+    return get(b:, 'LanguageClient_isServerRunning', 0)
 endfunction
 
 " Example function usable for status line.
@@ -1401,12 +1630,15 @@ endfunction
 
 function! LanguageClient_contextMenu() abort
     let l:options = keys(LanguageClient_contextMenuItems())
-
-    if get(g:, 'loaded_fzf') && get(g:, 'LanguageClient_fzfContextMenu', 1)
-        return fzf#run(fzf#wrap({
-                    \ 'source': l:options,
-                    \ 'sink': function('LanguageClient_handleContextMenuItem'),
-                    \ }))
+    let l:useSelectionUI = get(g:, 'LanguageClient_selectionUIContextMenu',
+				\ get(g:, 'LanguageClient_fzfContextMenu', 1))
+    if l:useSelectionUI
+            \ && (type(get(g:, 'LanguageClient_selectionUI', v:null)) is s:TYPE.funcref
+                \ || (get(g:, 'LanguageClient_selectionUI', 'FZF') ==? 'FZF'
+                    \ && get(g:, 'loaded_fzf')
+                \ )
+            \ )
+        return s:selectionUI_funcref(l:options, function('LanguageClient_handleContextMenuItem'))
     endif
 
     let l:selections = map(copy(l:options), { key, val -> printf('%d) %s', key + 1, val ) })
@@ -1490,6 +1722,126 @@ function! LanguageClient#debugInfo(...) abort
     let l:params = get(a:000, 0, {})
     let l:Callback = get(a:000, 1, v:null)
     return LanguageClient#Call('languageClient/debugInfo', l:params, l:Callback)
+endfunction
+
+function! s:ClosePopups(...) abort
+  if s:ShouldUseFloatWindow()
+    call s:CloseFloatingHover()
+  elseif exists('*popup_clear') && s:GetVar('LanguageClient_usePopupHover', v:true)
+    call popup_clear()
+  else
+    :pclose
+  endif
+endfunction
+
+" receives the v:event from the CompleteChanged autocmd
+function! LanguageClient#handleCompleteChanged(event) abort
+  " this function needs timer_start because by the time it is called the
+  " `textlock` lock is set, so calling something (ClosePopups in this case) in
+  " a timer basically unsets that lock.
+  if !exists('*timer_start')
+    return
+  endif
+
+  " this timer is just to stop textlock from locking our changes
+  call s:timer_start(0, funcref('s:ClosePopups'))
+  call s:timer_stop('LanguageClient#handleCompleteChanged')
+
+  function! DebounceHandleCompleteChanged(event) abort
+    let l:user_data = get(v:completed_item, 'user_data', '')
+    if len(l:user_data) ==# 0
+      return
+    endif
+
+    if type(l:user_data) ==# v:t_string
+      let l:user_data = json_decode(l:user_data)
+    endif
+
+    let l:completed_item = {}
+
+    " LCN completion items
+    if has_key(l:user_data, 'lspitem')
+      let l:completed_item = l:user_data['lspitem']
+    endif
+
+    " NCM2 completion items
+    if has_key(l:user_data, 'ncm2_lspitem')
+      let l:completed_item = l:user_data['ncm2_lspitem']
+    endif
+
+    if l:completed_item ==# {}
+      return
+    endif
+
+    if has_key(l:completed_item, 'documentation')
+      call s:ShowCompletionItemDocumentation(l:completed_item['documentation'], a:event)
+    else
+      call LanguageClient#completionItem_resolve(l:completed_item, { 'pumpos': a:event })
+    endif
+  endfunction
+
+  call s:timer_start_store(100, { -> DebounceHandleCompleteChanged(a:event) }, 'LanguageClient#handleCompleteChanged')
+endfunction
+
+function! s:ShowCompletionItemDocumentation(doc, completion_event) abort
+  let l:kind = 'text'
+
+  " some servers send a dictionary with kind and value whereas others just
+  " send the value
+  if type(a:doc) is s:TYPE.dict
+    let l:lines = split(a:doc['value'], "\n")
+    if has_key(a:doc, 'kind')
+      let l:kind = a:doc['kind']
+    endif
+  else
+    let l:lines = split(a:doc, "\n")
+  endif
+
+  if len(l:lines) ==# 0
+    return
+  endif
+
+  for l:line in l:lines
+    let l:line = ' ' . l:line . ' '
+  endfor
+
+  let l:pos = a:completion_event
+  if exists('*pum_getpos')
+    " favor pum_getpos output if available
+    let l:pos = pum_getpos()
+  endif
+  let l:x_pos = l:pos['width'] + l:pos['col'] + 1
+  call s:OpenHoverPreview('CompletionItemDocumentation', l:lines, l:kind, l:x_pos, l:pos['row'])
+endfunction
+
+" s:timer_stop tries to stop the timer with the given name by calling vim's
+" timer_stop. If vim's timer_stop function does not exist it just returns.
+function! s:timer_stop(name) abort
+	if !exists('*timer_stop')
+		return
+	endif
+
+	if has_key(s:timers, a:name)
+  	call timer_stop(s:timers[a:name])
+	endif
+endfunction
+
+" s:timer_start tries to start a timer by calling vim's timer_start function,
+" if it does not exist it just calls the function given in the second
+" argument.
+function! s:timer_start(delay, func) abort
+	if !exists('*timer_start')
+		return a:func()
+	endif
+
+  return timer_start(a:delay, a:func)
+endfunction
+
+" s:timer_start_store calls s:timer_start and stores the returned timer_id in
+" a script scoped s:timers variable that we can use to debounce function
+" calls.
+function! s:timer_start_store(delay, func, name) abort
+  let s:timers[a:name] = s:timer_start(a:delay, a:func)
 endfunction
 
 let g:LanguageClient_loaded = s:Launch()

@@ -8,16 +8,17 @@ CONTENTS                                               *LanguageClientContents*
 2. Configuration ............... |LanguageClientConfiguration|
 3. Commands .................... |LanguageClientCommands|
 4. Functions ................... |LanguageClientFunctions|
-5. Events ...................... |LanguageClientEvents|
-6. License ..................... |LanguageClientLicense|
-7. Bugs ........................ |LanguageClientBugs|
-8. Contributing ................ |LanguageClientContributing|
+5. Mappings .................... |LanguageClientMappings|
+6. Events ...................... |LanguageClientEvents|
+7. License ..................... |LanguageClientLicense|
+8. Bugs ........................ |LanguageClientBugs|
+9. Contributing ................ |LanguageClientContributing|
 
 ==============================================================================
 1. Usage                                                 *LanguageClientUsage*
 
-Before using of LanguageClient, it is necessary to specify commands that are
-going to be used to start language server. See |LanguageClient_serverCommands|
+Before using LanguageClient, it is necessary to specify commands that are
+going to be used to start a language server. See |LanguageClient_serverCommands|
 for detail. Here is a simple example config: >
 
     let g:LanguageClient_serverCommands = {
@@ -35,14 +36,20 @@ like to map these functions to shortcuts, for example: >
     nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
     nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 
+You can also use slightly cleaner Plug mappings instead of the full function name: >
+
+    nmap <silent> K <Plug>(lcn-hover)
+    nmap <silent> gd <Plug>(lcn-definition)
+    nmap <silent> <F2> <Plug>(lcn-rename)
+
 You can apply these mappings only for buffers with supported filetypes with a
 simple function: >
 
     function LC_maps()
       if has_key(g:LanguageClient_serverCommands, &filetype)
-        nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>
-        nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
-        nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+        nmap <buffer> <silent> K <Plug>(lcn-hover)
+        nmap <buffer> <silent> gd <Plug>(lcn-definition)
+        nmap <buffer> <silent> <F2> <Plug>(lcn-rename)
       endif
     endfunction
 
@@ -68,17 +75,49 @@ To use the language server with Vim's formatting operator |gq|, set 'formatexpr'
 
 2.1 g:LanguageClient_serverCommands          *g:LanguageClient_serverCommands*
 
-String to list map. Defines commands to start language server for specific
-filetype. For example: >
+Dictionary to specify the servers to be used for each filetype. The keys are
+strings representing the filetypes and the values are either
+  1 - a list of strings that form a command
+  2 - a dictionary with keys name, command and initializationOptions, where:
+    - name: is the name of the server, which should match the root node of the
+      configuration options specified in the settings.json file for this server
+    - command: is the same list of strings in option 1
+    - initializationOptions: is an optional dictionary with options to be passed
+      to the server. The values to be set here are highly dependent on each
+      server so you should see the documentation for each server to find out
+      what to configure in here (if anything).  The options set in
+      initializationOptions are merged with the default settings for each
+      language server and with the workspace settings defined by the user in
+      the files specified in the variable `LanguageClient_settingsPath'. The
+      order in which these settings are merged is first the defualt settings,
+      then the server settings configured in this section and lastly the
+      contents of the files in the `LanguageClient_settingsPath` variable in
+      the order in which they were listed.
+
+For example: >
 
     let g:LanguageClient_serverCommands = {
         \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-        \ }
+        \ 'go': {
+        \   'name': 'gopls',
+        \   'command': ['gopls'],
+        \   'initializationOptions': {
+        \     'usePlaceholders': v:true,
+        \     'codelens': {
+        \       'generate': v:true,
+        \       'test': v:true,
+        \     },
+        \   },
+        \ },
+        \}
 
-In the example above, 'run', 'stable', and 'rls' are arguments to the
-'rustup' command line tool.
+In the configuration for the rust filetype above, 'run', 'stable', and 'rls'
+are arguments to the 'rustup' command line tool. And in the configuration for
+the go filetype the server is configured to run the command `gopls` with no
+additional arguments, and with the initialization options set in the
+`initializationOptions` key.
 
-Or tcp connection string to the server, >
+You can also use a tcp connection to the server, for example: >
     let g:LanguageClient_serverCommands = {
         \ 'javascript': ['tcp://127.0.0.1:2089'],
         \ }
@@ -86,7 +125,14 @@ Or tcp connection string to the server, >
 Note: environmental variables are not supported except home directory alias `~`.
 
 Default: {}
-Valid Option: Map<String, List<String> | String>
+
+
+
+Valid Option: Map<String, List<String> | {
+    name: String
+    command: List<String>
+    initializationOptions?: Map<String, Any>
+  }>
 
 2.2 g:LanguageClient_diagnosticsDisplay  *g:LanguageClient_diagnosticsDisplay*
 
@@ -96,30 +142,30 @@ Default: >
     {
         1: {
             "name": "Error",
-            "texthl": "ALEError",
+            "texthl": "LanguageClientError",
             "signText": "✖",
-            "signTexthl": "ALEErrorSign",
+            "signTexthl": "LanguageClientErrorSign",
             "virtualTexthl": "Error",
         },
         2: {
             "name": "Warning",
-            "texthl": "ALEWarning",
+            "texthl": "LanguageClientWarning",
             "signText": "⚠",
-            "signTexthl": "ALEWarningSign",
+            "signTexthl": "LanguageClientWarningSign",
             "virtualTexthl": "Todo",
         },
         3: {
             "name": "Information",
-            "texthl": "ALEInfo",
+            "texthl": "LanguageClientInfo",
             "signText": "ℹ",
-            "signTexthl": "ALEInfoSign",
+            "signTexthl": "LanguageClientInfoSign",
             "virtualTexthl": "Todo",
         },
         4: {
             "name": "Hint",
-            "texthl": "ALEInfo",
+            "texthl": "LanguageClientInfo",
             "signText": "➤",
-            "signTexthl": "ALEInfoSign",
+            "signTexthl": "LanguageClientInfoSign",
             "virtualTexthl": "Todo",
         },
     }
@@ -163,13 +209,30 @@ Default: 1.
 Selection UI used when there are multiple entries.
 
 Default: If fzf is loaded, use "fzf", otherwise use "location-list".
-Valid options: "fzf" | "quickfix" | "location-list"
+Valid options: "fzf" | "quickfix" | "location-list" | |Funcref|
+
+If you use a |Funcref|, the referenced function should have two arguments
+(source, sink). The "source" argument can be either a command string or a
+list. The sink argument can be a command string or a |Funcref| that takes the
+selected line as its first argument.
+
+An example implementation is "s:FZF()" in autoload/LanguageClient.vim. For
+details, see the source and sink arguments of fzf#run():
+https://github.com/junegunn/fzf/blob/master/README-VIM.md#fzfrun
+
+Another example, this time using vim-clap: >
+
+	function! MySelectionUI(source, sink) abort
+		return clap#run({'id': 'LCN', 'source': a:source, 'sink': a:sink})
+	endfunction
+
+	let g:LanguageClient_selectionUI = function('MySelectionUI')
 
 2.7 g:LanguageClient_selectionUI_autoOpen                *LanguageClient_selectionUI_autoOpen*
 Selection UI auto open when selectionUI is not "fzf"
 
-Valid options: 1 | 0
 Default: 1
+Valid options: 1 | 0
 
 2.8 g:LanguageClient_trace                           *g:LanguageClient_trace*
 
@@ -207,9 +270,34 @@ path this is relative to the workspace directory. If several paths are
 provided, then the corresponding settings are merged with precedence going to
 the last file.
 
+The initialization options found in the files in this config are combined with
+the initialization options specified in the server command, if any. The former
+taking precedence over the latter.
+
+Note that the key under which the initialization options for each server lives
+matches the key under which the server expects it's configuration. This is
+important for servers that can request configuration via a
+`workspace/configuration` request.
+
+Previously, the initialization options lived under a `initializationOptions`
+key, which worked, but made answering that `workspace/configuration` request
+hard, since we couldn't really get the correct path to the setting the server
+requested. Since version 0.1.161 of this plugin, that key has been deprecated
+and you'll see a message saying that you should move off of it if your settings
+file includes an `initializationOptions` key.
+
 Example settings file content: >
     {
-        "rust.clippy_preference": "on"
+        "gopls": {
+          "usePlaceholders": true,
+          "local": "github.com/my/pkg",
+        },
+        "rust-analyzer": {
+          "inlayHints": {
+            "enable": true,
+            "chainingHints": true
+          },
+        },
     }
 
 Default: ".vim/settings.json"
@@ -231,7 +319,7 @@ need to `expand` it.
 
 Example:
 
-    `let g:LanguageClient_loggingFile = expand('~/.vim/LanguageClient.log')``
+    `let g:LanguageClient_loggingFile = expand('~/.vim/LanguageClient.log')`
 
 
 2.15 g:LanguageClient_loggingLevel           *g:LanguageClient_loggingLevel*
@@ -303,9 +391,11 @@ Controls how hover output is displayed. Must be one of the following:
 Default: "Auto"
 Valid options: "Never", "Auto", "Always"
 
-2.22 g:LanguageClient_fzfContextMenu         *g:LanguageClient_fzfContextMenu*
+2.22 g:LanguageClient_selectionUIContextMenu *g:LanguageClient_selectionUIContextMenu* *g:LanguageClient_fzfContextMenu*
 
-Should FZF be used for `LanguageClient_contextMenu()`.
+Should the selection UI be used for `LanguageClient_contextMenu()`.
+
+(Alias for the deprecated `LanguageClient_fzfContextMenu`)
 
 Default: 1
 Valid options: 1 | 0
@@ -355,7 +445,7 @@ When the value is set to 1, |LanguageClient#textDocument_hover()| opens
 documentation in a floating window instead of preview.
 This variable is effective only when the floating window feature is
 supported. Check by running >
-    :echomsg exists('nvim_open_win')
+    :echomsg exists('*nvim_open_win')
 
 Default: 1 when a floating window is supported, otherwise 0
 Valid Options: 1 | 0
@@ -394,7 +484,14 @@ Maximum severity to show diagnostic messages.
 Default: "Hint"
 Valid options: "Error" | "Warning" | "Information" | "Hint"
 
-2.31 g:LanguageClient_echoProjectRoot  *g:LanguageClient_echoProjectRoot*
+2.31 g:LanguageClient_diagnosticsIgnoreSources  *g:LanguageClient_diagnosticsIgnoreSources*
+
+Does not show the diagnostics message which has the source specified by this
+options.
+
+Default: "[]"
+
+2.32 g:LanguageClient_echoProjectRoot  *g:LanguageClient_echoProjectRoot*
 
 Whether to echo messages in vim of the form: "Project root: /home/user/myproject" when
 the root of a project is detected using g:LanguageClient_rootMarkers.
@@ -402,7 +499,7 @@ the root of a project is detected using g:LanguageClient_rootMarkers.
 Default: 1 to display the messages
 Valid options: 1 | 0
 
-2.32 g:LanguageClient_semanticHighlightMaps   *g:LanguageClient_semanticHighlightMaps*
+2.33 g:LanguageClient_semanticHighlightMaps   *g:LanguageClient_semanticHighlightMaps*
 
 String to list/map map. Defines the mapping of semantic highlighting "scopes" to
 highlight groups. This depends on the LSP server supporting the proposed
@@ -503,14 +600,14 @@ Example configuration for eclipse.jdt.ls:
      highlight! JavaMemberVariable ctermfg=White cterm=italic guifg=White gui=italic
 
 
-2.33 g:LanguageClient_applyCompletionAdditionalTextEdits *g:LanguageClient__applyCompletionAdditionalTextEdits*
+2.34 g:LanguageClient_applyCompletionAdditionalTextEdits *g:LanguageClient_applyCompletionAdditionalTextEdits*
 
 Indicates whether completionItem additional text edits should be applied.
 
 Default: 1
 Valid options: 1 | 0
 
-2.34 g:LanguageClient_preferredMarkupKind *g:LanguageClient_preferredMarkupKind*
+2.35 g:LanguageClient_preferredMarkupKind *g:LanguageClient_preferredMarkupKind*
 
 Sets the preferred markup kind. This value is sent to the server and is
 normally used to decide whether to send plaintext or markdown in things like
@@ -522,25 +619,131 @@ server, effectively letting it decide which markup kind to use.
 
 Example setting 1. Set the preferred markup kind to `plaintext`
   ```
-  let g:LanguageClient_preferredMarkupKind: ['plaintext']
+  let g:LanguageClient_preferredMarkupKind = ['plaintext']
   ```
 
 Example setting 2. Set the preferred markup kind to `plaintext` and `markdown`
 as a fallback.
 
   ```
-  let g:LanguageClient_preferredMarkupKind: ['plaintext', 'markdown']
+  let g:LanguageClient_preferredMarkupKind = ['plaintext', 'markdown']
   ```
 
 Example setting 3. Set the preferred markup kind to `markdown`
 
   ```
-  let g:LanguageClient_preferredMarkupKind: ['markdown']
+  let g:LanguageClient_preferredMarkupKind = ['markdown']
+  ```
 
-This setting may have no effect of the server decides not to honour it.
+This setting may have no effect if the server decides not to honour it.
 
 Default: v:null
 Valid options: Array<String>
+
+2.36 g:LanguageClient_floatingWindowStyle  *g:LanguageClient_floatingWindowStyle*
+
+Style of opened Neovim floating window.
+
+Default: 'minimal'
+Valid options: 'minimal'
+
+2.37 g:LanguageClient_hideVirtualTextsOnInsert *g:LanguageClient_hideVirtualTextsOnInsert*
+
+Hides all virtual texts for the current buffer while editing in insert mode.
+
+Default: 0
+Valid options: 1 | 0
+
+2.38 g:LanguageClient_setOmnifunc                *g:LanguageClient_setOmnifunc*
+
+Whether set buffer omnifunc to 'LanguageClient#complete'.
+
+Default: v:true
+Valid options: v:true | v:false
+
+2.39 g:LanguageClient_binaryPath                  *g:LanguageClient_binaryPath*
+
+Full path to languageclient binary.
+
+Default: 'bin/languageclient' relative to plugin root.
+Valid options: String
+
+2.40 g:LanguageClient_enableExtensions          *g:LanguageClient_enableExtensions*
+
+LanguageClient-neovim provides extensions for some language servers, such as gopls or rust-analyzer.
+These extensions can be turned on or off, and they are configurable per language (not per language
+server).
+
+An example of the extensions provided is running Rust or Go tests in a vim terminal. This takes
+advantage of the commands provided by rust-analyzer or gopls (respectively) and executes those
+commands in a vim terminal.
+
+Example config:
+  ```
+  let g:LanguageClient_enableExtensions = {
+    \ 'go': v:false,
+    \ 'rust': v:true,
+    \ }
+  ```
+In this example we explicitly disable extensions for the filetype `go`, and enable them for `rust`.
+Filetypes not included in this config will also have their extensions disabled, unless you
+explicitly enable them like we did for `rust`.
+
+The default value for this config, or the absence of this config, enables extensions for all filetypes.
+
+Default: v:null
+
+2.41 g:LanguageClient_codeLensDisplay          *g:LanguageClient_codeLensDisplay*
+
+Control how code lenses are displayed.
+
+Default: >
+  {
+    "virtualTexthl": "LanguageClientCodeLens",
+  }
+
+2.42 g:LanguageClient_hoverMarginSize        *g:LanguageClient_hoverMarginSize*
+
+When using floating windows to open hover previews (for more information see
+|g:LanguageClient_useFloatingHover|), this setting controls whether and how
+big of a margin to draw around the contents of the hover.
+
+Having some margin looks nice, so the default is 1.
+
+Floating windows don't have a true way to set padding/margin on them, so the
+strategy used is to add one line above and below the language server's raw
+hover response, and one space character before the start of every non-empty
+line in the hover response.
+
+Having a space in front of the hover content can cause some syntax
+highlighters to mess up (because e.g., they have a regex expecting a syntax
+construct to be anchored to the start of a line). To turn off adding this
+margin, set this setting to 0. Example:
+>
+  let g:LanguageClient_hoverMarginSize = 0
+<
+Default: 1
+
+2.43 g:LanguageClient_restartOnCrash          *g:LanguageClient_restartOnCrash*
+
+If enabled, the client will attempt to restart the server on the event that it
+unexpectedly crashes.
+
+Default: 1
+
+2.44 g:LanguageClient_maxRestartRetries          *g:LanguageClient_maxRestartRetries*
+
+Max number of times to attempt to recover from a server crash. Each language
+handles its own count independently.
+
+Default: 5
+
+2.45 g:LanguageClient_showCompletionDocs  *g:LanguageClient_showCompletionDocs*
+
+Show completion item documentation in a floating window right next to pmenu.
+
+Default: 1
+Valid options: 1 | 0
 
 ==============================================================================
 3. Commands                                           *LanguageClientCommands*
@@ -679,6 +882,12 @@ If optional dependency FZF is installed, locations will be displayed in a FZF
 prompt, selecting one of the entry will then goto the reference location.
 
 For Denite users, a source with name 'references' is provided.
+
+*LanguageClient#textDocument_visualCodeAction()*
+*LanguageClient_textDocument_visualCodeAction()*
+Signature: LanguageClient#textDocument_visualCodeAction(...)
+
+Show code actions at current visual selection.
 
 *LanguageClient#textDocument_codeAction()*
 *LanguageClient_textDocument_codeAction()*
@@ -865,17 +1074,108 @@ Signature: LanguageClient#debugInfo(...)
 
 Print out debug info.
 
+*LanguageClient#diagnosticsNext*
+Signature: LanguageClient#diagnosticsNext()
+
+Moves the cursor to the next diagnostic in the buffer, relative to the current cursor position.
+
+*LanguageClient#diagnosticsPrevious*
+Signature: LanguageClient#diagnosticsPrevious()
+
+Moves the cursor to the previous diagnostic in the buffer, relative to the current cursor position.
+
+*LanguageClient#textDocument_switchSourceHeader*
+Signature: LanguageClient#textDocument_switchSourceHeader(...)
+
+Calls clangd's `textDocument/switchSourceHeader` extension request.
+
+*LanguageClient#executeCodeAction*
+Signature: LanguageClient#executeCodeAction(kind, ...)
+
+Tries to execute the code action with the give kind under the cursor position.
+The action will only be executed if there is exactly one code action with that
+kind under the cursor.
+
+This function can be used to create commands for common LSP actions, such as
+`source.organizeImports`.  To do so you can create a command like this:
+
+  command! OrganizeImports call LanguageClient#executeCodeAction('source.organizeImports')
+
+Note that this only works for code actions, not commands, and only in normal
+mode.
+
 ==============================================================================
-5. Events                                               *LanguageClientEvents*
+5. Mappings                                           *LanguageClientMappings*
+
+LanguageClient provides various Plug mappings which can be used to set up
+custom mappings. For example, to create a mapping to call the rename function
+you would create a custom mapping like this:
+
+  nmap <silent><F2> <Plug>(lcn-rename)
+
+The full list of Plug mappings is:
+
+*(lcn-menu)*
+Calls LanguageClient_contextMenu.
+
+*(lcn-hover)*
+Calls LanguageClient_textDocument_hover.
+
+*(lcn-rename)*
+Calls LanguageClient_textDocument_rename.
+
+*(lcn-definition)*
+Calls LanguageClient_textDocument_definition.
+
+*(lcn-type-definition)*
+Calls LanguageClient_textDocument_typeDefinition.
+
+*(lcn-references)*
+Calls LanguageClient_textDocument_references.
+
+*(lcn-implementation)*
+Calls LanguageClient_textDocument_implementation.
+
+*(lcn-code-action)*
+Calls LanguageClient_textDocument_codeAction if called in normal model or
+LanguageClient_textDocument_visualCodeAction if called in visual mode.
+
+*(lcn-code-lens-action)*
+Calls LanguageClient_handleCodeLensAction.
+
+*(lcn-symbols)*
+Calls LanguageClient_textDocument_documentSymbol.
+
+*(lcn-highlight)*
+Calls LanguageClient_textDocument_documentHighlight.
+
+*(lcn-explain-error)*
+Calls LanguageClient_textDocument_explainErrorAtPoint.
+
+*(lcn-format)*
+Calls LanguageClient_textDocument_formatting.
+
+*(lcn-format-sync)*
+Calls LanguageClient_textDocument_formatting_sync.
+
+*(lcn-diagnostics-next)*
+Calls LanguageClient_diagnosticsNext.
+
+*(lcn-diagnostics-prev)*
+Calls LanguageClient_diagnosticsPrevious.
+
+
+==============================================================================
+6. Events                                               *LanguageClientEvents*
 
 LanguageClient provides two events for use with |User| |autocmd|s.
 
-5.1 LanguageClientStarted
+6.1 LanguageClientStarted
 *LanguageClientStarted*
 
 This event is triggered after LanguageClient has successfully started.
 
-5.2 LanguageClientStopped
+6.2 LanguageClientStopped
 *LanguageClientStopped*
 
 This event is triggered after LanguageClient has stopped.
@@ -887,23 +1187,28 @@ Example: >
     autocmd User LanguageClientStopped setlocal signcolumn=auto
   augroup END
 
-5.3 LanguageClientDiagnosticsChanged
+6.3 LanguageClientDiagnosticsChanged
 *LanguageClientDiagnosticsChanged*
 
 This event is triggered when diagnostics changed.
 
-5.4 LanguageClientTextDocumentDidOpenPost
+6.4 LanguageClientTextDocumentDidOpenPost
 *LanguageClientTextDocumentDidOpenPost*
 
 Triggered after textDocument/didOpen notification is sent to language server.
 
+6.5 LanguageServerCrashed
+*LanguageServerCrashed*
+
+This event is triggered when a language server unexpectedly quits.
+
 ==============================================================================
-6. License                                             *LanguageClientLicense*
+7. License                                             *LanguageClientLicense*
 
 The MIT License.
 
 ==============================================================================
-7. Bugs                                                   *LanguageClientBugs*
+8. Bugs                                                   *LanguageClientBugs*
 
 Please report all bugs at https://github.com/autozimu/LanguageClient-neovim/issues
 
@@ -924,7 +1229,7 @@ which can work like a proxy and logs all stdin and stdout of the language
 server into a log file.
 
 ==============================================================================
-8. Contributing                                   *LanguageClientContributing*
+9. Contributing                                   *LanguageClientContributing*
 
 https://github.com/autozimu/LanguageClient-neovim
 

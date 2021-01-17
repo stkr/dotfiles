@@ -405,7 +405,9 @@ endif
     " Overlays / context menus
     let g:which_key_map.c = { 'name' : '+context' }
     let g:which_key_map.c.h = 'hover'
+    let g:which_key_map.c.i = 'info'
     nnoremap <Leader>ch :<C-u>call LanguageClient_textDocument_hover()<CR>
+    nnoremap <Leader>ci :<C-u>call LanguageClient_textDocument_hover()<CR>
 
     " Useful common substitution commands
     " We make all substitution commands per default operate on the full buffer.
@@ -546,6 +548,12 @@ endif
         \ 'cpp': ['clangd'],
         \ 'c': ['clangd'],
         \ }
+
+
+    let g:LanguageClient_selectionUI = "location-list"
+    let g:LanguageClient_selectionUIContextMenu = 0
+    let g:LanguageClient_useFloatingHover = 0
+    let g:LanguageClient_usePopupHover = 0
 
     " let g:LanguageClient_loggingLevel = 'DEBUG'
     " let g:LanguageClient_virtualTextPrefix = ''
