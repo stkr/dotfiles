@@ -62,19 +62,12 @@ elif [ -f /mingw64/share/git/completion/git-completion.bash ]; then
      . /mingw64/share/git/completion/git-completion.bash
 fi
 
-if [ -f ~/.git-prompt.sh ]; then
-     GIT_PS1_SHOWDIRTYSTATE=1
-     GIT_PS1_SHOWSTASHSTATE=1
-     GIT_PS1_SHOWUNTRACKEDFILES=1
-     . ~/.git-prompt.sh
-fi
-
 for f in ~/.bashrc.d/*.bash; do source "$f"; done
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\[$(__git_ps1)\]'$'\n$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]'$'\n$ '
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h \w\[$(__git_ps1)\]'$'\n$ '
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h \w'$'\n$ '
 fi
 unset color_prompt force_color_prompt
 
