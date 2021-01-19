@@ -117,6 +117,11 @@ case "$( hostname )" in
         export TMUX_STATUS_FG="colour255"
         ;;
 
+    *.nxdi.us-cdc01.nxp.com)
+        export TMUX_STATUS_BG="blue"
+        export TMUX_STATUS_FG="colour255"
+        ;;
+
     *)
         export TMUX_STATUS_BG="black"
         export TMUX_STATUS_FG="white"
@@ -158,6 +163,9 @@ alias man="TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man"
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
+
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+export LD_LIBRARY_PATH="$HOME/lib:$HOME/.local/lib:$LD_LIBRARY_PATH"
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
