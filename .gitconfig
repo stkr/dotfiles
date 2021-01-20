@@ -1,7 +1,7 @@
 [core]
 	eol = lf
 	autocrlf = input
-	editor = gvim -f
+	editor = vim -f
 [alias]
     co = checkout
     ci = commit
@@ -33,13 +33,13 @@
 
 
 [merge]
-	tool = gvimdiff -f
+	tool = vimdiff -f
 	conflictstyle = diff3
 [mergetool]
 	prompt = false
 
 [diff]
-	tool = gvim -f
+	tool = vim -f
 
 [pull]
 	rebase = false
