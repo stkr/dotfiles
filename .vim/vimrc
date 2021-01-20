@@ -367,47 +367,18 @@ endif
     " Finding stuff
     let g:which_key_map.f = { 'name' : '+find' }
     let g:which_key_map.f.f = 'file'
-    let g:which_key_map.f.c = 'class'
-    let g:which_key_map.f.s = 'symbol'
     let g:which_key_map.f.b = 'buffer'
-    let g:which_key_map.f.r = 'references'
-    let g:which_key_map.f.u = 'usages'
     let g:which_key_map.f.h = 'history'
     let g:which_key_map.f.t = 'tag'
     nnoremap <Leader>ff :<C-u>Files<CR>
-    nnoremap <Leader>fc :<C-u>call LanguageClient_textDocument_documentSymbol()<CR>
-    nnoremap <Leader>fs :<C-u>call LanguageClient_textDocument_documentSymbol()<CR>
     nnoremap <Leader>fb :<C-u>Buffers<CR>
-    nnoremap <Leader>fr :<C-u>call LanguageClient_textDocument_references()<CR>
-    nnoremap <Leader>fu :<C-u>call LanguageClient_textDocument_references()<CR>
     nnoremap <Leader>fh :<C-u>History<CR>
     nnoremap <Leader>ft :<C-u>Tags<CR>
 
-    " Going to stuff
-    let g:which_key_map.g = { 'name' : '+goto' }
-    let g:which_key_map.g.d = 'definition'
-    let g:which_key_map.g.i = 'implementation'
-    let g:which_key_map.g.t = 'type definition'
-    nnoremap <Leader>gd :<C-u>call LanguageClient#textDocument_definition()<CR>
-    nnoremap <Leader>gi :<C-u>call LanguageClient#textDocument_implementation()<CR>
-    nnoremap <Leader>gt :<C-u>call LanguageClient#textDocument_typeDefinition()<CR>
-
     " Refactoring stuff
     let g:which_key_map.r = { 'name' : '+refactor' }
-    let g:which_key_map.r.r = 'rename'
-    let g:which_key_map.r.m = 'menu...'
     let g:which_key_map.r.f = 'format'
-    nnoremap <Leader>rr :<C-u>call LanguageClient_textDocument_rename()<CR>
-    nnoremap <Leader>rm :<C-u>call LanguageClient_contextMenu()<CR>
     nnoremap <Leader>rf :<C-u>call FormatDocument()<CR>
-    vnoremap <Leader>rf :<C-u>call LanguageClient#textDocument_rangeFormatting()<CR>
-
-    " Overlays / context menus
-    let g:which_key_map.c = { 'name' : '+context' }
-    let g:which_key_map.c.h = 'hover'
-    let g:which_key_map.c.i = 'info'
-    nnoremap <Leader>ch :<C-u>call LanguageClient_textDocument_hover()<CR>
-    nnoremap <Leader>ci :<C-u>call LanguageClient_textDocument_hover()<CR>
 
     " Useful common substitution commands
     " We make all substitution commands per default operate on the full buffer.
@@ -543,43 +514,6 @@ endif
 
 " Code completion {{{
 
-    let g:LanguageClient_serverCommands = {
-        \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-        \ 'cpp': ['clangd'],
-        \ 'c': ['clangd'],
-        \ }
-
-
-    let g:LanguageClient_selectionUI = "location-list"
-    let g:LanguageClient_selectionUIContextMenu = 0
-    let g:LanguageClient_useFloatingHover = 0
-    let g:LanguageClient_usePopupHover = 0
-
-    " let g:LanguageClient_loggingLevel = 'DEBUG'
-    " let g:LanguageClient_virtualTextPrefix = ''
-    " let g:LanguageClient_loggingFile =  expand('c:/tmp/LanguageClient.log')
-    " let g:LanguageClient_serverStderr = expand('c:/tmp/LanguageServer.log')
-
-    " The LSP plugins typically offer a lot of functionality.
-    " Some of which replaces original vim functionality (e.g. goto definition from LSP can replace
-    " the goto definition from tags). However, there are usecases for ctags as well (LSP is fragile
-    " at times. So the question is wheter it is clever to replace all the regular vim mappings with
-    " LC mappings or create alternate ones. While the first breaks on bad (or not present) language
-    " server implementations, the second one needs the user to decide upfront which one he wants and
-    " requires to memorize more mappings.
-
-    " An approach to map keys only for filetypes wich have a language server registered (this does
-    " not mean that it is working, nor that it produces meaningful responses) is illustrated below:
-    " function LC_maps()
-    "   if has_key(g:LanguageClient_serverCommands, &filetype)
-    "     nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>
-    "     nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
-    "     nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-    "   endif
-    " endfunction
-
-    " autocmd FileType * call LC_maps()
-
     set completeopt-=preview
     set completeopt+=menuone
     set completeopt+=noselect
@@ -628,8 +562,6 @@ endif
             edit
         elseif &filetype ==# 'json'
             :% !python -m json.tool
-        else
-            LanguageClient#textDocument_formatting()
         endif
     endfunction
 " }}}
@@ -665,8 +597,5 @@ endif
     " <C-Home> and <C-End> go up and down the location list and wrap around
     nnoremap <silent> [l :call WrapCommand('up', 'l')<CR>
     nnoremap <silent> ]l  :call WrapCommand('down', 'l')<CR>
-
-    " nnoremap <silent> [r :LspNextReference<CR>
-    " nnoremap <silent> ]r :LspPreviousReference<CR>
 
 " }}}
