@@ -459,18 +459,6 @@ endif
     vnoremap <expr> p 'pgv"'.v:register.'y`]'
     nnoremap p p`]
 
-    " Shift h, l to move to beginning and end of line
-    noremap H ^
-    noremap L $
-
-    " Ctrl h, l to move between words
-    noremap <C-h> b
-    noremap <C-l> w
-
-    " Ctrl j, k for page down, up
-    nnoremap <C-j> <C-d>
-    nnoremap <C-k> <C-u>
-
 " }}}
 
 " Colorscheme and final setup {{{
