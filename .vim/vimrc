@@ -443,9 +443,6 @@ endif
     nnoremap <leader>q :Sayonara<cr>
     nnoremap <leader>Q :Sayonara!<cr>
 
-    " Double ESC closes everything, discarding changes and terminates with a non-zero exit code
-    nnoremap <ESC><ESC> :qa<CR>
-
     " Command line abbreviation so %% expands to the full path of
     " the directory that contains the current file
     cabbr <expr> %% expand('%:p:h')
