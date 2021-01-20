@@ -90,6 +90,11 @@ alias la='ls -A'
 alias dotfiles='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias dt='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
+# some project-specific aliases
+alias mlogin=/pkg/fs-foundation-/dynamic/bin/mlogin
+export EDA_ENV=TR
+unset CADENV_HOME
+
 # This is a bit convoluted, the goal is to fix man pages - per default they use
 # some highlights which do clash with colorschemes that have a bright background.
 # In order to fix that, we make less use a terminfo that sets those highlights to
