@@ -1,0 +1,28 @@
+{
+    "telemetry.enableTelemetry": false,
+    "telemetry.enableCrashReporter": false,
+    "extensions.ignoreRecommendations": true,
+    "editor.renderWhitespace": "none",
+    "editor.renderControlCharacters": false,
+    "workbench.colorTheme": "Default Light+",
+    "git.ignoreMissingGitWarning": true,
+    "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<leader>", "<leader>"],
+      "after": [":", "w", "<CR>"]
+    },
+    ],
+    "vim.insertModeKeyBindings": [
+    { 
+        "before": ["k", "j"], 
+        "after": ["<Esc>"] 
+    },
+    { 
+        "before": ["j", "k"], 
+        "after": ["<Esc>"] 
+    },
+    ],
+    "vim.replaceWithRegister": true,
+    "vim.leader": ",",
+    "vim.useSystemClipboard": true
+}
