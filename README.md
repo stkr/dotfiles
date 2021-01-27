@@ -52,6 +52,14 @@ Menu entry:
     Parameter:  -Single -run {Bash::Msys2-64} -new_console:d:"%P"
 
 
+## Starting git bash in a directory
+
+To start git-bash in a directory from Total Commander, the following Start Menu would work:
+
+    Command:    cmd /c (start /b "%P" "C:\Program Files\Git\git-bash.exe") && exit
+    Parameter: 
+
+
 ## Color mapping between ConEmu and ANSI
 
 The mapping between ConEmu and the ANSI escape codes for colors is not 100% straightforward. The
