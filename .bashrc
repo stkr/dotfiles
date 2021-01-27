@@ -204,3 +204,8 @@ set -o vi
 #     xauth add $( xauth -f "$LOGIN_HOME/.Xauthority" list | tail -1 )
 # fi
 #
+
+# Source the default cargo environment (only applies if rust is instlled on the machine).
+if [ -f  "$HOME/.cargo/env" ]; then
+    source "$HOME/.cargo/env"
+fi
