@@ -126,12 +126,28 @@ For merging, use:
 Explanation: open vim with 4 vertical splits, open the files, jump 3 times to the right, and
 position the current window at the bottom of the screen. 
 
-## Copying within tmux
 
-[3]
+## Clipboard and the terminal
+
+When working remotely in ssh sessions, it is usually not possible to access the hosts clipboard.
+There are several solutions existing to that problem 
+
+  - using xclip and X11 forwarding 
+  - using terminal escape codes
+
+### OSC 52 on mintty
+
+Support for OSC 52 is built-in for mintty. However, it needs to be enabled with a setting in the
+config file: "AllowSetSelection=yes" (see ~/.config/mintty/config).
+
+### OSC 53 on conemu
+
+There are settings decribed at [5], however i was not able to sucessfully reproduce that.
 
 
 [1]: https://www.atlassian.com/git/tutorials/dotfiles
 [2]: https://github.com/microsoft/Git-Credential-Manager-for-Windows
 [3]: https://medium.com/free-code-camp/tmux-in-practice-integration-with-system-clipboard-bcd72c62ff7b
+[4]: https://jdhao.github.io/2021/01/05/nvim_copy_from_remote_via_osc52/
+[5]: https://conemu.github.io/en/SettingsANSI.html
 
