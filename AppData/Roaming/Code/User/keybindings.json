@@ -26,5 +26,20 @@
         "key": "ctrl+k",
         "command": "selectPrevSuggestion",
         "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
+    },
+    {
+        "key": "Enter",
+        "command": "search.focus.nextInputBox",
+        "when": "inSearchEditor && inputBoxFocus || inputBoxFocus && searchViewletVisible"
+    },
+    {
+        "key": "n",
+        "command": "search.action.focusNextSearchResult",
+        "when": "inSearchEditor && ! searchInputBoxFocus"
+    },
+    {
+        "key": "shift+n",
+        "command": "search.action.focusPreviousSearchResult",
+        "when": "inSearchEditor && !searchInputBoxFocus"
     }
 ]

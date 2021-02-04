@@ -26,6 +26,10 @@
           "commands": ["workbench.action.showCommands",]
       },
       {
+          "before": ["leader", "f", "g"],
+          "commands": ["search.action.openNewEditor",]
+      },
+      {
           "before": ["leader", "."],
           "commands": ["workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup",]
       },
@@ -42,5 +46,6 @@
     ],
     "vim.replaceWithRegister": true,
     "vim.leader": ",",
-    "vim.useSystemClipboard": true
+    "vim.useSystemClipboard": true,
+    "search.mode": "newEditor"
 }
