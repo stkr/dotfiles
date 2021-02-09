@@ -1,51 +1,96 @@
 {
-    "telemetry.enableTelemetry": false,
-    "telemetry.enableCrashReporter": false,
-    "extensions.ignoreRecommendations": true,
-    "editor.renderWhitespace": "none",
-    "editor.renderControlCharacters": false,
-    "workbench.colorTheme": "Default Light+",
-    "editor.definitionLinkOpensInPeek": false,
-    "editor.gotoLocation.multipleDefinitions": "goto",
-    "git.ignoreMissingGitWarning": true,
-    "vim.normalModeKeyBindingsNonRecursive": [
-      {
-        "before": ["<leader>", "<leader>"],
-        "commands": ["workbench.action.files.save"]
-      },
-      {
-        "before": ["<leader>", "q"],
-        "after": [":", "q", "<CR>"]
-      },
-      {
-        "before": ["<leader>", "f", "f"],
-        "commands": ["workbench.action.quickOpen"],
-      },
-      {
-          "before": ["leader", "f", "a"],
-          "commands": ["workbench.action.showCommands",]
-      },
-      {
-          "before": ["leader", "f", "g"],
-          "commands": ["search.action.openNewEditor",]
-      },
-      {
-          "before": ["leader", "."],
-          "commands": ["workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup",]
-      },
-    ],
-    "vim.insertModeKeyBindings": [
-    { 
-        "before": ["k", "j"], 
-        "after": ["<Esc>"] 
+  "telemetry.enableTelemetry": false,
+  "telemetry.enableCrashReporter": false,
+  "extensions.ignoreRecommendations": true,
+  "editor.renderWhitespace": "none",
+  "editor.renderControlCharacters": false,
+  "workbench.colorTheme": "Default Light+",
+  "editor.definitionLinkOpensInPeek": false,
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "git.ignoreMissingGitWarning": true,
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": [
+        "<leader>",
+        "<leader>"
+      ],
+      "commands": [
+        "workbench.action.files.save"
+      ]
     },
-    { 
-        "before": ["j", "k"], 
-        "after": ["<Esc>"] 
+    {
+      "before": [
+        "<leader>",
+        "q"
+      ],
+      "after": [
+        ":",
+        "q",
+        "<CR>"
+      ]
     },
-    ],
-    "vim.replaceWithRegister": true,
-    "vim.leader": ",",
-    "vim.useSystemClipboard": true,
-    "search.mode": "newEditor"
+    {
+      "before": [
+        "<leader>",
+        "f",
+        "f"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ],
+    },
+    {
+      "before": [
+        "leader",
+        "f",
+        "a"
+      ],
+      "commands": [
+        "workbench.action.showCommands",
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "f",
+        "g"
+      ],
+      "commands": [
+        "search.action.openNewEditor",
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "."
+      ],
+      "commands": [
+        "workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup",
+      ]
+    },
+  ],
+  "vim.insertModeKeyBindings": [
+    {
+      "before": [
+        "k",
+        "j"
+      ],
+      "after": [
+        "<Esc>"
+      ]
+    },
+    {
+      "before": [
+        "j",
+        "k"
+      ],
+      "after": [
+        "<Esc>"
+      ]
+    },
+  ],
+  "vim.replaceWithRegister": true,
+  "vim.leader": ",",
+  "vim.useSystemClipboard": true,
+  "search.mode": "newEditor"
 }
