@@ -8,6 +8,29 @@
   "editor.definitionLinkOpensInPeek": false,
   "editor.gotoLocation.multipleDefinitions": "goto",
   "git.ignoreMissingGitWarning": true,
+  "vim.visualModeKeyBindingsNonRecursive": [
+    {
+      "before": [
+        "leader",
+        "f",
+        "a"
+      ],
+      "commands": [
+        "workbench.action.showCommands",
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "f",
+        "g"
+      ],
+      "commands": [
+        "editor.action.clipboardCopyAction",
+        "search.action.openNewEditor",
+      ]
+    },
+  ],
   "vim.normalModeKeyBindingsNonRecursive": [
     {
       "before": [
