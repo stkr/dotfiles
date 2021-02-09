@@ -1,6 +1,5 @@
 AllowSetSelection=yes
 Term=xterm-256color
-ThemeFile=mintty
 Font=JetBrains Mono
 FontHeight=10
 FontSmoothing=default
@@ -12,8 +11,7 @@ BackgroundColour=253,246,227
 CursorColour=238,232,213
 
 BoldAsFont=yes
-Term=xterm-256color
-BoldAsColour=yes
+BoldAsColour=no
 Black=7,54,66
 Red=220,50,47
 Green=133,153,0
