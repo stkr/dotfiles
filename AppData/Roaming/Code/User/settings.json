@@ -30,6 +30,13 @@
         "search.action.openNewEditor",
       ]
     },
+
+    // ######################################################### Refactoring
+    {
+      "before": [ "leader", "r", "f" ],
+      "commands": [ "editor.action.formatSelection", ]
+      // Note, there is a normal mode equivalent for formatting a document!
+    },
   ],
   "vim.normalModeKeyBindingsNonRecursive": [
     {
@@ -85,6 +92,60 @@
     {
       "before": [
         "leader",
+        "f",
+        "c"
+      ],
+      "commands": [
+        "workbench.action.showAllSymbols",
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "f",
+        "s"
+      ],
+      "commands": [
+        "workbench.action.gotoSymbol",
+      ]
+    },
+
+    // ######################################################### Windows
+    {
+      "before": [ "leader", "w", "h" ],
+      "commands": [ "workbench.action.focusLeftGroup", ]
+    },
+    {
+      "before": [ "leader", "w", "j" ],
+      "commands": [ "workbench.action.focusBelowGroup", ]
+    },
+    {
+      "before": [ "leader", "w", "k" ],
+      "commands": [ "workbench.action.focusAboveGroup", ]
+    },
+    {
+      "before": [ "leader", "w", "l" ],
+      "commands": [ "workbench.action.focusRightGroup", ]
+    },
+
+    // ######################################################### Refactoring
+    {
+      "before": [ "leader", "r", "f" ],
+      "commands": [ "editor.action.formatDocument", ]
+      // Note, there is a visual mode equivalent for formatting a selection!
+    },
+    {
+      "before": [ "leader", "r", "r" ],
+      "commands": [ "editor.action.rename", ]
+    },
+
+
+
+
+
+    {
+      "before": [
+        "leader",
         "."
       ],
       "commands": [
@@ -115,5 +176,6 @@
   "vim.replaceWithRegister": true,
   "vim.leader": ",",
   "vim.useSystemClipboard": true,
-  "search.mode": "newEditor"
+  "search.mode": "newEditor",
+  "files.autoSave": "onFocusChange"
 }
