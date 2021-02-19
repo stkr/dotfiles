@@ -34,8 +34,15 @@
     // ######################################################### Refactoring
     {
       "before": [ "leader", "r", "f" ],
-      "commands": [ "editor.action.formatSelection", ]
+      "commands": [ "editor.action.formatSelection", ],
       // Note, there is a normal mode equivalent for formatting a document!
+    },
+
+    // ######################################################### Misc
+    // Bind p in visual mode to paste without overriding the current register
+    {
+      "before": [ "p", ],
+      "after": [ "p", "g", "v", "y" ],
     },
   ],
   "vim.normalModeKeyBindingsNonRecursive": [
@@ -139,39 +146,25 @@
       "commands": [ "editor.action.rename", ]
     },
 
-
-
-
-
+    // ######################################################### Misc
+    // Quickly switch between buffers
     {
-      "before": [
-        "leader",
-        "."
-      ],
-      "commands": [
-        "workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup",
-      ]
+      "before": [ "leader", "." ],
+      "commands": [ "workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup", ]
     },
   ],
   "vim.insertModeKeyBindings": [
+
+    // Exit insert mode with jk or kj
     {
-      "before": [
-        "k",
-        "j"
-      ],
-      "after": [
-        "<Esc>"
-      ]
+      "before": [ "k", "j" ],
+      "after": [ "<Esc>" ]
     },
     {
-      "before": [
-        "j",
-        "k"
-      ],
-      "after": [
-        "<Esc>"
-      ]
+      "before": [ "j", "k" ],
+      "after": [ "<Esc>" ]
     },
+
   ],
   "vim.replaceWithRegister": true,
   "vim.leader": ",",
