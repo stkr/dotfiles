@@ -536,7 +536,11 @@ endif
     " and an entry is selected, per default ESC would close the popup but keep the selected entry
     " inserted. With this binding, the selection is cancelled and no text is inserted. Note, for
     " some reason (yet to be understood) this is causing issues when using vim in MSYS.
-    inoremap <expr> <Esc>      pumvisible() ? "\<C-e>" : "\<Esc>"
+    " It also is causing an insertion of a C character to exit insert mode and trigger an undo
+    " operaion on a terminal vim (but only when run on a certain machine (NxDI) - not sure wheter it
+    " is caused by a particular vim version). We are NOT using the mapping for now due to those
+    " reasons.
+    " inoremap <expr> <Esc>      pumvisible() ? "\<C-e>" : "\<Esc>"
 
     inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
     inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
