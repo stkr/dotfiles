@@ -66,56 +66,43 @@
         "<CR>"
       ]
     },
+
+    // ######################################################### Find
     {
-      "before": [
-        "<leader>",
-        "f",
-        "f"
-      ],
-      "commands": [
-        "workbench.action.quickOpen"
-      ],
+      // Find file
+      "before": [ "<leader>", "f", "f" ],
+      "commands": [ "workbench.action.quickOpen" ],
+    },
+
+    {
+      // Find command
+      "before": [ "leader", "f", "a" ],
+      "commands": [ "workbench.action.showCommands", ]
     },
     {
-      "before": [
-        "leader",
-        "f",
-        "a"
-      ],
-      "commands": [
-        "workbench.action.showCommands",
-      ]
+      // Find global (in files)
+      "before": [ "leader", "f", "g" ],
+      "commands": [ "search.action.openNewEditor", ]
     },
     {
-      "before": [
-        "leader",
-        "f",
-        "g"
-      ],
-      "commands": [
-        "search.action.openNewEditor",
-      ]
+      "before": [ "leader", "f", "c" ],
+      "commands": [ "workbench.action.showAllSymbols", ]
     },
     {
-      "before": [
-        "leader",
-        "f",
-        "c"
-      ],
-      "commands": [
-        "workbench.action.showAllSymbols",
-      ]
+      "before": [ "leader", "f", "s" ], 
+      "commands": [ "workbench.action.gotoSymbol", ]
     },
     {
-      "before": [
-        "leader",
-        "f",
-        "s"
-      ],
-      "commands": [
-        "workbench.action.gotoSymbol",
-      ]
+      // Find all references
+      "before": [ "leader", "f", "u" ], 
+      "commands": [ "editor.action.goToReferences", ]
     },
+    {
+      // Find all references
+      "before": [ "leader", "f", "r" ], 
+      "commands": [ "editor.action.goToReferences", ]
+    },
+
 
     // ######################################################### Windows
     {
@@ -152,6 +139,19 @@
       "before": [ "leader", "." ],
       "commands": [ "workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup", ]
     },
+
+    // This is an attempt to resolve the situation of jumplists in combination with search editors 
+    // and/or ctrl+clicking on identifiers to get to their definition/declaration.
+    // It is suggested in https://github.com/VSCodeVim/Vim/issues/3990, however, does not seem to 
+    // improve the situation in my particular usecase.
+    // {
+    //     "key": "ctrl+o",
+    //     "commands": [ "workbench.action.navigateBack" ]
+    // },
+    // {
+    //     "key": "ctrl+i",
+    //     "commands": [ "workbench.action.navigateForward" ]
+    // },
   ],
   "vim.insertModeKeyBindings": [
 
@@ -170,5 +170,6 @@
   "vim.leader": ",",
   "vim.useSystemClipboard": true,
   "search.mode": "newEditor",
-  "files.autoSave": "onFocusChange"
+  "files.autoSave": "onFocusChange",
+  "clangd.onConfigChanged": "restart"
 }
