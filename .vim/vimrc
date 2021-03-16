@@ -94,6 +94,9 @@ endif
 
     set virtualedit=block
 
+    " To avoid clashes in namespace, prefix the commands that fzf.vim exports with Fzf.
+    let g:fzf_command_prefix='Fzf'
+
 " }}}
 
 
@@ -382,10 +385,12 @@ endif
     let g:which_key_map.f.b = 'buffer'
     let g:which_key_map.f.h = 'history'
     let g:which_key_map.f.t = 'tag'
-    nnoremap <Leader>ff :<C-u>Files<CR>
-    nnoremap <Leader>fb :<C-u>Buffers<CR>
-    nnoremap <Leader>fh :<C-u>History<CR>
-    nnoremap <Leader>ft :<C-u>Tags<CR>
+    let g:which_key_map.f.g = 'grep'
+    nnoremap <Leader>ff :<C-u>FzfFiles<CR>
+    nnoremap <Leader>fb :<C-u>FzfBuffers<CR>
+    nnoremap <Leader>fh :<C-u>FzfHistory<CR>
+    nnoremap <Leader>ft :<C-u>FzfTags<CR>
+    nnoremap <Leader>fg :<C-u>Rg 
 
     " Refactoring stuff
     let g:which_key_map.r = { 'name' : '+refactor' }
