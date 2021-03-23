@@ -1,4 +1,3 @@
-
 if has('win32') || has ('win64')
     " On windows, force the language to english.
     language messages en
@@ -237,6 +236,7 @@ endif
 " }}}
 
 
+
 " General Mappings {{{
     " set a map leader for more key combos
     let mapleader = ','
@@ -300,7 +300,6 @@ endif
     " nnoremap <silent><C-k> m`:silent -g/\m^\s*$/d<CR>``:noh<CR>
     " nnoremap <silent><C-j> :set paste<CR>m`O<Esc>``:set nopaste<CR>
 
-    nmap <leader>l :set list!<cr>
     set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:␣
 
     " Toggle highlighting of search results
@@ -339,9 +338,6 @@ endif
     vnoremap $\ <esc>`>o*/<esc>`<O/*<esc>
     vnoremap $< <esc>`>a><esc>`<i<<esc>
 
-    " toggle cursor line
-    nnoremap <leader>i :set cursorline!<cr>
-
     " scroll the viewport faster
     nnoremap <C-e> 3<C-e>
     nnoremap <C-y> 3<C-y>
@@ -374,10 +370,10 @@ endif
     let g:which_key_map.w.k = 'jump up'
     let g:which_key_map.w.h = 'jump left'
     let g:which_key_map.w.l = 'jump right'
-    nmap <Leader>wj <C-W>j
-    nmap <Leader>wk <C-W>k
-    nmap <Leader>wh <C-W>h
-    nmap <Leader>wl <C-W>l
+    nnoremap <Leader>wj <C-W>j
+    nnoremap <Leader>wk <C-W>k
+    nnoremap <Leader>wh <C-W>h
+    nnoremap <Leader>wl <C-W>l
 
     " Finding stuff
     let g:which_key_map.f = { 'name' : '+find' }
@@ -391,11 +387,20 @@ endif
     nnoremap <Leader>fh :<C-u>FzfHistory<CR>
     nnoremap <Leader>ft :<C-u>FzfTags<CR>
     nnoremap <Leader>fg :<C-u>Rg 
+if (has('nvim'))
+    let g:which_key_map.f.r = 'references'
+    nnoremap <Leader>fr <cmd>lua vim.lsp.buf.references()<CR>
+endif
+
 
     " Refactoring stuff
     let g:which_key_map.r = { 'name' : '+refactor' }
     let g:which_key_map.r.f = 'format'
     nnoremap <Leader>rf :<C-u>call FormatDocument()<CR>
+if (has('nvim'))
+    let g:which_key_map.r.r = 'rename'
+    nnoremap <Leader>rr <cmd>lua vim.lsp.buf.rename()<CR>
+endif
 
     " Useful common substitution commands
     " We make all substitution commands per default operate on the full buffer.
@@ -439,8 +444,31 @@ endif
     let g:which_key_map.e = { 'name' : '+edit/open' }
     let g:which_key_map.e.v = '.vimrc'
     let g:which_key_map.e.g = '~/.gitconfig'
-    map <leader>ev :e! <C-R>=g:vim_home<CR>vimrc<CR>
-    map <leader>eg :e! ~/.gitconfig<cr>
+    nnoremap <leader>ev :e! <C-R>=g:vim_home<CR>vimrc<CR>
+    nnoremap <leader>eg :e! ~/.gitconfig<cr>
+
+    " Listing things
+    let g:which_key_map.l = { 'name' : '+list' }
+if (has('nvim'))
+    let g:which_key_map.l.s = { 'name' : 'doc symbols' }
+    nnoremap <leader>ls <cmd>lua vim.lsp.buf.document_symbol()<CR>
+    let g:which_key_map.l.w = { 'name' : 'workspace symbols' }
+    nnoremap <leader>lw <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+endif
+
+    " Toggle features
+    let g:which_key_map.t = { 'name' : '+toggle' }
+    let g:which_key_map.t.l = { 'name' : 'listchars' }
+    let g:which_key_map.t.p = { 'name' : 'paste' }
+    nnoremap <leader>tl :set list!<cr>
+    nnoremap <leader>tp :set paste!<cr>
+
+
+    " Misc
+if (has('nvim'))
+    let g:which_key_map.i = { 'name' : 'info' }
+    nnoremap <leader>i <cmd>lua vim.lsp.buf.hover()<CR>
+endif
 
 
     " shortcuts for 3-way merge
@@ -450,8 +478,8 @@ endif
 
 
     " helpers for dealing with other people's code
-    nmap \t :set ts=4 sts=4 sw=4 noet<cr>
-    nmap \s :set ts=4 sts=4 sw=4 et<cr>
+    " nmap \t :set ts=4 sts=4 sw=4 noet<cr>
+    " nmap \s :set ts=4 sts=4 sw=4 et<cr>
 " }}}
 
 " General Functionality {{{
