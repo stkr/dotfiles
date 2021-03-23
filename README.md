@@ -148,9 +148,28 @@ There are several solutions existing to that problem
 Support for OSC 52 is built-in for mintty. However, it needs to be enabled with a setting in the
 config file: "AllowSetSelection=yes" (see ~/.config/mintty/config).
 
-### OSC 53 on conemu
+### OSC 52 on conemu
 
 There are settings decribed at [5], however i was not able to sucessfully reproduce that.
+
+
+## nvim and vim using the same plugins
+
+The config file for neovim on windows is at
+
+    nvim: ~/AppData/Local/nvim
+
+On windows, the directories where nvim and vim searches for plugin is:
+
+    ~/AppData/Local/nvim-data/site
+
+It is possible ot make nvim pick up the plugins of vim by including vim's plugin path into nvim's
+runtimepath and also use the same vimrc file:
+
+    set runtimepath^=~/.vim runtimepath+=~/.vim/after
+    let &packpath=&runtimepath
+    source ~/.vim/vimrc
+
 
 
 [1]: https://www.atlassian.com/git/tutorials/dotfiles
