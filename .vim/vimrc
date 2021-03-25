@@ -400,6 +400,12 @@ if (has('nvim'))
     nnoremap <Leader>fr <cmd>lua vim.lsp.buf.references()<CR>
 endif
 
+    " Jumping/going to positions
+    let g:which_key_map.g = { 'name' : '+goto' }
+if (has('nvim'))
+    let g:which_key_map.g.d ='definition'
+    nnoremap <Leader>gd <cmd>lua vim.lsp.buf.definition()<CR>
+endif
 
     " Refactoring stuff
     let g:which_key_map.r = { 'name' : '+refactor' }
@@ -408,6 +414,7 @@ endif
 if (has('nvim'))
     let g:which_key_map.r.r = 'rename'
     nnoremap <Leader>rr <cmd>lua vim.lsp.buf.rename()<CR>
+    vnoremap <Leader>rf <cmd>lua vim.lsp.buf.range_formatting()<CR>
 endif
 
     " Useful common substitution commands
@@ -476,7 +483,13 @@ endif
 if (has('nvim'))
     let g:which_key_map.i = { 'name' : 'info' }
     nnoremap <leader>i <cmd>lua vim.lsp.buf.hover()<CR>
+
+    nnoremap ]e <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+    nnoremap [e <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+
+
 endif
+
 
 
     " shortcuts for 3-way merge
