@@ -368,16 +368,20 @@ endif
     " vnoremap <space> zf
 
 
-    " Super fast window movement shortcuts
+    " Super fast window manipulation shortcuts
     let g:which_key_map.w = { 'name' : '+window' }
     let g:which_key_map.w.j = 'jump down'
     let g:which_key_map.w.k = 'jump up'
     let g:which_key_map.w.h = 'jump left'
     let g:which_key_map.w.l = 'jump right'
+    let g:which_key_map.w['<'] = 'smaller'
+    let g:which_key_map.w['>'] = 'bigger'
     nnoremap <Leader>wj <C-W>j
     nnoremap <Leader>wk <C-W>k
     nnoremap <Leader>wh <C-W>h
     nnoremap <Leader>wl <C-W>l
+    nnoremap <silent> <Leader>w< :exe "vertical resize " . (winwidth(0) * 4/5)<CR>
+    nnoremap <silent> <Leader>w> :exe "vertical resize " . (winwidth(0) * 5/4)<CR>
 
     " Finding stuff
     let g:which_key_map.f = { 'name' : '+find' }
@@ -489,8 +493,8 @@ endif
 " General Functionality {{{
 
     " Close buffers but keep splits
-    nnoremap <leader>q :Sayonara<cr>
-    nnoremap <leader>Q :Sayonara!<cr>
+    nnoremap <leader>Q :Sayonara<cr>
+    nnoremap <leader>q :Sayonara!<cr>
 
     " Command line abbreviation so %% expands to the full path of
     " the directory that contains the current file
