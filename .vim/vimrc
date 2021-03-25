@@ -96,6 +96,10 @@ endif
     " To avoid clashes in namespace, prefix the commands that fzf.vim exports with Fzf.
     let g:fzf_command_prefix='Fzf'
 
+    " Preview window on the right side of the window,
+    " hidden by default, ctrl-/ to toggle
+    let g:fzf_preview_window = ['right:hidden', 'ctrl-/']
+
 " }}}
 
 
