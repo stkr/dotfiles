@@ -7,6 +7,7 @@
   "workbench.colorTheme": "Default Light+",
   "editor.definitionLinkOpensInPeek": false,
   "editor.gotoLocation.multipleDefinitions": "goto",
+  "editor.autoClosingBrackets": "never",
   "git.ignoreMissingGitWarning": true,
   "vim.visualModeKeyBindingsNonRecursive": [
     {
@@ -134,10 +135,28 @@
     },
 
     // ######################################################### Misc
+
     // Quickly switch between buffers
     {
       "before": [ "leader", "." ],
       "commands": [ "workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup", ]
+    },
+
+    // Jump through errors/warnings  (this is somewhat a similar thing 
+    // as the quickfix jumping on vim)
+    {
+      "before": ["]", "q"],
+      "commands": ["editor.action.marker.nextInFiles",]
+    },
+    {
+      "before": ["[", "q"],
+      "commands": ["editor.action.marker.prevInFiles",]
+    },
+
+    {
+      // Build
+      "before": ["leader", "b", "b"],
+      "commands": ["workbench.action.tasks.build",]
     },
 
     // This is an attempt to resolve the situation of jumplists in combination with search editors 
