@@ -565,21 +565,43 @@ endif
 
 " Code completion {{{
 
-    set completeopt-=preview
-    set completeopt+=menuone
-    set completeopt+=noselect
-    let g:mucomplete#always_use_completeopt = 1
-    let g:mucomplete#no_mappings = 1
+    " Use <Tab> and <S-Tab> to navigate through popup menu
+    inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+    inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-    " Trigger code completion with tab:
-    function! s:check_back_space() abort
-        let col = col('.') - 1
-        return !col || getline('.')[col - 1]  =~ '\s'
-    endfunction
-    imap <silent><expr> <TAB>
-        \ pumvisible() ? "\<C-n>" :
-        \ <SID>check_back_space() ? "\<TAB>" :
-        \ "\<plug>(MUcompleteFwd)"
+    " Set completeopt to have a better completion experience
+    set completeopt=menuone,noinsert,noselect
+
+    " Avoid showing message extra message when using completion
+    set shortmess+=c
+
+    if (has('nvim'))
+        let g:completion_enable_auto_popup=1
+        let g:completion_matching_smart_case=1
+        let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy', 'all']
+
+        imap <tab> <Plug>(completion_smart_tab)
+        imap <s-tab> <Plug>(completion_smart_s_tab)
+
+
+        let g:completion_chain_complete_list = {
+            \ 'c': [
+            \    {'complete_items': ['lsp', 'snippet']},
+            \    {'mode': '<c-p>'},
+            \    {'mode': '<c-n>'}
+            \],
+            \ 'cpp': [
+            \    {'complete_items': ['lsp', 'snippet']},
+            \    {'mode': '<c-p>'},
+            \    {'mode': '<c-n>'}
+            \],
+            \ 'default': [
+            \    {'complete_items': ['lsp', 'buffers']},
+            \    {'mode': '<c-p>'},
+            \    {'mode': '<c-n>'}
+            \]
+        \}
+    endif
 
     " The next binding makes a difference only when autocompletion is enabled. If the popup is shown
     " and an entry is selected, per default ESC would close the popup but keep the selected entry
@@ -597,9 +619,6 @@ endif
     inoremap <expr> <C-k>      pumvisible() ? "\<C-p>" : "\<C-k>"
     inoremap <expr> <C-d>      pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<C-d>"
     inoremap <expr> <C-u>      pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<C-u>"
-
-    imap <expr> <C-h>          pumvisible() ? "\<plug>(MUcompleteCycFwd)" : "\<C-h>"
-    imap <expr> <C-l>          pumvisible() ? "\<plug>(MUcompleteCycBwd)" : "\<C-l>"
 
 " }}}
 

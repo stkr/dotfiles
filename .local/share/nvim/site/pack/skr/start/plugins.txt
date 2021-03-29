@@ -1,1 +1,3 @@
 487ea4a https://github.com/neovim/nvim-lspconfig.git 
+fc9b2fd https://github.com/nvim-lua/completion-nvim.git
+c36871b https://github.com/steelsojka/completion-buffers.git
