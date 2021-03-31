@@ -404,7 +404,9 @@ endif
     let g:which_key_map.g = { 'name' : '+goto' }
 if (has('nvim'))
     let g:which_key_map.g.d ='definition'
+    let g:which_key_map.g.a ='alternate (source/header)'
     nnoremap <Leader>gd <cmd>lua vim.lsp.buf.definition()<CR>
+    nnoremap <Leader>ga <cmd>ClangdSwitchSourceHeader<CR>
 endif
 
     " Refactoring stuff
@@ -477,6 +479,10 @@ endif
     let g:which_key_map.t.p = { 'name' : 'paste' }
     nnoremap <leader>tl :set list!<cr>
     nnoremap <leader>tp :set paste!<cr>
+if (has('nvim'))
+    let g:which_key_map.t.c = { 'name' : 'autocomplete' }
+    nnoremap <leader>tc :CompletionToggle<cr>
+endif
 
 
     " Misc
@@ -486,8 +492,6 @@ if (has('nvim'))
 
     nnoremap ]e <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
     nnoremap [e <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
-
-
 endif
 
 
@@ -596,7 +600,7 @@ endif
             \    {'mode': '<c-n>'}
             \],
             \ 'default': [
-            \    {'complete_items': ['lsp', 'buffers']},
+            \    {'complete_items': ['buffers']},
             \    {'mode': '<c-p>'},
             \    {'mode': '<c-n>'}
             \]

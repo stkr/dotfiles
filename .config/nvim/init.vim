@@ -5,12 +5,9 @@ source ~/.vim/vimrc
 
 " Language server protocol {{{
 "
-if (has('nvim'))
-    " Enable clangd
-    lua << EOF
-require'lspconfig'.clangd.setup{}
-EOF
-endif
+"
+" Enable clangd with completion-nvim
+lua require'lspconfig'.clangd.setup{on_attach=require'completion'.on_attach}
 " }}}
 "
 
