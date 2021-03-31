@@ -394,7 +394,7 @@ endif
     nnoremap <Leader>fb :<C-u>FzfBuffers<CR>
     nnoremap <Leader>fh :<C-u>FzfHistory<CR>
     nnoremap <Leader>ft :<C-u>FzfTags<CR>
-    nnoremap <Leader>fg :<C-u>Rg 
+    nnoremap <expr> <Leader>fg ':Rg '.expand('<cexpr>')
 if (has('nvim'))
     let g:which_key_map.f.r = 'references'
     nnoremap <Leader>fr <cmd>lua vim.lsp.buf.references()<CR>
