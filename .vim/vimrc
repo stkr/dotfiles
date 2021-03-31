@@ -367,6 +367,9 @@ endif
     " nnoremap <space> za
     " vnoremap <space> zf
 
+    " Comment a line and move to the next line (using vim-commentary)
+    nnoremap <C-/> :Commentary<CR>j
+    vnoremap <C-/> :Commentary<CR>`>j
 
     " Super fast window manipulation shortcuts
     let g:which_key_map.w = { 'name' : '+window' }
