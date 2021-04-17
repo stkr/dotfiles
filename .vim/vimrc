@@ -91,7 +91,7 @@ endif
 
     let g:netrw_winsize=15
 
-    set virtualedit=block
+    set virtualedit=block,onemore
 
     " To avoid clashes in namespace, prefix the commands that fzf.vim exports with Fzf.
     let g:fzf_command_prefix='Fzf'
