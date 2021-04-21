@@ -363,6 +363,10 @@ endif
     nnoremap <silent> ^ g^
     nnoremap <silent> $ g$
 
+    " This enables "after-objects", a textobject that is everything after one of the following
+    " characters. Note this is from a plugin vim-after-objects.
+    autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ')
+
     " Use the space key to toggle folds
     " nnoremap <space> za
     " vnoremap <space> zf
@@ -554,6 +558,10 @@ endif
     colorscheme solarized8_high
 
     syntax on
+
+    " For large files, disable syntax highlighting
+    autocmd Filetype * if getfsize(@%) > 1000000 | setlocal syntax=OFF | endif
+
     filetype plugin indent on
 
     " Highlight the active line and the active column.
