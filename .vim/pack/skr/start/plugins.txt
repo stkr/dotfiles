@@ -13,6 +13,7 @@ ec87af6 https://github.com/jremmen/vim-ripgrep.git
 349340d https://github.com/tpope/vim-commentary.git
 99557c4 https://github.com/jlanzarotta/bufexplorer.git 
 7f52106 https://github.com/junegunn/vim-after-object.git
+27e7cd7 https://github.com/junegunn/rainbow_parentheses.vim.git
 
 deprecated:
 f67ecb5  https://github.com/prabirshrestha/async.vim.git

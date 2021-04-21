@@ -486,8 +486,10 @@ endif
     let g:which_key_map.t = { 'name' : '+toggle' }
     let g:which_key_map.t.l = { 'name' : 'listchars' }
     let g:which_key_map.t.p = { 'name' : 'paste' }
+    let g:which_key_map.t.r = { 'name' : 'rainbowparentheses' }
     nnoremap <leader>tl :set list!<cr>
     nnoremap <leader>tp :set paste!<cr>
+    nnoremap <leader>tr :RainbowParentheses!!<cr>
 if (has('nvim'))
     let g:which_key_map.t.c = { 'name' : 'autocomplete' }
     nnoremap <leader>tc :CompletionToggle<cr>
@@ -561,6 +563,8 @@ endif
 
     " For large files, disable syntax highlighting
     autocmd Filetype * if getfsize(@%) > 1000000 | setlocal syntax=OFF | endif
+
+    let g:rainbow#pairs = [['(', ')'], ['[', ']'],['{','}']]
 
     filetype plugin indent on
 
