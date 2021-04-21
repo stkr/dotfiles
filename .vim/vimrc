@@ -316,7 +316,7 @@ endif
     " nmap <leader>] >>
 
     " switch between current and last buffer
-    nmap <leader>. <c-^>
+    nnoremap <Leader>. :<C-u>FzfBuffers<CR>
 
     " enable . command in visual mode
     vnoremap . :normal .<cr>
@@ -393,11 +393,13 @@ endif
     let g:which_key_map.f.h = 'history'
     let g:which_key_map.f.t = 'tag'
     let g:which_key_map.f.g = 'grep'
+    let g:which_key_map.f['*'] = 'word in files'
     nnoremap <Leader>ff :<C-u>FzfFiles<CR>
     nnoremap <Leader>fb :<C-u>FzfBuffers<CR>
     nnoremap <Leader>fh :<C-u>FzfHistory<CR>
     nnoremap <Leader>ft :<C-u>FzfTags<CR>
-    nnoremap <expr> <Leader>fg ':Rg '.expand('<cexpr>')
+    nnoremap <Leader>fg :Rg ""<left>
+    nnoremap <expr> <Leader>f* ':Rg "'.expand('<cexpr>').'"<CR>'
 if (has('nvim'))
     let g:which_key_map.f.r = 'references'
     nnoremap <Leader>fr <cmd>lua vim.lsp.buf.references()<CR>
@@ -487,12 +489,24 @@ if (has('nvim'))
     nnoremap <leader>tc :CompletionToggle<cr>
 endif
 
+    " Display context help/information
+if (has('nvim'))
+    let g:which_key_map.c = { 'name' : '+context' }
+    let g:which_key_map.c.i = { 'name' : 'info' }
+    let g:which_key_map.c.s = { 'name' : 'signature' }
+    nnoremap <leader>ci <cmd>lua vim.lsp.buf.hover()<CR>
+    nnoremap <leader>cs <cmd>lua vim.lsp.buf.signature_help()<CR>
+endif
+
+    " Buffer management
+    let g:which_key_map.b = { 'name' : '+buffer' }
+    let g:which_key_map.b.e = { 'name' : 'list' }
+    let g:which_key_map.b.t = { 'name' : 'toggle' }
+    " Note, these are imlicitly assigned by bufexplorer plugin
+
 
     " Misc
 if (has('nvim'))
-    let g:which_key_map.i = { 'name' : 'info' }
-    nnoremap <leader>i <cmd>lua vim.lsp.buf.hover()<CR>
-
     nnoremap ]e <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
     nnoremap [e <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
 endif

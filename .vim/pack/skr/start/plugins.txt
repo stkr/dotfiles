@@ -11,6 +11,7 @@ e9d62b4  https://github.com/junegunn/fzf.vim.git
 8e9c05a https://github.com/stefandtw/quickfix-reflector.vim.git
 ec87af6 https://github.com/jremmen/vim-ripgrep.git
 349340d https://github.com/tpope/vim-commentary.git
+99557c4 https://github.com/jlanzarotta/bufexplorer.git 
 
 
 deprecated:
