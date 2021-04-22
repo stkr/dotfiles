@@ -11,6 +11,17 @@ else
     set clipboard=unnamedplus
 endif
 
+" Conditionally disable plugins {{{
+"
+"     The recommendatons for writing a plugin say that if a variable g:loaded_PLUGIN_NAME is deined,
+"     the plugin shall not be loaded. Now, also in this file we depend for certain mappings on
+"     plugins being loaded. However, the logic is a bit backwards. If the particular variable does
+"     NOT exist, the plugin will be loaded. Keep that in mind on conditional loading...
+"
+" }}}
+
+
+
 " General {{{
     " Abbreviations
     abbr funciton function
@@ -245,13 +256,15 @@ endif
     " set a map leader for more key combos
     let mapleader = ','
 
-    " Use vim-which-key plugin to show a description of shortcuts. This is in effect, if one is too
-    " slow typing valid complete leader command sequences.
-    nnoremap <silent> <leader> :WhichKey ','<CR>
-    vnoremap <silent> <leader> :WhichKeyVisual ','<CR>
-    " This is the global variable devining the descriptions. It is filled below, close to the key
-    " mappings. Note, this map needs to be registered at the plugin (in a after/plugin/*.vim file).
-    let g:which_key_map = {}
+    if ! exists('g:loaded_vim_which_key')
+        " Use vim-which-key plugin to show a description of shortcuts. This is in effect, if one is too
+        " slow typing valid complete leader command sequences.
+        nnoremap <silent> <leader> :WhichKey ','<CR>
+        vnoremap <silent> <leader> :WhichKeyVisual ','<CR>
+        " This is the global variable devining the descriptions. It is filled below, close to the key
+        " mappings. Note, this map needs to be registered at the plugin (in a after/plugin/*.vim file).
+        let g:which_key_map = {}
+    endif
 
 
 
@@ -376,13 +389,15 @@ endif
     vnoremap <C-/> :Commentary<CR>`>j
 
     " Super fast window manipulation shortcuts
-    let g:which_key_map.w = { 'name' : '+window' }
-    let g:which_key_map.w.j = 'jump down'
-    let g:which_key_map.w.k = 'jump up'
-    let g:which_key_map.w.h = 'jump left'
-    let g:which_key_map.w.l = 'jump right'
-    let g:which_key_map.w['<'] = 'smaller'
-    let g:which_key_map.w['>'] = 'bigger'
+    if ! exists('g:loaded_vim_which_key')
+        let g:which_key_map.w = { 'name' : '+window' }
+        let g:which_key_map.w.j = 'jump down'
+        let g:which_key_map.w.k = 'jump up'
+        let g:which_key_map.w.h = 'jump left'
+        let g:which_key_map.w.l = 'jump right'
+        let g:which_key_map.w['<'] = 'smaller'
+        let g:which_key_map.w['>'] = 'bigger'
+    endif
     nnoremap <Leader>wj <C-W>j
     nnoremap <Leader>wk <C-W>k
     nnoremap <Leader>wh <C-W>h
@@ -391,39 +406,51 @@ endif
     nnoremap <silent> <Leader>w> :exe "vertical resize " . (winwidth(0) * 5/4)<CR>
 
     " Finding stuff
-    let g:which_key_map.f = { 'name' : '+find' }
-    let g:which_key_map.f.f = 'file'
-    let g:which_key_map.f.b = 'buffer'
-    let g:which_key_map.f.h = 'history'
-    let g:which_key_map.f.t = 'tag'
-    let g:which_key_map.f.g = 'grep'
-    let g:which_key_map.f['*'] = 'word in files'
+    if ! exists('g:loaded_vim_which_key')
+        let g:which_key_map.f = { 'name' : '+find' }
+        let g:which_key_map.f.f = 'file'
+        let g:which_key_map.f.b = 'buffer'
+        let g:which_key_map.f.h = 'history'
+        let g:which_key_map.f.t = 'tag'
+        let g:which_key_map.f.g = 'grep'
+        let g:which_key_map.f['*'] = 'word in files'
+        if (has('nvim'))
+            let g:which_key_map.f.r = 'references'
+        endif
+    endif
     nnoremap <Leader>ff :<C-u>FzfFiles<CR>
     nnoremap <Leader>fb :<C-u>FzfBuffers<CR>
     nnoremap <Leader>fh :<C-u>FzfHistory<CR>
     nnoremap <Leader>ft :<C-u>FzfTags<CR>
     nnoremap <Leader>fg :Rg ""<left>
     nnoremap <expr> <Leader>f* ':Rg "'.expand('<cexpr>').'"<CR>'
-if (has('nvim'))
-    let g:which_key_map.f.r = 'references'
-    nnoremap <Leader>fr <cmd>lua vim.lsp.buf.references()<CR>
-endif
+    if (has('nvim'))
+        nnoremap <Leader>fr <cmd>lua vim.lsp.buf.references()<CR>
+    endif
 
     " Jumping/going to positions
-    let g:which_key_map.g = { 'name' : '+goto' }
-if (has('nvim'))
-    let g:which_key_map.g.d ='definition'
-    let g:which_key_map.g.a ='alternate (source/header)'
-    nnoremap <Leader>gd <cmd>lua vim.lsp.buf.definition()<CR>
-    nnoremap <Leader>ga <cmd>ClangdSwitchSourceHeader<CR>
-endif
+    if ! exists('g:loaded_vim_which_key')
+        let g:which_key_map.g = { 'name' : '+goto' }
+        if (has('nvim'))
+            let g:which_key_map.g.d ='definition'
+            let g:which_key_map.g.a ='alternate (source/header)'
+        endif
+    endif
+    if (has('nvim'))
+        nnoremap <Leader>gd <cmd>lua vim.lsp.buf.definition()<CR>
+        nnoremap <Leader>ga <cmd>ClangdSwitchSourceHeader<CR>
+    endif
 
     " Refactoring stuff
-    let g:which_key_map.r = { 'name' : '+refactor' }
-    let g:which_key_map.r.f = 'format'
+    if ! exists('g:loaded_vim_which_key')
+        let g:which_key_map.r = { 'name' : '+refactor' }
+        let g:which_key_map.r.f = 'format'
+        if (has('nvim'))
+            let g:which_key_map.r.r = 'rename'
+        endif
+    endif
     nnoremap <Leader>rf :<C-u>call FormatDocument()<CR>
 if (has('nvim'))
-    let g:which_key_map.r.r = 'rename'
     nnoremap <Leader>rr <cmd>lua vim.lsp.buf.rename()<CR>
     vnoremap <Leader>rf <cmd>lua vim.lsp.buf.range_formatting()<CR>
 endif
@@ -431,13 +458,15 @@ endif
     " Useful common substitution commands
     " We make all substitution commands per default operate on the full buffer.
     " To have it operate on something else, use visual mode.
-    let g:which_key_map.s = { 'name' : '+subst' }
+    if ! exists('g:loaded_vim_which_key')
+        let g:which_key_map.s = { 'name' : '+subst' }
 
-    " Substitute slashes
-    let g:which_key_map.s.s = { 'name' : '+slashes' }
-    let g:which_key_map.s.s.u = 'unix'
-    let g:which_key_map.s.s.l = 'linux'
-    let g:which_key_map.s.s.w = 'windows'
+        " Substitute slashes
+        let g:which_key_map.s.s = { 'name' : '+slashes' }
+        let g:which_key_map.s.s.u = 'unix'
+        let g:which_key_map.s.s.l = 'linux'
+        let g:which_key_map.s.s.w = 'windows'
+    endif
     " Convert backslashes to forward slashes (windows->unix)
     nnoremap <leader>ssu :s!\\!/!g<CR>
     vnoremap <leader>ssu :s!\\!/!g<CR>
@@ -448,17 +477,21 @@ endif
     nnoremap <leader>ssw :s!/!\\!g<CR>
     vnoremap <leader>ssw :s!/!\\!g<CR>
     " Convert a hex string to comma separated list of bytes
-    let g:which_key_map.s.h = { 'name' : '+hex' }
-    let g:which_key_map.s.h.b = 'bytes (c)'
+    if ! exists('g:loaded_vim_which_key')
+        let g:which_key_map.s.h = { 'name' : '+hex' }
+        let g:which_key_map.s.h.b = 'bytes (c)'
+    endif
     nnoremap <leader>shb :s!\([0-9a-fA-F][0-9a-fA-F]\)!0x\1, !g<CR>
     vnoremap <leader>shb :s!\([0-9a-fA-F][0-9a-fA-F]\)!0x\1, !g<CR>
 
     " Substitute whitespace
-    let g:which_key_map.s.w = { 'name' : '+whitespace' }
-    let g:which_key_map.s.w.e = 'whitespace at eol'
-    let g:which_key_map.s.w.n = 'consecutive newlines'
-    let g:which_key_map.s.w.u = 'unix eol'
-    let g:which_key_map.s.w.w = 'windows eol'
+    if ! exists('g:loaded_vim_which_key')
+        let g:which_key_map.s.w = { 'name' : '+whitespace' }
+        let g:which_key_map.s.w.e = 'whitespace at eol'
+        let g:which_key_map.s.w.n = 'consecutive newlines'
+        let g:which_key_map.s.w.u = 'unix eol'
+        let g:which_key_map.s.w.w = 'windows eol'
+    endif
     nnoremap <leader>swe :s/\s\+$<cr>
     vnoremap <leader>swe :s/\s\+$<cr>
     nnoremap <leader>swn :s/\n\{2,}/\r\r/g<cr>
@@ -467,47 +500,63 @@ endif
     nnoremap <leader>sww :<C-u>set ff=dos<cr>
 
     " Edit commonly used filed
-    let g:which_key_map.e = { 'name' : '+edit/open' }
-    let g:which_key_map.e.v = '.vimrc'
-    let g:which_key_map.e.g = '~/.gitconfig'
+    if ! exists('g:loaded_vim_which_key')
+        let g:which_key_map.e = { 'name' : '+edit/open' }
+        let g:which_key_map.e.v = '.vimrc'
+        let g:which_key_map.e.g = '~/.gitconfig'
+    endif
     nnoremap <leader>ev :e! <C-R>=g:vim_home<CR>vimrc<CR>
     nnoremap <leader>eg :e! ~/.gitconfig<cr>
 
     " Listing things
-    let g:which_key_map.l = { 'name' : '+list' }
-if (has('nvim'))
-    let g:which_key_map.l.s = { 'name' : 'doc symbols' }
-    nnoremap <leader>ls <cmd>lua vim.lsp.buf.document_symbol()<CR>
-    let g:which_key_map.l.w = { 'name' : 'workspace symbols' }
-    nnoremap <leader>lw <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-endif
+    if ! exists('g:loaded_vim_which_key')
+        let g:which_key_map.l = { 'name' : '+list' }
+        if (has('nvim'))
+            let g:which_key_map.l.s = { 'name' : 'doc symbols' }
+            let g:which_key_map.l.w = { 'name' : 'workspace symbols' }
+        endif
+    endif
+    if (has('nvim'))
+        nnoremap <leader>ls <cmd>lua vim.lsp.buf.document_symbol()<CR>
+        nnoremap <leader>lw <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+    endif
 
     " Toggle features
-    let g:which_key_map.t = { 'name' : '+toggle' }
-    let g:which_key_map.t.l = { 'name' : 'listchars' }
-    let g:which_key_map.t.p = { 'name' : 'paste' }
-    let g:which_key_map.t.r = { 'name' : 'rainbowparentheses' }
+    if ! exists('g:loaded_vim_which_key')
+        let g:which_key_map.t = { 'name' : '+toggle' }
+        let g:which_key_map.t.l = { 'name' : 'listchars' }
+        let g:which_key_map.t.p = { 'name' : 'paste' }
+        let g:which_key_map.t.r = { 'name' : 'rainbowparentheses' }
+        if (has('nvim'))
+            let g:which_key_map.t.c = { 'name' : 'autocomplete' }
+        endif
+    endif
     nnoremap <leader>tl :set list!<cr>
     nnoremap <leader>tp :set paste!<cr>
     nnoremap <leader>tr :RainbowParentheses!!<cr>
-if (has('nvim'))
-    let g:which_key_map.t.c = { 'name' : 'autocomplete' }
-    nnoremap <leader>tc :CompletionToggle<cr>
-endif
+    if (has('nvim'))
+        nnoremap <leader>tc :CompletionToggle<cr>
+    endif
 
     " Display context help/information
-if (has('nvim'))
-    let g:which_key_map.c = { 'name' : '+context' }
-    let g:which_key_map.c.i = { 'name' : 'info' }
-    let g:which_key_map.c.s = { 'name' : 'signature' }
-    nnoremap <leader>ci <cmd>lua vim.lsp.buf.hover()<CR>
-    nnoremap <leader>cs <cmd>lua vim.lsp.buf.signature_help()<CR>
-endif
+    if ! exists('g:loaded_vim_which_key')
+        let g:which_key_map.c = { 'name' : '+context' }
+        if (has('nvim'))
+            let g:which_key_map.c.i = { 'name' : 'info' }
+            let g:which_key_map.c.s = { 'name' : 'signature' }
+        endif
+    endif
+    if (has('nvim'))
+        nnoremap <leader>ci <cmd>lua vim.lsp.buf.hover()<CR>
+        nnoremap <leader>cs <cmd>lua vim.lsp.buf.signature_help()<CR>
+    endif
 
     " Buffer management
-    let g:which_key_map.b = { 'name' : '+buffer' }
-    let g:which_key_map.b.e = { 'name' : 'list' }
-    let g:which_key_map.b.t = { 'name' : 'toggle' }
+    if ! exists('g:loaded_vim_which_key')
+        let g:which_key_map.b = { 'name' : '+buffer' }
+        let g:which_key_map.b.e = { 'name' : 'list' }
+        let g:which_key_map.b.t = { 'name' : 'toggle' }
+    endif
     " Note, these are imlicitly assigned by bufexplorer plugin
 
 
