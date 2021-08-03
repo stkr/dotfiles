@@ -39,7 +39,7 @@
 	prompt = false
 
 [diff]
-	tool = vim -f
+	tool = vimdiff -f
 
 [pull]
 	rebase = false
