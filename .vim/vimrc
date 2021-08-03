@@ -317,7 +317,7 @@ endif
     " nnoremap <silent><C-k> m`:silent -g/\m^\s*$/d<CR>``:noh<CR>
     " nnoremap <silent><C-j> :set paste<CR>m`O<Esc>``:set nopaste<CR>
 
-    set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:␣
+    set listchars=eol:¬,tab:>\ ,trail:~,extends:>,precedes:<,space:.
 
     " Toggle highlighting of search results
     ":nnoremap <silent><expr> <Leader>s (&hls && v:hlsearch ? ':nohls' : ':set hls')."\n"
