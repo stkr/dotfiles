@@ -329,7 +329,7 @@ endif
     " nmap <leader>] >>
 
     " switch between current and last buffer
-    nnoremap <Leader>. :<C-u>FzfBuffers<CR>
+    nnoremap <Leader>. :<C-u>:BufExplorer<CR>j
 
     " enable . command in visual mode
     vnoremap . :normal .<cr>
