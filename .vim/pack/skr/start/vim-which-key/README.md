@@ -14,11 +14,13 @@
     * [`timeoutlen`](#timeoutlen)
     * [Special keys](#special-keys)
     * [Configuration](#configuration)
-        * [Miminal Configuration](#miminal-configuration)
+        * [Minimal Configuration](#minimal-configuration)
         * [Example](#example)
         * [Hide statusline](#hide-statusline)
     * [Commands](#commands)
     * [Options](#options)
+    * [FAQ](#faq)
+        * [How to map some special keys like `<BS>`?](#how-to-map-some-special-keys-like-bs)
 * [Credit](#credit)
 
 <!-- /TOC -->
@@ -111,7 +113,10 @@ Please note that no matter which mappings and menus you configure, your original
 
 ### Configuration
 
-#### Miminal Configuration
+- For neovim, [nvim-whichkey-setup.lua](https://github.com/AckslD/nvim-whichkey-setup.lua) provides a wrapper around vim-which-key to simplify configuration in lua.
+  It also solves issues (see #126) when the mapped command is more complex and makes it easy to also map `localleader` and keymaps in visual mode (see #155).
+
+#### Minimal Configuration
 
 `:WhichKey` and `:WhichKeyVisual` are the primary way of interacting with this plugin.
 
@@ -145,9 +150,9 @@ let g:which_key_map['w'] = {
       \ 'l' : ['<C-W>l'     , 'window-right']          ,
       \ 'k' : ['<C-W>k'     , 'window-up']             ,
       \ 'H' : ['<C-W>5<'    , 'expand-window-left']    ,
-      \ 'J' : ['resize +5'  , 'expand-window-below']   ,
+      \ 'J' : [':resize +5'  , 'expand-window-below']   ,
       \ 'L' : ['<C-W>5>'    , 'expand-window-right']   ,
-      \ 'K' : ['resize -5'  , 'expand-window-up']      ,
+      \ 'K' : [':resize -5'  , 'expand-window-up']      ,
       \ '=' : ['<C-W>='     , 'balance-window']        ,
       \ 's' : ['<C-W>s'     , 'split-window-below']    ,
       \ 'v' : ['<C-W>v'     , 'split-window-below']    ,
@@ -219,7 +224,14 @@ let g:which_key_map.o = {
 " =======================================================
 " Create menus not based on existing mappings:
 " =======================================================
-" Provide commands(ex-command, <Plug>/<C-W>/<C-d> mapping, etc.) and descriptions for existing mappings
+" Provide commands(ex-command, <Plug>/<C-W>/<C-d> mapping, etc.)
+" and descriptions for the existing mappings.
+"
+" Note:
+" Some complicated ex-cmd may not work as expected since they'll be
+" feed into `feedkeys()`, in which case you have to define a decicated
+" Command or function wrapper to make it work with vim-which-key.
+" Ref issue #126, #133 etc.
 let g:which_key_map.b = {
       \ 'name' : '+buffer' ,
       \ '1' : ['b1'        , 'buffer 1']        ,
@@ -276,18 +288,25 @@ autocmd  FileType which_key set laststatus=0 noshowmode noruler
 
 See more details about commands and options via `:h vim-which-key`.
 
-Command              | Description
-:----                | :----:
-`:WhichKey {prefix}` | Open the guide window for the given prefix
-`:WhichKey! {dict}`  | Open the guide window for a given dictionary directly
+| Command              |                      Description                      |
+| :------------------- | :---------------------------------------------------: |
+| `:WhichKey {prefix}` |      Open the guide window for the given prefix       |
+| `:WhichKey! {dict}`  | Open the guide window for a given dictionary directly |
 
 ### Options
 
-Variable               | Default    | Description
-:----                  | :----:     | :----:
-`g:which_key_vertical` | 0          | show popup vertically
-`g:which_key_position` | `botright` | split a window at the bottom
-`g:which_key_hspace`   | 5          | minimum horizontal space between columns
+| Variable               |  Default   |                 Description                 |
+| :--------------------- | :--------: | :-----------------------------------------: |
+| `g:which_key_vertical` |     0      |            show popup vertically            |
+| `g:which_key_position` | `botright` |        split a window at the bottom         |
+| `g:which_key_hspace`   |     5      |  minimum horizontal space between columns   |
+| `g:which_key_centered` |     1      | make all keybindings centered in the middle |
+
+### FAQ
+
+#### How to map some special keys like `<BS>`?
+
+See [#178](https://github.com/liuchengxu/vim-which-key/issues/178).
 
 ## Credit
 

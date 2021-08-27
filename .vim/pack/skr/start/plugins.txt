@@ -4,7 +4,7 @@ f133579  https://github.com/lifepillar/vim-mucomplete.git
 7e4da6e  https://github.com/tpope/vim-abolish.git
 31aee09  https://github.com/junegunn/vim-slash.git
 
-b940914  https://github.com/liuchengxu/vim-which-key.git
+da2934f  https://github.com/liuchengxu/vim-which-key.git
 1217520  https://github.com/inkarkat/vim-ReplaceWithRegister.git
 e9d62b4  https://github.com/junegunn/fzf.vim.git
 
