@@ -171,6 +171,23 @@ runtimepath and also use the same vimrc file:
     source ~/.vim/vimrc
 
 
+## Hostname specific colorization of the tmux status line
+
+In order to easily identify the machine that a tmux session is running on (when working remotely),
+for each machine, a separate ~/.tmux.conf file exists. The per-machine split is done by using
+different branches. The table below gives an overview of useful color combinations (in the solarized
+color scheme).
+
+background | foreground | used on hosts
+---        | ---        | ---
+cyan       | colour255  | la5410
+blue       | colour255  | graz-pi3, nxdi.us-cdc01.nxp.com
+green      | colour255  | ardning-pi3
+yellow     | colour255  | atlanta
+red        | colour255  | 
+magente    | colour255  | 
+black      | white      | others
+
 
 [1]: https://www.atlassian.com/git/tutorials/dotfiles
 [2]: https://github.com/microsoft/Git-Credential-Manager-for-Windows
