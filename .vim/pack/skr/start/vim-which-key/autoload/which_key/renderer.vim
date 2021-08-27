@@ -90,9 +90,34 @@ function! s:create_rows(layout, mappings) abort
   let n_rows =  l.n_rows - 1
 
   let rows = []
+  let row_max_size = 0
   let row = 0
   let col = 0
-  let smap = sort(filter(keys(mappings), 'v:val !=# "name"'),'1')
+
+  " Separate leaves and dict keys depending on which_key_group_dicts_together
+  if exists('g:which_key_group_dicts') && g:which_key_group_dicts != ''
+
+    let leaf_keys = []
+    let dict_keys = []
+
+    for key in sort(filter(keys(mappings), 'v:val !=# "name"'), 'i')
+      if type(mappings[key]) == s:TYPE.dict
+        call add(dict_keys, key)
+      else
+        call add(leaf_keys, key)
+      endif
+    endfor
+
+    " Decide what's shown first leaves or dicts
+    if g:which_key_group_dicts ==? 'end'
+      let smap = leaf_keys + dict_keys
+    else
+      let smap = dict_keys + leaf_keys
+    endif
+
+  else
+    let smap = sort(filter(keys(mappings), 'v:val !=# "name"'), 'i')
+  endif
 
   let displaynames = which_key#renderer#get_displaynames()
   if get(g:, 'which_key_align_by_seperator', 1)
@@ -124,9 +149,16 @@ function! s:create_rows(layout, mappings) abort
 
     let crow = get(rows, row, [])
     if empty(crow)
+      call add(crow, "")
       call add(rows, crow)
     endif
-    call add(crow, item.repeat(' ', l.col_width - strdisplaywidth(item)))
+    if col == l.n_cols-1
+      let item = item
+    else
+      let item = item.repeat(' ', l.col_width - strdisplaywidth(item))
+    endif
+    call add(crow, item)
+    let row_max_size = max([row_max_size, strdisplaywidth(join(crow, ""))])
 
     if !g:which_key_sort_horizontal
       if row >= n_rows - 1
@@ -152,6 +184,21 @@ function! s:create_rows(layout, mappings) abort
     "silent execute "cnoremap <nowait> <buffer> ".substitute(k, "|", "<Bar>", ""). " " . s:escape_keys(k) ."<CR>"
   endfor
 
+  " Doesnt work in vertical
+  if g:which_key_centered && !g:which_key_vertical
+    let sign_column_size = &signcolumn ==# 'yes' ? 2 : 0
+    let line_number_size = &number ? len(string(line('$'))) : 0
+    let centered_offset = sign_column_size + line_number_size
+
+    let display_cap = g:which_key_floating_relative_win ? winwidth(g:which_key_origin_winid) : &columns
+    let max_display_size = display_cap - centered_offset
+
+    let left_padding_size = float2nr(floor((max_display_size - row_max_size) / 2))
+
+    for row in range(len(rows))
+      let rows[row][0] = repeat(' ', left_padding_size)
+    endfor
+  endif
   call map(rows, 'join(v:val, "")')
 
   return rows
