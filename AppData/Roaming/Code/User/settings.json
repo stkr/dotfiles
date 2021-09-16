@@ -38,6 +38,11 @@
       "commands": [ "editor.action.formatSelection", ],
       // Note, there is a normal mode equivalent for formatting a document!
     },
+    {
+      "before": [ "leader", "r", "m" ],
+      "commands": [ "editor.action.refactor", ]
+      // Note, there is a visual mode equivalent
+    },
 
     // ######################################################### Misc
     // Bind p in visual mode to paste without overriding the current register
@@ -133,6 +138,11 @@
       "before": [ "leader", "r", "r" ],
       "commands": [ "editor.action.rename", ]
     },
+    {
+      "before": [ "leader", "r", "m" ],
+      "commands": [ "editor.action.refactor", ]
+      // Note, there is a visual mode equivalent
+    },
 
     // ######################################################### Misc
 
@@ -190,5 +200,7 @@
   "vim.useSystemClipboard": true,
   "search.mode": "newEditor",
   "files.autoSave": "onFocusChange",
-  "clangd.onConfigChanged": "restart"
+  "clangd.onConfigChanged": "restart",
+  "rust-analyzer.inlayHints.enable": false,
+  "rust-analyzer.completion.addCallArgumentSnippets": false,
 }
