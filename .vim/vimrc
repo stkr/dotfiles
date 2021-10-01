@@ -559,13 +559,18 @@ endif
     endif
     " Note, these are imlicitly assigned by bufexplorer plugin
 
+    " Navigation in the file system
+    if ! exists('g:loaded_vim_which_key')
+        let g:which_key_map.n = { 'name' : '+navigate' }
+        let g:which_key_map.n.c = { 'name' : 'current' }
+    endif
+    nnoremap <leader>nc :cd %:p:h<CR>
 
     " Misc
-if (has('nvim'))
-    nnoremap ]e <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
-    nnoremap [e <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
-endif
-
+    if (has('nvim'))
+        nnoremap ]e <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+        nnoremap [e <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+    endif
 
 
     " shortcuts for 3-way merge
