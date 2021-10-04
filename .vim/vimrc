@@ -461,12 +461,16 @@ endif
     if ! exists('g:loaded_vim_which_key')
         let g:which_key_map.s = { 'name' : '+subst' }
 
+        " Substitute ford under cursor
+        let g:which_key_map.s['*'] = 'word'
         " Substitute slashes
         let g:which_key_map.s.s = { 'name' : '+slashes' }
         let g:which_key_map.s.s.u = 'unix'
         let g:which_key_map.s.s.l = 'linux'
         let g:which_key_map.s.s.w = 'windows'
     endif
+    nnoremap <leader>s* :%s!\\!/!g<CR>
+    nnoremap <expr> <Leader>s* ':%s/\<'.expand('<cexpr>').'\>//gc<left><left><left>'
     " Convert backslashes to forward slashes (windows->unix)
     nnoremap <leader>ssu :s!\\!/!g<CR>
     vnoremap <leader>ssu :s!\\!/!g<CR>
