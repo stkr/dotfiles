@@ -539,6 +539,7 @@ endif
     nnoremap <leader>tp :set paste!<cr>
     nnoremap <leader>tr :RainbowParentheses!!<cr>
     if (has('nvim'))
+        // TODO: replace with cmp-nvim equivalent
         nnoremap <leader>tc :CompletionToggle<cr>
     endif
 
@@ -667,31 +668,6 @@ endif
     set shortmess+=c
 
     if (has('nvim'))
-        let g:completion_enable_auto_popup=1
-        let g:completion_matching_smart_case=1
-        let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy', 'all']
-
-        imap <tab> <Plug>(completion_smart_tab)
-        imap <s-tab> <Plug>(completion_smart_s_tab)
-
-
-        let g:completion_chain_complete_list = {
-            \ 'c': [
-            \    {'complete_items': ['lsp', 'snippet']},
-            \    {'mode': '<c-p>'},
-            \    {'mode': '<c-n>'}
-            \],
-            \ 'cpp': [
-            \    {'complete_items': ['lsp', 'snippet']},
-            \    {'mode': '<c-p>'},
-            \    {'mode': '<c-n>'}
-            \],
-            \ 'default': [
-            \    {'complete_items': ['buffers']},
-            \    {'mode': '<c-p>'},
-            \    {'mode': '<c-n>'}
-            \]
-        \}
     endif
 
     " The next binding makes a difference only when autocompletion is enabled. If the popup is shown
@@ -712,6 +688,37 @@ endif
     inoremap <expr> <C-u>      pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<C-u>"
 
 " }}}
+
+
+" These are examples on how to configure language servers. I don't enable any language server from
+" here as 
+"     a) typically setting differ per project, 
+"     b) it seems loading lspconfig has a noticable effect on startup time which is not acceptable
+"         for the majority of cases where I just edit a text file.
+"
+"   " Language server protocol {{{
+"       if (has('nvim'))
+"           " Enable clangd
+"           lua << EOF
+"           
+"       -- vim.lsp.set_log_level("debug");
+"   
+"       -- Setup nvim-cmp.
+"       local cmp = require'cmp'
+"       cmp.setup({
+"           sources = {
+"           { name = 'nvim_lsp' },
+"           }
+"       })
+"   
+"       require'lspconfig'.clangd.setup{
+"           cmd = { "clangd", "--background-index", "--compile-commands-dir=rtl_release_make" },
+"           capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+"       };
+"       EOF
+"       endif
+"   " }}}
+
 
 " {{{ Formatting of a document
     function! FormatDocument()
