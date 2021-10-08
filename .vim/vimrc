@@ -86,19 +86,18 @@ endif
     set colorcolumn=101
     set fileencodings=ucs-bom,utf8,prc
 
-    set directory=$HOME/.vim-tmp/,$HOME/.tmp/,$HOME/tmp
-    set backupdir=$HOME/.vim-tmp/,$HOME/.tmp/,$HOME/tmp
-    set backup
-
-    " Keep undo history across sessions by storing it in a file
-    if has('persistent_undo')
-        let g:vim_undodir=expand("$HOME/.undodir")
-        if ! isdirectory(g:vim_undodir)
-            call mkdir(g:vim_undodir, 'p')
-        endif
-        let &undodir = g:vim_undodir
-        set undofile
+    if has('nvim')
+        set directory=$HOME/.nvim-tmp/,$HOME/.tmp/nvim
+        set backupdir=$HOME/.nvim-tmp/,$HOME/.tmp/nvim
+        set undodir=$HOME/.nvim-undo/,$HOME/.tmp/nvim/undo
+    else
+        set directory=$HOME/.vim-tmp/,$HOME/.tmp/vim
+        set backupdir=$HOME/.vim-tmp/,$HOME/.tmp/vim
+        set undodir=$HOME/.vim-undo/,$HOME/.tmp/vim/undo
     endif
+
+    set backup
+    set undofile
 
     let g:netrw_winsize=15
 
