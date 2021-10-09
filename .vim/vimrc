@@ -538,8 +538,8 @@ endif
     nnoremap <leader>tp :set paste!<cr>
     nnoremap <leader>tr :RainbowParentheses!!<cr>
     if (has('nvim'))
-        // TODO: replace with cmp-nvim equivalent
-        nnoremap <leader>tc :CompletionToggle<cr>
+        " TODO: replace with cmp-nvim equivalent
+        " nnoremap <leader>tc :CompletionToggle<cr>
     endif
 
     " Display context help/information
