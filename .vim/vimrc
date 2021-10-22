@@ -710,10 +710,23 @@ endif
 "           }
 "       })
 "   
+"       " clangd
 "       require'lspconfig'.clangd.setup{
 "           cmd = { "clangd", "--background-index", "--compile-commands-dir=rtl_release_make" },
 "           capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 "       };
+"
+"       " rls
+"       require'lspconfig'.rls.setup({
+"           settings = {
+"               rust = {
+"                   unstable_features = true,
+"                   build_on_save = false,
+"                   all_features = true,
+"               },
+"           },
+"       })
+"
 "       EOF
 "       endif
 "   " }}}
