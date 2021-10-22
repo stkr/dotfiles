@@ -1,4 +1,5 @@
 507f8a5 https://github.com/neovim/nvim-lspconfig.git 
 af70f40 https://github.com/hrsh7th/nvim-cmp.git
 f93a6cf https://github.com/hrsh7th/cmp-nvim-lsp.git
+0e7476f https://github.com/jackguo380/vim-lsp-cxx-highlight
 
