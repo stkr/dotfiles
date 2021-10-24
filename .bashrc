@@ -67,6 +67,7 @@ for f in ~/.bashrc.d/*.bash; do source "$f"; done
 if [ "$color_prompt" = yes ]; then
     PS1='${debian_chroot:+($debian_chroot)}\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]'$'\n$ '
 else
+    K
     PS1='${debian_chroot:+($debian_chroot)}\u@\h \w'$'\n$ '
 fi
 unset color_prompt force_color_prompt
@@ -74,6 +75,7 @@ unset color_prompt force_color_prompt
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
+    K
     PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
     ;;
 *)
@@ -168,4 +170,18 @@ set -o vi
 # Source the default cargo environment (only applies if rust is instlled on the machine).
 if [ -f  "$HOME/.cargo/env" ]; then
     source "$HOME/.cargo/env"
+fi
+
+# Start an ssh agent
+if [ -z "$SSH_AUTH_SOCK" ]; then
+   eval $(ssh-agent) > /dev/null
+fi
+
+# We keep the user's shell to be bash (to get all the benefits of .bashrc and .profile etc.), but in
+# case of an interactive shell we drop to fish. 
+# This aproach is inspired by ArchWiki:
+# https://wiki.archlinux.org/title/Fish#Setting_fish_as_default_shell
+if [[ $(ps --no-header --pid=$PPID --format=cmd) != "fish" && -z ${BASH_EXECUTION_STRING} ]]
+then
+	exec fish
 fi
