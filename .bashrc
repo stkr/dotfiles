@@ -177,6 +177,11 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
    eval $(ssh-agent) > /dev/null
 fi
 
+# if fd is available, use it per default for fzf finds
+if command -v fd &> /dev/null ; then 
+    export FZF_DEFAULT_COMMAND='fd --type f'
+fi
+
 # We keep the user's shell to be bash (to get all the benefits of .bashrc and .profile etc.), but in
 # case of an interactive shell we drop to fish. 
 # This aproach is inspired by ArchWiki:
