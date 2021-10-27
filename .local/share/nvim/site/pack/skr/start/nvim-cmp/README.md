@@ -3,11 +3,14 @@
 A completion engine plugin for neovim written in Lua.
 Completion sources are installed from external repositories and "sourced".
 
+<video src="https://user-images.githubusercontent.com/629908/139000570-3ac39587-a88b-43c6-b35e-207489719359.mp4" width="100%"></video>
 
-Status
+Readme!
 ====================
 
-Can be used. Feedback wanted!
+1. nvim-cmp's breaking changes are [here](https://github.com/hrsh7th/nvim-cmp/issues/231).
+2. This is my hobby project. You can support me via GitHub sponsors.
+3. The bug reports are welcome, but I might not fix if you don't provide a minimal reproduction configuration and steps.
 
 
 Concept
@@ -41,19 +44,25 @@ call plug#begin(s:plug_dir)
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 
-" For vsnip user.
+" For vsnip users.
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 
-" For luasnip user.
+" For luasnip users.
 " Plug 'L3MON4D3/LuaSnip'
 " Plug 'saadparwaiz1/cmp_luasnip'
 
-" For ultisnips user.
+" For ultisnips users.
 " Plug 'SirVer/ultisnips'
 " Plug 'quangnguyen30192/cmp-nvim-ultisnips'
+
+" For snippy users.
+" Plug 'dcampos/nvim-snippy'
+" Plug 'dcampos/cmp-snippy'
 
 call plug#end()
 
@@ -66,42 +75,54 @@ lua <<EOF
   cmp.setup({
     snippet = {
       expand = function(args)
-        -- For `vsnip` user.
-        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` user.
-
-        -- For `luasnip` user.
-        -- require('luasnip').lsp_expand(args.body)
-
-        -- For `ultisnips` user.
-        -- vim.fn["UltiSnips#Anon"](args.body)
+        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+        -- require'snippy'.expand_snippet(args.body) -- For `snippy` users.
       end,
     },
     mapping = {
-      ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-      ['<C-f>'] = cmp.mapping.scroll_docs(4),
-      ['<C-Space>'] = cmp.mapping.complete(),
-      ['<C-e>'] = cmp.mapping.close(),
+      ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+      ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+      ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+      ['<C-y>'] = cmp.config.disable, -- If you want to remove the default `<C-y>` mapping, You can specify `cmp.config.disable` value.
+      ['<C-e>'] = cmp.mapping({
+        i = cmp.mapping.abort(),
+        c = cmp.mapping.close(),
+      }),
       ['<CR>'] = cmp.mapping.confirm({ select = true }),
     },
-    sources = {
+    sources = cmp.config.sources({
       { name = 'nvim_lsp' },
-
-      -- For vsnip user.
-      { name = 'vsnip' },
-
-      -- For luasnip user.
-      -- { name = 'luasnip' },
-
-      -- For ultisnips user.
-      -- { name = 'ultisnips' },
-
+      { name = 'vsnip' }, -- For vsnip users.
+      -- { name = 'luasnip' }, -- For luasnip users.
+      -- { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
+    }, {
       { name = 'buffer' },
+    })
+  })
+
+  -- Use buffer source for `/`.
+  cmp.setup.cmdline('/', {
+    sources = {
+      { name = 'buffer' }
     }
   })
 
+  -- Use cmdline & path source for ':'.
+  cmp.setup.cmdline(':', {
+    sources = cmp.config.sources({
+      { name = 'path' }
+    }, {
+      { name = 'cmdline' }
+    })
+  })
+
   -- Setup lspconfig.
+  local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
   require('lspconfig')[%YOUR_LSP_SERVER%].setup {
-    capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+    capabilities = capabilities
   }
 EOF
 ```
@@ -125,18 +146,23 @@ If you want to remove an option, you can set it to `false` instead.
 
 Built in helper `cmd.mappings` are:
 
-- *cmp.mapping.select_prev_item()*
-- *cmp.mapping.select_next_item()*
+- *cmp.mapping(...)*
+- *cmp.mapping.select_prev_item({ cmp.SelectBehavior.{Insert,Select} } })*
+- *cmp.mapping.select_next_item({ cmp.SelectBehavior.{Insert,Select} })*
 - *cmp.mapping.scroll_docs(number)*
 - *cmp.mapping.complete()*
 - *cmp.mapping.close()*
 - *cmp.mapping.abort()*
 - *cmp.mapping.confirm({ select = bool, behavior = cmp.ConfirmBehavior.{Insert,Replace} })*
 
-You can configure `nvim-cmp` to use these `cmd.mappings` like this:
+You can configure `nvim-cmp` to use these `cmd.mapping` like this:
 
 ```lua
 mapping = {
+  ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+  ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+  ['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+  ['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
   ['<C-d>'] = cmp.mapping.scroll_docs(-4),
   ['<C-f>'] = cmp.mapping.scroll_docs(4),
   ['<C-Space>'] = cmp.mapping.complete(),
@@ -155,6 +181,17 @@ mapping = {
   ...
   ['<Tab>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 's' })
   ...
+}
+```
+
+One more addition, the mapping mode can be specified by table key. It's useful to specify different function for each modes.
+
+```lua
+mapping = {
+  ['<CR>'] = cmp.mapping({
+    i = cmp.mapping.confirm({ select = true }),
+    c = cmp.mapping.confirm({ select = false }),
+  })
 }
 ```
 
@@ -186,13 +223,13 @@ end
 
 #### sources (type: table<cmp.SourceConfig>)
 
-Globals source lists are listed in the `source` table. These are applied to all
+Global source lists are listed in the `source` table. These are applied to all
 buffers. The order of the sources list helps define the source priority, see
 the *sorting.priority_weight* options below.
 
 It is possible to setup different source lists for different filetypes, this is
 an example using the `FileType` autocommand to setup different sources for the
-lua filetype.
+lua filetype. This will overwrite your global sources for the buffer.
 
 ```viml
 " Setup buffer configuration (nvim-lua source only enables in Lua filetype).
@@ -220,7 +257,7 @@ The source customization options. It is defined by each source.
 #### sources[number].priority (type: number|nil)
 
 The manually specified source priority.
-If you don't specifies it, The source priority will determine by the default algorithm (see `sorting.priority_weight`).
+If you don't specify it, the source priority will be determined by the default algorithm (see `sorting.priority_weight`).
 
 #### sources[number].keyword_pattern (type: string)
 
@@ -233,6 +270,12 @@ The source specific keyword_length for override.
 #### sources[number].max_item_count (type: number)
 
 The source specific maximum item count.
+
+#### sources[number].group_index (type: number)
+
+The source group index.
+
+You can call built-in utility like `cmp.config.sources({ { name = 'a' } }, { { name = 'b' } })`.
 
 #### preselect (type: cmp.PreselectMode)
 
@@ -344,13 +387,13 @@ The documentation window's max width.
 
 The documentation window's max height.
 
-#### formatting.deprecated (type: boolean)
+#### documentation.zindex (type: number)
 
-Specify deprecated candidate should be marked as deprecated or not.
+The documentation window's zindex.
 
-This option is useful but disabled by default because sometimes, this option can break your terminal appearance.
+#### formatting.fields (type: cmp.ItemField[])
 
-Default: `false`
+The order of item's fields for completion menu.
 
 #### formatting.format (type: fun(entry: cmp.Entry, vim_item: vim.CompletedItem): vim.CompletedItem)
 
@@ -366,11 +409,8 @@ Please see [FAQ](#how-to-show-name-of-item-kind-and-source-like-compe) if you wo
 local lspkind = require('lspkind')
 cmp.setup {
   formatting = {
-    format = function(entry, vim_item)
-      vim_item.kind = lspkind.presets.default[vim_item.kind]
-      return vim_item
-    end
-  }
+    format = lspkind.cmp_format(),
+  },
 }
 ```
 
@@ -378,12 +418,17 @@ cmp.setup {
 
 A callback function called when the item is confirmed.
 
-#### experimental.ghost_text (type: boolean)
+#### experimental.native_menu (type: boolean)
+
+Use vim's native completion menu instead of custom floating menu.
+
+Default: `false`
+
+#### experimental.ghost_text (type: cmp.GhostTextConfig | false)
 
 Specify whether to display ghost text.
 
 Default: `false`
-
 
 Commands
 ====================
@@ -399,13 +444,55 @@ Autocmds
 
 Invoke after nvim-cmp setup.
 
+Highlights
+====================
+
+#### `CmpItemAbbr`
+
+The abbr field.
+
+#### `CmpItemAbbrDeprecated`
+
+The deprecated item's abbr field.
+
+#### `CmpItemAbbrMatch`
+
+The matched characters highlight.
+
+#### `CmpItemAbbrMatchFuzzy`
+
+The fuzzy matched characters highlight.
+
+#### `CmpItemKind`
+
+The kind field.
+
+#### `CmpItemMenu`
+
+The menu field.
 
 Programatic API
 ====================
 
 You can use the following APIs.
 
-#### `cmp.confirm({ select = boolean, behavior = cmp.ConfirmBehavior.{Insert,Replace} })`
+#### `cmp.visible()`
+
+Return the completion menu is visible or not.
+
+NOTE: This method returns true if the native popup menu is visible. For convenience to define mappings.
+
+#### `cmp.get_selected_entry()`
+
+Return the selected entry.
+
+#### `cmp.get_active_entry()`
+
+Return the active entry.
+
+NOTE: The `preselected` entry does not returned from this method.
+
+#### `cmp.confirm({ select = boolean, behavior = cmp.ConfirmBehavior.{Insert,Replace} }, callback)`
 
 Confirm current selected item if possible.
 
@@ -421,13 +508,13 @@ Close current completion menu.
 
 Close current completion menu and restore current line (similar to native `<C-e>` behavior).
 
-#### `cmp.select_next_item()`
+#### `cmp.select_next_item({ cmp.SelectBehavior.{Insert,Select} })`
 
 Select next completion item if possible.
 
-#### `cmp.select_prev_item()`
+#### `cmp.select_prev_item({ cmp.SelectBehavior.{Insert,Select} })`
 
-Select prev completion item if possible.
+Select previous completion item if possible.
 
 #### `cmp.scroll_docs(delta)`
 
@@ -440,6 +527,9 @@ FAQ
 #### I can't get the specific source working.
 
 You should check `:CmpStatus` command's output. Probably, your specified source name is wrong.
+
+NOTE: `nvim_lsp` will be sourced on InsertEnter event. It will show as `unknown source` but it isn't problem.
+
 
 #### What is the `pairs-wise plugin automatically supported`?
 
@@ -461,6 +551,7 @@ mapping = {
 }
 ```
 
+
 #### How to set up like nvim-compe's `preselect = 'always'`?
 
 You can use the following configuration.
@@ -472,6 +563,7 @@ cmp.setup {
   }
 }
 ```
+
 
 #### I dislike auto-completion
 
@@ -485,6 +577,7 @@ cmp.setup {
 }
 ```
 
+
 #### How to disable nvim-cmp on the specific buffer?
 
 You can specify `enabled = false` like this.
@@ -492,6 +585,7 @@ You can specify `enabled = false` like this.
 ```vim
 autocmd FileType TelescopePrompt lua require('cmp').setup.buffer { enabled = false }
 ```
+
 
 #### nvim-cmp is slow.
 
@@ -501,40 +595,30 @@ I've optimized `nvim-cmp` as much as possible, but there are currently some know
 
 The `cmp-buffer` source makes an index of the current buffer so if the current buffer is too large, it will slowdown the main UI thread.
 
-**Slow language server**
-
-For example, `typescript-language-server` will returns 15k items to the client.
-In such a case, it will take 100ms just to parse payloads as JSON.
-
 **`vim.lsp.set_log_level`**
 
 This setting will cause the filesystem operation for each LSP payload.
 This will greatly slow down nvim-cmp (and other LSP related features).
 
+
 #### How to show name of item kind and source (like compe)?
 
 ```lua
 formatting = {
-  format = function(entry, vim_item)
-    -- fancy icons and a name of kind
-    vim_item.kind = require("lspkind").presets.default[vim_item.kind] .. " " .. vim_item.kind
-
-    -- set a name for each source
-    vim_item.menu = ({
+  format = require("lspkind").cmp_format({with_text = true, menu = ({
       buffer = "[Buffer]",
       nvim_lsp = "[LSP]",
       luasnip = "[LuaSnip]",
       nvim_lua = "[Lua]",
       latex_symbols = "[Latex]",
-    })[entry.source.name]
-    return vim_item
-  end,
+    })}),
 },
 ```
 
-#### How to setup supertab-like mapping?
 
-You can found the solution in [Example mappings](https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings).
+#### How to setup mapping?
+
+You can find all the mapping solutions in [Example mappings](https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings).
 
 
 Source creation

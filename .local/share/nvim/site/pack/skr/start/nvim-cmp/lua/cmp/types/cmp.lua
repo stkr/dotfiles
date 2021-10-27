@@ -5,6 +5,11 @@ cmp.ConfirmBehavior = {}
 cmp.ConfirmBehavior.Insert = 'insert'
 cmp.ConfirmBehavior.Replace = 'replace'
 
+---@alias cmp.SelectBehavior "'insert'" | "'select'"
+cmp.SelectBehavior = {}
+cmp.SelectBehavior.Insert = 'insert'
+cmp.SelectBehavior.Select = 'select'
+
 ---@alias cmp.ContextReason "'auto'" | "'manual'" | "'none'"
 cmp.ContextReason = {}
 cmp.ContextReason.Auto = 'auto'
@@ -22,11 +27,20 @@ cmp.PreselectMode = {}
 cmp.PreselectMode.Item = 'item'
 cmp.PreselectMode.None = 'none'
 
+---@alias cmp.ItemField "'abbr'" | "'kind'" | "'menu'"
+cmp.ItemField = {}
+cmp.ItemField.Abbr = 'abbr'
+cmp.ItemField.Kind = 'kind'
+cmp.ItemField.Menu = 'menu'
+
 ---@class cmp.ContextOption
 ---@field public reason cmp.ContextReason|nil
 
 ---@class cmp.ConfirmOption
 ---@field public behavior cmp.ConfirmBehavior
+
+---@class cmp.SelectOption
+---@field public behavior cmp.SelectBehavior
 
 ---@class cmp.SnippetExpansionParams
 ---@field public body string
@@ -72,6 +86,7 @@ cmp.PreselectMode.None = 'none'
 ---@field public winhighlight string
 ---@field public maxwidth number|nil
 ---@field public maxheight number|nil
+---@field public zindex number|nil
 
 ---@class cmp.ConfirmationConfig
 ---@field public default_behavior cmp.ConfirmBehavior
@@ -82,7 +97,7 @@ cmp.PreselectMode.None = 'none'
 ---@field public comparators function[]
 
 ---@class cmp.FormattingConfig
----@field public deprecated boolean
+---@field public fields cmp.ItemField[]
 ---@field public format fun(entry: cmp.Entry, vim_item: vim.CompletedItem): vim.CompletedItem
 
 ---@class cmp.SnippetConfig
@@ -92,6 +107,7 @@ cmp.PreselectMode.None = 'none'
 ---@field on_confirm_done function(e: cmp.Entry)
 
 ---@class cmp.ExperimentalConfig
+---@field public native_menu boolean
 ---@field public ghost_text cmp.GhostTextConfig|"false"
 
 ---@class cmp.GhostTextConfig
@@ -104,5 +120,6 @@ cmp.PreselectMode.None = 'none'
 ---@field public keyword_pattern string
 ---@field public keyword_length number
 ---@field public max_item_count number
+---@field public group_index number
 
 return cmp

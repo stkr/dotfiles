@@ -1,5 +1,19 @@
 local misc = {}
 
+---Create once callback
+---@param callback function
+---@return function
+misc.once = function(callback)
+  local done = false
+  return function(...)
+    if done then
+      return
+    end
+    done = true
+    callback(...)
+  end
+end
+
 ---Return concatenated list
 ---@param list1 any[]
 ---@param list2 any[]
@@ -15,18 +29,8 @@ misc.concat = function(list1, list2)
   return new_list
 end
 
----Get cursor before line
----@return string
-misc.get_cursor_before_line = function()
-  local cursor = vim.api.nvim_win_get_cursor(0)
-  return string.sub(vim.api.nvim_get_current_line(), 1, cursor[2])
-end
-
----Return current mode is insert-mode or not.
----@return boolean
-misc.is_insert_mode = function()
-  return string.sub(vim.api.nvim_get_mode().mode, 1, 1) == 'i'
-end
+---The symbol to remove key in misc.merge.
+misc.none = vim.NIL
 
 ---Merge two tables recursively
 ---@generic T
@@ -35,7 +39,7 @@ end
 ---@return T
 misc.merge = function(v1, v2)
   local merge1 = type(v1) == 'table' and (not vim.tbl_islist(v1) or vim.tbl_isempty(v1))
-  local merge2 = type(v2) == 'table' and (not vim.tbl_islist(v1) or vim.tbl_isempty(v1))
+  local merge2 = type(v2) == 'table' and (not vim.tbl_islist(v2) or vim.tbl_isempty(v2))
   if merge1 and merge2 then
     local new_tbl = {}
     for k, v in pairs(v2) do
@@ -47,6 +51,9 @@ misc.merge = function(v1, v2)
       end
     end
     return new_tbl
+  end
+  if v1 == misc.none then
+    return nil
   end
   if v1 == nil then
     return v2
