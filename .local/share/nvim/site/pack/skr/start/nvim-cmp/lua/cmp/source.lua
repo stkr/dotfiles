@@ -1,6 +1,5 @@
 local context = require('cmp.context')
 local config = require('cmp.config')
-local matcher = require('cmp.matcher')
 local entry = require('cmp.entry')
 local debug = require('cmp.utils.debug')
 local misc = require('cmp.utils.misc')
@@ -35,7 +34,7 @@ source.SourceStatus.COMPLETED = 3
 ---@return cmp.Source
 source.new = function(name, s)
   local self = setmetatable({}, { __index = source })
-  self.id = misc.id('source')
+  self.id = misc.id('cmp.source.new')
   self.name = name
   self.source = s
   self.cache = cache.new()
@@ -82,7 +81,7 @@ source.get_entries = function(self, ctx)
     return {}
   end
 
-  local prev_entries = (function()
+  local target_entries = (function()
     local key = { 'get_entries', self.revision }
     for i = ctx.cursor.col, self.offset, -1 do
       key[3] = string.sub(ctx.cursor_before_line, 1, i)
@@ -91,31 +90,29 @@ source.get_entries = function(self, ctx)
         return prev_entries
       end
     end
-    return nil
+    return self.entries
   end)()
 
-  local entries = self.cache:ensure({ 'get_entries', self.revision, ctx.cursor_before_line }, function()
-    debug.log(self:get_debug_name(), 'filter', #(prev_entries or self.entries))
-
-    local inputs = {}
-    local entries = {}
-    for _, e in ipairs(prev_entries or self.entries) do
-      local o = e:get_offset()
-      if not inputs[o] then
-        inputs[o] = string.sub(ctx.cursor_before_line, o)
-      end
-      e.score = matcher.match(inputs[o], e:get_filter_text(), { e:get_word() })
-      e.exact = false
-      if e.score >= 1 then
-        e.exact = vim.tbl_contains({ e:get_filter_text(), e:get_word() }, inputs[o])
-        table.insert(entries, e)
-      end
+  local inputs = {}
+  local entries = {}
+  for _, e in ipairs(target_entries) do
+    local o = e:get_offset()
+    if not inputs[o] then
+      inputs[o] = string.sub(ctx.cursor_before_line, o)
     end
 
-    return entries
-  end)
+    local match = e:match(inputs[o])
+    e.score = match.score
+    e.exact = false
+    if e.score >= 1 then
+      e.matches = match.matches
+      e.exact = e:get_filter_text() == inputs[o] or e:get_word() == inputs[o]
+      table.insert(entries, e)
+    end
+  end
+  self.cache:set({ 'get_entries', self.revision, ctx.cursor_before_line }, entries)
 
-  local max_item_count = self:get_config().max_item_count
+  local max_item_count = self:get_config().max_item_count or 200
   local limited_entries = {}
   for _, e in ipairs(entries) do
     table.insert(limited_entries, e)
@@ -270,7 +267,7 @@ source.complete = function(self, ctx, callback)
           completion_context = {
             triggerKind = types.lsp.CompletionTriggerKind.TriggerForIncompleteCompletions,
           }
-        elseif self.request_offset ~= offset then
+        elseif not vim.tbl_contains({ self.request_offset, self.offset }, offset) then
           completion_context = {
             triggerKind = types.lsp.CompletionTriggerKind.Invoked,
           }
@@ -306,7 +303,7 @@ source.complete = function(self, ctx, callback)
       option = self:get_config().opts,
       completion_context = completion_context,
     },
-    self.complete_dedup(vim.schedule_wrap(function(response)
+    self.complete_dedup(vim.schedule_wrap(misc.once(function(response)
       if #((response or {}).items or response or {}) > 0 then
         debug.log(self:get_debug_name(), 'retrieve', #(response.items or response))
         local old_offset = self.offset
@@ -336,7 +333,7 @@ source.complete = function(self, ctx, callback)
         self.status = prev_status
       end
       callback()
-    end))
+    end)))
   )
   return true
 end
