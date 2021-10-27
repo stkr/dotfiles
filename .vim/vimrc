@@ -328,6 +328,7 @@ endif
     " nmap <leader>] >>
 
     " switch between current and last buffer
+    let g:bufExplorerDisableDefaultKeyMapping=1
     nnoremap <Leader>. :<C-u>:BufExplorer<CR>j
 
     " enable . command in visual mode
@@ -555,20 +556,27 @@ endif
         nnoremap <leader>cs <cmd>lua vim.lsp.buf.signature_help()<CR>
     endif
 
-    " Buffer management
-    if ! exists('g:loaded_vim_which_key')
-        let g:which_key_map.b = { 'name' : '+buffer' }
-        let g:which_key_map.b.e = { 'name' : 'list' }
-        let g:which_key_map.b.t = { 'name' : 'toggle' }
-    endif
-    " Note, these are imlicitly assigned by bufexplorer plugin
-
     " Navigation in the file system
     if ! exists('g:loaded_vim_which_key')
         let g:which_key_map.n = { 'name' : '+navigate' }
         let g:which_key_map.n.c = { 'name' : 'current' }
     endif
     nnoremap <leader>nc :cd %:p:h<CR>
+
+    " Interfacing the build system (build/run/etc)
+    " Note,that these typically depend on the build system.
+    " We have defaults per file type in ftplugin files (e.g., rust files 
+    " use Cargo bindings), however, it might even be necessary to override 
+    " them on a per-project basis.
+    " The attempt is to have a consistent set of mappings for common operations 
+    " regardless of the build system, so here is an overview of the mappings 
+    " we should define.
+    if ! exists('g:loaded_vim_which_key')
+        let g:which_key_map.b = { 'name' : '+build' }
+        let g:which_key_map.b.b = { 'name' : 'build' }
+        let g:which_key_map.b.r = { 'name' : 'run' }
+        " (to be continued...)
+    endif
 
     " Misc
     if (has('nvim'))
@@ -656,35 +664,66 @@ endif
 
 " Code completion {{{
 
-    " Use <Tab> and <S-Tab> to navigate through popup menu
-    inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-    inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-    " Set completeopt to have a better completion experience
-    set completeopt=menuone,noinsert,noselect
-
-    " Avoid showing message extra message when using completion
-    set shortmess+=c
-
     if (has('nvim'))
+
+        lua << EOF
+            -- Setup nvim-cmp.
+            local cmp = require'cmp'
+            cmp.setup({
+                completion = {
+                    completeopt = 'menu,menuone,noinsert',
+                },
+                mapping = {
+                    ['<C-j>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+                    ['<C-k>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+                    ['<Tab>'] = cmp.mapping.confirm({ 
+                        behavior = cmp.ConfirmBehavior.Replace,
+                        select = true,
+                    }),
+                    ['<CR>'] = cmp.mapping.confirm({ 
+                        behavior = cmp.ConfirmBehavior.Replace,
+                        select = true,
+                    }),
+
+                    ['<C-d>'] = cmp.mapping.scroll_docs(4),
+                    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+                },
+                sources = {
+                    { name = 'nvim_lsp' },
+                    { name = 'buffer' },
+                },
+            })
+EOF
+
+    else
+
+        " Use <Tab> and <S-Tab> to navigate through popup menu
+        " inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+        " inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+        " Set completeopt to have a better completion experience
+        set completeopt=menuone,preview
+
+        " Avoid showing message extra message when using completion
+        set shortmess+=c
+
+        " The next binding makes a difference only when autocompletion is enabled. If the popup is shown
+        " and an entry is selected, per default ESC would close the popup but keep the selected entry
+        " inserted. With this binding, the selection is cancelled and no text is inserted. Note, for
+        " some reason (yet to be understood) this is causing issues when using vim in MSYS.
+        inoremap <expr> <Esc>      pumvisible() ? "\<C-e>" : "\<Esc>"
+
+        inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
+        inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
+        inoremap <expr> <Up>       pumvisible() ? "\<C-p>" : "\<Up>"
+        inoremap <expr> <PageDown> pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<PageDown>"
+        inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
+
+        inoremap <expr> <C-j>      pumvisible() ? "\<C-n>" : "\<C-j>"
+        inoremap <expr> <C-k>      pumvisible() ? "\<C-p>" : "\<C-k>"
+        inoremap <expr> <C-d>      pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<C-d>"
+        inoremap <expr> <C-u>      pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<C-u>"
     endif
-
-    " The next binding makes a difference only when autocompletion is enabled. If the popup is shown
-    " and an entry is selected, per default ESC would close the popup but keep the selected entry
-    " inserted. With this binding, the selection is cancelled and no text is inserted. Note, for
-    " some reason (yet to be understood) this is causing issues when using vim in MSYS.
-    inoremap <expr> <Esc>      pumvisible() ? "\<C-e>" : "\<Esc>"
-
-    inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
-    inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
-    inoremap <expr> <Up>       pumvisible() ? "\<C-p>" : "\<Up>"
-    inoremap <expr> <PageDown> pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<PageDown>"
-    inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
-
-    inoremap <expr> <C-j>      pumvisible() ? "\<C-n>" : "\<C-j>"
-    inoremap <expr> <C-k>      pumvisible() ? "\<C-p>" : "\<C-k>"
-    inoremap <expr> <C-d>      pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<C-d>"
-    inoremap <expr> <C-u>      pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<C-u>"
 
 " }}}
 
