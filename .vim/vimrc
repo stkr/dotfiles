@@ -508,9 +508,11 @@ endif
         let g:which_key_map.e = { 'name' : '+edit/open' }
         let g:which_key_map.e.v = '.vimrc'
         let g:which_key_map.e.g = '~/.gitconfig'
+        let g:which_key_map.e.n = 'nvim-init'
     endif
     nnoremap <leader>ev :e! <C-R>=g:vim_home<CR>vimrc<CR>
     nnoremap <leader>eg :e! ~/.gitconfig<cr>
+    nnoremap <leader>en :e! ~/.config/nvim/init.vim<cr>
 
     " Listing things
     if ! exists('g:loaded_vim_which_key')
