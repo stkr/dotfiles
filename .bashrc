@@ -189,3 +189,25 @@ if command -v fish &> /dev/null ; then
         exec fish
     fi
 fi
+
+
+# Now we only do reach this point in case we did not exec to fish, so this applies ONLY in case of
+# remaining in bash!
+
+# Directory shortcuts
+function sc {
+    if test "$#" -lt 1; then
+        echo "Missing path argument."
+        return
+    fi
+
+    case $1 in
+        rf)
+        rfinch)
+            cd /c/_ddm/redfinch/
+            ;;
+        *)
+            echo "Unknown shortcut \"$1\"."
+            ;;
+    esac
+}
