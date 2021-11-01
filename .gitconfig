@@ -24,6 +24,8 @@
     dt = difftool
     mt = mergetool
 
+    su = submodule update --recursive
+
     unstage = reset --soft HEAD^
     delete-nontracking-branches = "! git branch --list --format \"%(if:equals=[gone])%(upstream:track)%(then)%(refname:short)%(end)\" | sed '/^$/d' | xargs git branch -d "
     sync = "!f() { git checkout --quiet --detach; git fetch origin $1:$1; git checkout --quiet -; }; f"
