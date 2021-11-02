@@ -202,8 +202,7 @@ function sc {
     fi
 
     case $1 in
-        rf)
-        rfinch)
+        rf | rfinch)
             cd /c/_ddm/redfinch/
             ;;
         *)
