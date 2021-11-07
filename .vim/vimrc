@@ -385,8 +385,8 @@ endif
     " vnoremap <space> zf
 
     " Comment a line and move to the next line (using vim-commentary)
-    nnoremap <C-/> :Commentary<CR>j
-    vnoremap <C-/> :Commentary<CR>`>j
+    nnoremap <leader>/ :Commentary<CR>j
+    vnoremap <leader>/ :Commentary<CR>`>j
 
     " Super fast window manipulation shortcuts
     if ! exists('g:loaded_vim_which_key')
