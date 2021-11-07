@@ -328,8 +328,7 @@ endif
     " nmap <leader>] >>
 
     " switch between current and last buffer
-    let g:bufExplorerDisableDefaultKeyMapping=1
-    nnoremap <Leader>. :<C-u>:BufExplorer<CR>j
+    nnoremap <Leader>. :<C-u>FzfBuffers<CR>
 
     " enable . command in visual mode
     vnoremap . :normal .<cr>
