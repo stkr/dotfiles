@@ -1,0 +1,9 @@
+[submodule ".tmux/plugins/tpm"]
+	path = .tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm
+[submodule ".config/tmux/plugins/tpm"]
+	path = .config/tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm
+[submodule ".config/tmux/plugins/tmux-logging"]
+	path = .config/tmux/plugins/tmux-logging
+	url = https://github.com/tmux-plugins/tmux-logging
