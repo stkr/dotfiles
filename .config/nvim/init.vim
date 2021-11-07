@@ -8,17 +8,17 @@ lua << EOF
     local cmp = require'cmp'
     cmp.setup({
         completion = {
-            completeopt = 'menu,menuone,noinsert',
+            completeopt = 'menu,menuone,preview',
         },
         mapping = {
             ['<C-j>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
             ['<C-k>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
             ['<Tab>'] = cmp.mapping.confirm({ 
-                behavior = cmp.ConfirmBehavior.Replace,
+                behavior = cmp.ConfirmBehavior.Insert,
                 select = true,
             }),
             ['<CR>'] = cmp.mapping.confirm({ 
-                behavior = cmp.ConfirmBehavior.Replace,
+                behavior = cmp.ConfirmBehavior.Insert,
                 select = true,
             }),
 
