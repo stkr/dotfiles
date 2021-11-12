@@ -11,6 +11,37 @@ else
     set clipboard=unnamedplus
 endif
 
+
+" Plugins {{{
+"
+    " Specify a directory for plugins
+    " - For Neovim: stdpath('data') . '/plugged'
+    " - Avoid using standard Vim directory names like 'plugin'
+    call plug#begin('~/.vim/plugged')
+
+    Plug 'justinmk/vim-sneak', { 'commit': '94c2de47ab301d476a2baec9ffda07367046bec9' }
+
+    " Initialize plugin system
+    call plug#end()
+
+" }}}
+
+" vim-sneak {({
+    let g:sneak#s_next = 1
+    " let g:sneak#label = 1
+
+    " 2-character Sneak (default)
+    nmap f <Plug>Sneak_s
+    nmap F <Plug>Sneak_S
+    " visual-mode
+    xmap f <Plug>Sneak_s
+    xmap F <Plug>Sneak_S
+    " operator-pending-mode
+    omap f <Plug>Sneak_s
+    omap F <Plug>Sneak_S
+" }}}
+
+
 " Conditionally disable plugins {{{
 "
 "     The recommendatons for writing a plugin say that if a variable g:loaded_PLUGIN_NAME is deined,
