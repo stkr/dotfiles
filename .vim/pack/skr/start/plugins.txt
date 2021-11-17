@@ -15,6 +15,9 @@ ec87af6-patched https://github.com/jremmen/vim-ripgrep.git
 7f52106 https://github.com/junegunn/vim-after-object.git
 27e7cd7 https://github.com/junegunn/rainbow_parentheses.vim.git
 
+28b81a4 https://github.com/lifepillar/vim-solarized8
+
+
 deprecated:
 f67ecb5  https://github.com/prabirshrestha/async.vim.git
 b88179d  https://github.com/prabirshrestha/asyncomplete-buffer.vim.git
