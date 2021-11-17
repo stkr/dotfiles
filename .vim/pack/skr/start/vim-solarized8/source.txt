@@ -1,1 +1,0 @@
-https://github.com/lifepillar/vim-solarized8.git
