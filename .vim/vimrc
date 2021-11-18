@@ -31,6 +31,9 @@ endif
         Plug 'hrsh7th/nvim-cmp', { 'commit': '286b9f78d1013d4f4d3a70efcc803d00912dfe35' }
         Plug 'jackguo380/vim-lsp-cxx-highlight', { 'commit': '0e7476ff41cd65e55f92fdbc7326335ec33b59b0' }
 
+        Plug 'nvim-lua/plenary.nvim'
+        Plug 'nvim-telescope/telescope.nvim'
+
     endif
 
     " Initialize plugin system
@@ -371,7 +374,11 @@ endif
     " nmap <leader>] >>
 
     " switch between current and last buffer
-    nnoremap <Leader>. :<C-u>FzfBuffers<CR>
+    if has('nvim')
+        nnoremap <Leader>. :<C-u>Telescope buffers<CR>
+    else
+        nnoremap <Leader>. :<C-u>FzfBuffers<CR>
+    endif
 
     " enable . command in visual mode
     vnoremap . :normal .<cr>
@@ -460,14 +467,23 @@ endif
             let g:which_key_map.f.r = 'references'
         endif
     endif
-    nnoremap <Leader>ff :<C-u>FzfFiles<CR>
-    nnoremap <Leader>fb :<C-u>FzfBuffers<CR>
-    nnoremap <Leader>fh :<C-u>FzfHistory<CR>
-    nnoremap <Leader>ft :<C-u>FzfTags<CR>
-    nnoremap <Leader>fg :Rg ""<left>
-    nnoremap <expr> <Leader>f* ':Rg "'.expand('<cexpr>').'"<CR>'
+
     if (has('nvim'))
-        nnoremap <Leader>fr <cmd>lua vim.lsp.buf.references()<CR>
+        nnoremap <Leader>f :Telescope<CR>
+        nnoremap <Leader>ff :Telescope fd<CR>
+        nnoremap <Leader>fb :Telescope buffers<CR>
+        nnoremap <Leader>fc :Telescope command_history<CR>
+        nnoremap <Leader>fs :Telescope search_history<CR>
+        nnoremap <Leader>ft :Telescope tags<CR>
+        nnoremap <Leader>fr :Telescope references<CR>
+        nnoremap <Leader>fg :Telescope live_grep<CR>
+    else
+        nnoremap <Leader>ff :<C-u>FzfFiles<CR>
+        nnoremap <Leader>fb :<C-u>FzfBuffers<CR>
+        nnoremap <Leader>fh :<C-u>FzfHistory<CR>
+        nnoremap <Leader>ft :<C-u>FzfTags<CR>
+        nnoremap <Leader>fg :Rg ""<left>
+        nnoremap <expr> <Leader>f* ':Rg "'.expand('<cexpr>').'"<CR>'
     endif
 
     " Jumping/going to positions
