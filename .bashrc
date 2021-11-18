@@ -215,7 +215,7 @@ function sc {
 
     case $1 in
         rf | rfinch)
-            cd /c/_ddm/redfinch/
+            cd /c/LocalData/data/rfinch/
             ;;
         *)
             echo "Unknown shortcut \"$1\"."

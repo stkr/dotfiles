@@ -139,7 +139,7 @@ font:
     #style: Italic
 
   # Point size
-  size: 11.0
+  size: 10.0
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
@@ -353,6 +353,8 @@ hints:
 #  program: /bin/bash
 #  args:
 #    - --login
+shell:
+    program: ubuntu2004.exe
 
 # Startup directory
 #
