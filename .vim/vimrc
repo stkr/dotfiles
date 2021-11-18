@@ -21,6 +21,18 @@ endif
 
     Plug 'justinmk/vim-sneak', { 'commit': '94c2de47ab301d476a2baec9ffda07367046bec9' }
 
+    if (has('nvim'))
+        Plug 'neovim/nvim-lspconfig', { 'commit': '27d2c116fdea5614f422dcbcae63da01a1415fcf' }
+
+        Plug 'hrsh7th/cmp-nvim-lsp', { 'commit': '134117299ff9e34adde30a735cd8ca9cf8f3db81' }
+        Plug 'hrsh7th/cmp-buffer', { 'commit': 'bfbc32a8aadbf3d21294aad45f069b7d204b34b1' }
+        Plug 'hrsh7th/cmp-path', { 'commit': '98ded32b9c4d95aa95af70b9979b767f39073f0e' }
+        " Plug 'hrsh7th/cmp-cmdline', { 'commit': '
+        Plug 'hrsh7th/nvim-cmp', { 'commit': '286b9f78d1013d4f4d3a70efcc803d00912dfe35' }
+        Plug 'jackguo380/vim-lsp-cxx-highlight', { 'commit': '0e7476ff41cd65e55f92fdbc7326335ec33b59b0' }
+
+    endif
+
     " Initialize plugin system
     call plug#end()
 
