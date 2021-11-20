@@ -40,6 +40,11 @@ lua << EOF
                     ["<C-j>"] = actions.move_selection_next,
                 },
             },
+        },
+        pickers = {
+            buffers = {
+                sort_lastused = true
+            }
         }
     }
 
