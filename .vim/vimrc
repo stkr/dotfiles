@@ -452,6 +452,7 @@ endif
         let g:which_key_map.f['*'] = 'word in files'
         if (has('nvim'))
             let g:which_key_map.f.r = 'references'
+            let g:which_key_map.f.u = 'usages'
         endif
     endif
 
@@ -462,7 +463,8 @@ endif
         nnoremap <Leader>fc :Telescope command_history<CR>
         nnoremap <Leader>fs :Telescope search_history<CR>
         nnoremap <Leader>ft :Telescope tags<CR>
-        nnoremap <Leader>fr :Telescope references<CR>
+        nnoremap <Leader>fr :Telescope lsp_references<CR>
+        nnoremap <Leader>fu :Telescope lsp_references<CR>
         nnoremap <Leader>fg :Telescope live_grep<CR>
     else
         nnoremap <Leader>ff :<C-u>FzfFiles<CR>
