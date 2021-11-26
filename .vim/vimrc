@@ -36,6 +36,8 @@ endif
         Plug 'nvim-lua/plenary.nvim',            { 'commit': '1c31adb35fcebe921f65e5c6ff6d5481fa5fa5ac' }
         Plug 'nvim-telescope/telescope.nvim',    { 'commit': '6f82c6630cea83b591beeebdc760705cafa3e426' }
 
+        Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'commit': '59e38e1661ffdd586cb7fc22ca0b5a05c7caf988', 'do': 'make' }
+
     endif
 
     " Initialize plugin system
