@@ -48,7 +48,7 @@ function gcb() {
     text=$2
     type=$( gparse_type "feature" $3 )
 
-    branch="$type/$jproject-$1-$2"
+    branch="$type/$JIRA_PROJECT-$1-$2"
     echo $branch
     git checkout -b "$branch"
     git push --set-upstream origin "$branch"
