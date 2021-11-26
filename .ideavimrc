@@ -69,5 +69,5 @@ inoremap <C-h> <Left>
 vnoremap p "_dP`]
 
 
-set clipboard+=ideaput
+set clipboard+=unnamed
 set idearefactormode=keep
