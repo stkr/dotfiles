@@ -43,10 +43,18 @@ lua << EOF
         },
         pickers = {
             buffers = {
-                sort_lastused = true
+                sort_lastused = true,
+				previewer = false,
+            },
+            file_browser = {
+				previewer = false,
             }
         }
     }
+
+    -- To get fzf loaded and working with telescope, you need to call
+    -- load_extension, somewhere after setup function:
+    require('telescope').load_extension('fzf')
 
 EOF
 
