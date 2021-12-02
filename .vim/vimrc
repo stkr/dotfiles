@@ -457,7 +457,6 @@ endif
     endif
 
     if (has('nvim'))
-        nnoremap <Leader>f :Telescope<CR>
         nnoremap <Leader>ff :Telescope fd<CR>
         nnoremap <Leader>fb :Telescope buffers<CR>
         nnoremap <Leader>fc :Telescope command_history<CR>
