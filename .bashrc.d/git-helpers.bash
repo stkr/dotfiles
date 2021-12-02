@@ -43,6 +43,11 @@ function gcb() {
         echo "Not enough arguments. Usage: cb NR TEXT [TYPE]."
         return 1
     fi
+    
+    if [[ $JIRA_PROJECT == "" ]]; then
+        echo "JIRA_PROJECT is not set."
+        return 1
+    fi
 
     nr=$1
     text=$2

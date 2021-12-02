@@ -217,6 +217,18 @@ function sc {
         rf | rfinch)
             cd /c/LocalData/data/rfinch/
             ;;
+        icm)
+            cd /c/LocalData/data/iot/iothub/iothub-device-link-commons
+            ;;
+        iag)
+            cd /c/LocalData/data/iot/iothub/iothub-device-link-agent
+            ;;
+        idl)
+            cd /c/LocalData/data/iot/iothub/iothub-device-link
+            ;;
+        sag)
+            cd /c/LocalData/data/iot/mcu/simw-top/nxp_iot_agent
+            ;;
         *)
             echo "Unknown shortcut \"$1\"."
             ;;
