@@ -68,6 +68,8 @@ inoremap <C-h> <Left>
 " line) version.
 vnoremap p "_dP`]
 
+nnoremap <leader>/ :action CommentByLineComment<CR>
+vnoremap <leader>/ :action CommentByLineComment<CR>
 
 set clipboard+=unnamed
 set idearefactormode=keep
