@@ -1,7 +1,7 @@
 AllowSetSelection=yes
 Term=xterm-256color
-Font=JetBrains Mono
-FontHeight=10
+Font=JetBrainsMono Nerd Font Mono
+FontHeight=11
 FontSmoothing=default
 BoldAsFont=yes
 AllowBlinking=yes
@@ -10,7 +10,6 @@ ForegroundColour=88,110,117
 BackgroundColour=253,246,227
 CursorColour=238,232,213
 
-BoldAsFont=yes
 BoldAsColour=no
 Black=7,54,66
 Red=220,50,47
@@ -28,6 +27,7 @@ BoldBlue=131,148,150
 BoldMagenta=108,113,196
 BoldCyan=147,161,161
 BoldWhite=253,246,227
-FontHeight=11
 Columns=172
 Rows=47
+FontWeight=400
+FontIsBold=no
