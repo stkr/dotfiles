@@ -19,6 +19,8 @@ endif
     " - Avoid using standard Vim directory names like 'plugin'
     call plug#begin('~/.vim/plugged')
 
+    Plug 'PhilRunninger/bufselect.vim',          { 'commit': '0e5fd332d76bd8b23ca6d92fe9ab6db7304b22d3' }
+
     if (has('nvim'))
         Plug 'neovim/nvim-lspconfig',            { 'commit': '27d2c116fdea5614f422dcbcae63da01a1415fcf' }
 
@@ -36,7 +38,9 @@ endif
 
         Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'commit': '59e38e1661ffdd586cb7fc22ca0b5a05c7caf988', 'do': 'make' }
 
+    else
     endif
+
 
     " Initialize plugin system
     call plug#end()
@@ -360,12 +364,10 @@ endif
     " nmap <leader>[ <<
     " nmap <leader>] >>
 
-    " switch between current and last buffer
-    if has('nvim')
-        nnoremap <Leader>. :<C-u>Telescope buffers<CR>
-    else
-        nnoremap <Leader>. :<C-u>FzfBuffers<CR>
-    endif
+    " After opening buffer list with ShowBufferList, move the cursor to the last recently open file
+    " (the "alternate" file) which is prefixed in the bufferlist with '#'. 
+    nnoremap <silent> <Leader>. :<C-u>ShowBufferList<CR>:call cursor(search(':\s*#'), 1)<CR>
+    let g:BufSelectKeyExit = "<ESC>"
 
     " enable . command in visual mode
     vnoremap . :normal .<cr>
