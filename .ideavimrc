@@ -17,7 +17,7 @@ nnoremap <Leader>q :action CloseEditor<CR>
 nnoremap <Leader>ff :action GotoFile<CR>
 nnoremap <Leader>fc :action GotoClass<CR>
 nnoremap <Leader>fs :action GotoSymbol<CR>
-nnoremap <Leader>fb :action RecentChangedFiles<CR>
+nnoremap <Leader>fb :action Switcher<CR>
 nnoremap <Leader>fr :action FindUsages<CR>
 nnoremap <Leader>fu :action FindUsages<CR>
 
