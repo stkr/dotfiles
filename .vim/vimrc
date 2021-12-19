@@ -22,7 +22,7 @@ endif
     Plug 'PhilRunninger/bufselect.vim',          { 'commit': '0e5fd332d76bd8b23ca6d92fe9ab6db7304b22d3' }
 
     if (has('nvim'))
-        Plug 'neovim/nvim-lspconfig',            { 'commit': '27d2c116fdea5614f422dcbcae63da01a1415fcf' }
+        Plug 'neovim/nvim-lspconfig',            { 'commit': '0f72e5468e510429d5f14b73c93fb528ead1fdaa' }
 
         Plug 'L3MON4D3/LuaSnip',                 { 'commit': '577045e9adf325e58f690f4d4b4a293f3dcec1b3' }
         Plug 'saadparwaiz1/cmp_luasnip',         { 'commit': '75bf6434f175206cd219f9d2bbcae154a009346c' }
