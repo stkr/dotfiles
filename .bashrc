@@ -170,10 +170,8 @@ if [ -f  "$HOME/.cargo/env" ]; then
     source "$HOME/.cargo/env"
 fi
 
-# Start an ssh agent
-if [ -z "$SSH_AUTH_SOCK" ]; then
-   eval $(ssh-agent) > /dev/null
-fi
+# Start an ssh agent if not already running
+[ -n "$SSH_AGENT_PID" ] || eval "$(ssh-agent -s)"
 
 # if fd is available, use it per default for fzf finds
 if command -v fd &> /dev/null ; then 
