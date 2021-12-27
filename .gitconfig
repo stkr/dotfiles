@@ -35,15 +35,18 @@
 
 
 [merge]
-	tool = vimdiff -f
+	tool = nvimdiff
 	conflictstyle = diff3
 [mergetool]
 	prompt = false
 
 [diff]
-	tool = vimdiff -f
+	tool = nvimdiff
 
 [pull]
 	rebase = false
 [push]
 	default = simple
+[user]
+	name = stefan
+	email = stefan
