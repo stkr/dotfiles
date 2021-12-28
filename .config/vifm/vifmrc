@@ -436,25 +436,22 @@ vnoremap gb :file &<cr>l
 if has('win')
     " Yank current directory path to Windows clipboard with forward slashes
     nnoremap yp :!echo %"d:gs!\!/! %i | clip<cr>
-    " Yank path to current file to Windows clipboard with forward slashes
-    nnoremap yf :!echo %"c:gs!\!/! %i | clip<cr>
+    " Yank path to selected files to Windows clipboard with forward slashes
+    nnoremap yf :!echo %"f:gs!\!/! %i | clip<cr>
 elseif executable('xclip')
     " Yank current directory path into the clipboard
     nnoremap yd :!echo -n %d | xclip -selection clipboard %i<cr>:echo expand('%"d') "is yanked to clipboard"<cr>
-    nnoremap <s-f11> :!echo -n %d | xclip -selection clipboard %i<cr>:echo expand('%"d') "is yanked to clipboard"<cr>
-    " Yank current file path into the clipboard
-    nnoremap yf :!echo -n %c:p | xclip -selection clipboard %i<cr>:echo expand('%"c:p') "is yanked to clipboard"<cr>
-    nnoremap <s-f12> :!echo -n %c:p | xclip -selection clipboard %i<cr>:echo expand('%"c:p') "is yanked to clipboard"<cr>
-    vnoremap yf :!echo -n %f:p | xclip -selection clipboard %i<cr>
-    vnoremap <s-f12> :!echo -n %f:p | xclip -selection clipboard %i<cr>
+    " Yank selected file paths into the clipboard
+    nnoremap yf :!echo -n %f:p | xclip -selection clipboard %i<cr>:echo "Selected filenames yanked to clipboard"<cr>
+    vnoremap yf :!echo -n %f:p | xclip -selection clipboard %i<cr>:echo "Selected filenames yanked to clipboard"<cr>
 
 elseif executable('xsel')
     " Yank current directory path into primary and selection clipboards
     nnoremap yd :!echo -n %d | xsel --input --primary %i &&
                 \ echo -n %d | xsel --clipboard --input %i<cr>
-    " Yank current file path into into primary and selection clipboards
-    nnoremap yf :!echo -n %c:p | xsel --input --primary %i &&
-                \ echo -n %c:p | xsel --clipboard --input %i<cr>
+    " Yank selected file paths into into primary and selection clipboards
+    nnoremap yf :!echo -n %f:p | xsel --input --primary %i &&
+                \ echo -n %f:p | xsel --clipboard --input %i<cr>
 endif
 
 " Mappings for faster renaming
