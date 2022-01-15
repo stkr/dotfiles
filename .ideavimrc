@@ -38,7 +38,8 @@ vnoremap <Leader>rf :action ReformatCode<CR>
 
 " Overlays / context menus
 nnoremap <Leader>ce :action ShowErrorDescription<CR>
-    
+nnoremap <Leader>ci :action ParameterInfo<CR>
+
 
 " Useful common substitution commands
 " ideavim is a bit crazy about backslash escaping here, hence these need to be redefined (they are
@@ -62,7 +63,7 @@ inoremap <C-l> <Right>
 inoremap <C-h> <Left>
 
 
-" When pasing text over a selection, do keep the original text in the clipboard. Note, we have a
+" When pasting text over a selection, do keep the original text in the clipboard. Note, we have a
 " similar thing in .vimrc, however the vimrc variant is not supported by ideavim and hence we fall
 " back here to the less robust (cursor positioning is inconsistent when doing this at the end of a
 " line) version.
