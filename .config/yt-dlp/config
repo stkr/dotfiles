@@ -1,0 +1,6 @@
+# Always use .netrc
+-n
+# --sponsorblock-mark sponsor,selfpromo,preview
+
+# Make local file dates be the dates of download, NOT the dates of the uload to the site:
+--no-mtime
