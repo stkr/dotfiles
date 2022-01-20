@@ -21,6 +21,7 @@ nnoremap <Leader>fs :action GotoSymbol<CR>
 nnoremap <Leader>fb :action Switcher<CR>
 nnoremap <Leader>fr :action FindUsages<CR>
 nnoremap <Leader>fu :action FindUsages<CR>
+nnoremap <Leader>fg :action FindInPath<CR>
 
 " Going to stuff
 nnoremap <Leader>gd :action GotoDeclaration<CR>
