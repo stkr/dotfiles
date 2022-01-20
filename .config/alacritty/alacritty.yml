@@ -111,7 +111,9 @@ font:
     #   - (macOS) Menlo
     #   - (Linux) monospace
     #   - (Windows) Consolas
-    family: JetBrains Mono Nerd Font
+    family: JetBrainsMono Nerd Font
+    # family: Consolas
+    # family: Inconsolata Nerd Font
 
     # The `style` can be specified to pick a specific face.
     #style: Regular
@@ -144,8 +146,8 @@ font:
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
   offset:
-    x: 0
-    y: 0
+    x: 1
+    y: 1
 
   # Glyph offset determines the locations of the glyphs within their cells with
   # the default being at the bottom. Increasing `x` moves the glyph to the right,
@@ -229,12 +231,6 @@ bell:
   animation: EaseOutExpo
   duration: 0
   color: '0xffffff'
-
-# Background opacity
-#
-# Window opacity as a floating point number from `0.0` to `1.0`.
-# The value `0.0` is completely transparent and `1.0` is opaque.
-background_opacity: 1.0
 
 # Mouse bindings
 #
@@ -359,17 +355,6 @@ hints:
 # Directory the shell is started in. If this is unset, or `None`, the working
 # directory of the parent process will be used.
 working_directory: None
-
-# Windows 10 ConPTY backend (Windows only)
-#
-# This will enable better color support and may resolve other issues,
-# however this API and its implementation is still young and so is
-# disabled by default, as stability may not be as good as the winpty
-# backend.
-#
-# Alacritty will fall back to the WinPTY automatically if the ConPTY
-# backend cannot be initialized.
-enable_experimental_conpty_backend: false
 
 # Send ESC (\x1b) before characters when alt is pressed.
 alt_send_esc: true

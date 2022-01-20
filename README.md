@@ -171,6 +171,19 @@ runtimepath and also use the same vimrc file:
     source ~/.vim/vimrc
 
 
+## Alacritty and the conpty desaster
+
+On windows, alacritty since some time uses the conpty. However, the version of conpty +
+conhost/OpenConsole shipped with windows is quite outdated and broken. There is no way in default
+alacritty to replace those components as they are taken from the windows installation. Howver a
+patch exists to have alacritty take conpty.dll and OpenConsole.exe from the same directory as the
+alacritty.exe [6]. A PR for that was declined [7], [8], so that will not make it into an alacritty
+release, however, compiling alacritty from scratch is quite straightworward. Source and compilation
+instructions for conpty.dll and OpenConsole can be found at [8]. After opening the .sln file in
+visual studio it prompts to install one million of things (20 GB!). However, the only thing really
+needed is the Windows SDK.
+
+
 ## Hostname specific colorization of the tmux status line
 
 In order to easily identify the machine that a tmux session is running on (when working remotely),
@@ -194,4 +207,7 @@ black      | white      | others
 [3]: https://medium.com/free-code-camp/tmux-in-practice-integration-with-system-clipboard-bcd72c62ff7b
 [4]: https://jdhao.github.io/2021/01/05/nvim_copy_from_remote_via_osc52/
 [5]: https://conemu.github.io/en/SettingsANSI.html
-
+[6]: https://github.com/fredizzimo/alacritty/commit/5121f4aaa09a921c236701c202a0f4c9a3276978?diff=unified
+[7]: https://github.com/alacritty/alacritty/pull/4501
+[8]: https://github.com/alacritty/alacritty/issues/3889
+[9]: https://github.com/microsoft/terminal
