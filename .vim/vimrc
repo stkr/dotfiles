@@ -682,7 +682,6 @@ endif
 " General Functionality {{{
 
     " Close buffers but keep splits
-    nnoremap <leader>Q :Sayonara<cr>
     nnoremap <leader>q :Sayonara!<cr>
 
     " Command line abbreviation so %% expands to the full path of
@@ -702,6 +701,14 @@ endif
     nnoremap p p`]
 
 " }}}
+
+
+" Additional alignment rules (easy align) {{{
+    let g:easy_align_delimiters = {
+    \ '^': { 'pattern': '\^' },
+    \ }
+" }}}
+
 
 " Colorscheme and final setup {{{
 
