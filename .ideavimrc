@@ -9,6 +9,7 @@ set timeoutlen=1000
 set showmode
 set surround
 set ReplaceWithRegister
+set ideajoin
 
 nnoremap <Leader>q :action CloseEditor<CR>
 
