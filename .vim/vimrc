@@ -761,13 +761,10 @@ endif
         " code a branch in the config file that is not taken.
         " (https://github.com/vim/vim/issues/7191)
         " Therefore all lua code needs to move to the nvim specific config file :-(
-
+    elseif has('ide') && &ide =~? 'intellij idea'
+        " Avoid loading the completion bindings when executed from ideavim. Ideavim does its own
+        " code completion.
     else
-
-        " Use <Tab> and <S-Tab> to navigate through popup menu
-        " inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-        " inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
         " Set completeopt to have a better completion experience
         set completeopt=menuone,preview
 
