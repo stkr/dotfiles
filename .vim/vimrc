@@ -509,8 +509,27 @@ if (has('nvim'))
 endif
 
     " Useful common substitution commands
-    " We make all substitution commands per default operate on the full buffer.
-    " To have it operate on something else, use visual mode.
+    
+    " The following are defined as functions and not used directly in the mapping, because when used
+    " directly in a mapping, they do have sideeffects on the searh register and on the hlsearch
+    " option which are undesireable. This is not the case (per design) if subst commands are
+    " executed from functions.
+    function s:subst_hex_bytes() 
+        :s!\([0-9a-fA-F][0-9a-fA-F]\)!0x\1, !ge
+    endfunction
+
+    function s:subst_hex_spaces() 
+        :s!\([0-9a-fA-F][0-9a-fA-F]\)!\1 !ge
+    endfunction
+
+    function s:subst_slash_bw_to_fw()
+        :s!\\!/!ge
+    endfunction
+
+    function s:subst_slash_fw_to_bw()
+        :s!/!\\!ge
+    endfunction
+
     if ! exists('g:loaded_vim_which_key')
         let g:which_key_map.s = { 'name' : '+subst' }
 
@@ -522,24 +541,29 @@ endif
         let g:which_key_map.s.s.l = 'linux'
         let g:which_key_map.s.s.w = 'windows'
     endif
-    nnoremap <leader>s* :%s!\\!/!g<CR>
-    nnoremap <expr> <Leader>s* ':%s/\<'.expand('<cexpr>').'\>//gc<left><left><left>'
+    nnoremap <expr> <Leader>s* ':%S/\<'.expand('<cexpr>').'\>//gc<left><left><left>'
+
     " Convert backslashes to forward slashes (windows->unix)
-    nnoremap <leader>ssu :s!\\!/!g<CR>
-    vnoremap <leader>ssu :s!\\!/!g<CR>
+    nnoremap <silent> <leader>ssu :call <SID>subst_slash_bw_to_fw()<cr>
+    vnoremap <silent> <leader>ssu :call <SID>subst_slash_bw_to_fw()<cr>
     " Convert backslashes to forward slashes (windows->linux)
-    nnoremap <leader>ssl :s!\\!/!g<CR>
-    vnoremap <leader>ssl :s!\\!/!g<CR>
+    nnoremap <silent> <leader>ssl :call <SID>subst_slash_bw_to_fw()<cr>
+    vnoremap <silent> <leader>ssl :call <SID>subst_slash_bw_to_fw()<cr>
     " Convert forward slashes to backslashes (linux->windows)
-    nnoremap <leader>ssw :s!/!\\!g<CR>
-    vnoremap <leader>ssw :s!/!\\!g<CR>
+    nnoremap <silent> <leader>ssw :call <SID>subst_slash_fw_to_bw()<cr>
+    vnoremap <silent> <leader>ssw :call <SID>subst_slash_fw_to_bw()<cr>
+
+
     " Convert a hex string to comma separated list of bytes
     if ! exists('g:loaded_vim_which_key')
         let g:which_key_map.s.h = { 'name' : '+hex' }
         let g:which_key_map.s.h.b = 'bytes (c)'
+        let g:which_key_map.s.h.s = 'spaces'
     endif
-    nnoremap <leader>shb :s!\([0-9a-fA-F][0-9a-fA-F]\)!0x\1, !g<CR>
-    vnoremap <leader>shb :s!\([0-9a-fA-F][0-9a-fA-F]\)!0x\1, !g<CR>
+    nnoremap <silent> <leader>shb :call <SID>subst_hex_bytes()<CR>
+    vnoremap <silent> <leader>shb :call <SID>subst_hex_bytes()<CR>
+    nnoremap <silent> <leader>shs :call <SID>subst_hex_spaces()<CR>
+    vnoremap <silent> <leader>shs :call <SID>subst_hex_spaces()<CR>
 
     " Substitute whitespace
     if ! exists('g:loaded_vim_which_key')
