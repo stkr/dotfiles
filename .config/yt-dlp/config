@@ -4,3 +4,12 @@
 
 # Make local file dates be the dates of download, NOT the dates of the uload to the site:
 --no-mtime
+
+# When downloading from the internet, limit the video quality.
+# Nowadays, some streams have 4k resolution, but I don't have a 4k 
+# monitor, so using that high of a quality is a waste of bandwith 
+# and computing power for decoding.
+# --format bestvideo[height<=?1080]+bestaudio/best
+# Sort: use the best resolution that is 1080p or lower, if there are multiple with that resolution,
+# prefer av01.
+--format-sort res:1080,vcodec:av01,
