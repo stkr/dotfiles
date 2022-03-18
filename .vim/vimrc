@@ -673,6 +673,8 @@ endif
     map <Leader>2 :diffget 2<CR>
     map <Leader>3 :diffget 3<CR>
 
+    map <Leader>< :diffget 2<CR>
+    map <Leader>> :diffget 1<CR>
 
     " helpers for dealing with other people's code
     " nmap \t :set ts=4 sts=4 sw=4 noet<cr>
