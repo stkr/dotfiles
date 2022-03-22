@@ -661,6 +661,14 @@ endif
         " (to be continued...)
     endif
 
+    " Alignment
+    if ! exists('g:loaded_vim_which_key')
+        let g:which_key_map.a = { 'name' : '+align' }
+        let g:which_key_map.a.a = { 'name' : 'easyalign' }
+    endif
+    xmap <leader>aa <Plug>(EasyAlign)
+    nmap <leader>aa <Plug>(EasyAlign)
+
     " Misc
     if (has('nvim'))
         nnoremap ]e <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
@@ -689,12 +697,6 @@ endif
     " Command line abbreviation so %% expands to the full path of
     " the directory that contains the current file
     cabbr <expr> %% expand('%:p:h')
-
-    " Start interactive EasyAlign in visual mode (e.g. vipga)
-    xmap ga <Plug>(EasyAlign)
-
-    " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-    nmap ga <Plug>(EasyAlign)
 
     " After block yank and paste, move cursor to the end of operated text
     " and don't override register
