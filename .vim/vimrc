@@ -41,6 +41,7 @@ endif
         Plug 'nvim-telescope/telescope.nvim',    { 'commit': '6f82c6630cea83b591beeebdc760705cafa3e426' }
 
         Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'commit': '59e38e1661ffdd586cb7fc22ca0b5a05c7caf988', 'do': 'make' }
+        Plug 'nvim-telescope/telescope-live-grep-raw.nvim', { 'commit': '8124094e11b54a1853c3306d78e6ca9a8d40d0cb' }
 
     else
     endif
@@ -449,34 +450,41 @@ endif
     " Finding stuff
     if ! exists('g:loaded_vim_which_key')
         let g:which_key_map.f = { 'name' : '+find' }
-        let g:which_key_map.f.f = 'file'
         let g:which_key_map.f.b = 'buffer'
-        let g:which_key_map.f.h = 'history'
-        let g:which_key_map.f.t = 'tag'
+        let g:which_key_map.f.f = 'file'
         let g:which_key_map.f.g = 'grep'
+        let g:which_key_map.f.t = 'tag'
+        let g:which_key_map.f[':'] = 'command history'
         let g:which_key_map.f['*'] = 'word in files'
         if (has('nvim'))
             let g:which_key_map.f.r = 'references'
             let g:which_key_map.f.u = 'usages'
+            let g:which_key_map.f['/'] = 'search history'
+
+            let g:which_key_map.f.a = 'anything'
         endif
     endif
 
     if (has('nvim'))
-        nnoremap <Leader>ff :Telescope fd<CR>
         nnoremap <Leader>fb :Telescope buffers<CR>
-        nnoremap <Leader>fc :Telescope command_history<CR>
-        nnoremap <Leader>fs :Telescope search_history<CR>
+        nnoremap <Leader>ff :Telescope fd<CR>
+        nnoremap <Leader>fg :Telescope live_grep<CR>
+        nnoremap <Leader>fg :lua require("telescope").extensions.live_grep_raw.live_grep_raw()<CR>
         nnoremap <Leader>ft :Telescope tags<CR>
+        nnoremap <Leader>f: :Telescope command_history<CR>
+        nnoremap <Leader>f* :Telescope grep_string<CR>
+
         nnoremap <Leader>fr :Telescope lsp_references<CR>
         nnoremap <Leader>fu :Telescope lsp_references<CR>
-        nnoremap <Leader>fg :Telescope live_grep<CR>
+        nnoremap <Leader>f/ :Telescope search_history<CR>
+
         nnoremap <Leader>fa :Telescope<CR>
     else
-        nnoremap <Leader>ff :<C-u>FzfFiles<CR>
         nnoremap <Leader>fb :<C-u>FzfBuffers<CR>
-        nnoremap <Leader>fh :<C-u>FzfHistory<CR>
-        nnoremap <Leader>ft :<C-u>FzfTags<CR>
+        nnoremap <Leader>ff :<C-u>FzfFiles<CR>
         nnoremap <Leader>fg :Rg ""<left>
+        nnoremap <Leader>ft :<C-u>FzfTags<CR>
+        nnoremap <Leader>f: :<C-u>FzfHistory<CR>
         nnoremap <expr> <Leader>f* ':Rg "'.expand('<cexpr>').'"<CR>'
     endif
 
