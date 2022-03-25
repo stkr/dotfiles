@@ -37,10 +37,10 @@ endif
 
         Plug 'ray-x/lsp_signature.nvim',         { 'commit': '422006c33c0da8947772c3a1040fa6c93be418d8' }
 
-        Plug 'nvim-lua/plenary.nvim',            { 'commit': '1c31adb35fcebe921f65e5c6ff6d5481fa5fa5ac' }
-        Plug 'nvim-telescope/telescope.nvim',    { 'commit': '6f82c6630cea83b591beeebdc760705cafa3e426' }
+        Plug 'nvim-lua/plenary.nvim',            { 'commit': '0d660152000a40d52158c155625865da2aa7aa1b' }
+        Plug 'nvim-telescope/telescope.nvim',    { 'commit': '503db70a6a82ff4847593e5830c05082db39faa0' }
 
-        Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'commit': '59e38e1661ffdd586cb7fc22ca0b5a05c7caf988', 'do': 'make' }
+        Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'commit': '8ec164b541327202e5e74f99bcc5fe5845720e18', 'do': 'make' }
         Plug 'nvim-telescope/telescope-live-grep-raw.nvim', { 'commit': '8124094e11b54a1853c3306d78e6ca9a8d40d0cb' }
 
     else
