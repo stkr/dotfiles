@@ -1,11 +1,16 @@
 local map = require("core.utils").map
 
+map("n", "<leader>.", ":BufExplorer<cr>")
+map("n", "<leader>,", ":w<cr>")
 
--- telescope
-map("n", "<leader>fp", ":Telescope media_files <CR>")
-map("n", "<leader>te", ":Telescope <CR>")
+-- The function is called `t` for `termcodes`.
+-- You don't have to call it that, but I find the terseness convenient
+local function t(str)
+    -- Adjust boolean arguments as needed
+    return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
 
--- truezen
-map("n", "<leader>ta", ":TZAtaraxis <CR>")
-map("n", "<leader>tm", ":TZMinimalist <CR>")
-map("n", "<leader>tf", ":TZFocus <CR>")
+-- wildmenu navigation
+-- I have no f** ing idea how to do that with nvchad's map()
+vim.api.nvim_set_keymap("c", "<c-j>", "<c-n>", { expr = false, noremap = true })
+vim.api.nvim_set_keymap("c", "<c-k>", "<c-p>", { expr = false, noremap = true })

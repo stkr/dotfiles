@@ -27,6 +27,8 @@ M.options = {
    undofile = true,
    fillchars = { eob = " " },
    shadafile = vim.opt.shadafile,
+   wildmenu = true,
+   wildmode= "list:longest", -- " complete files like a shell
 
    -- NvChad options
    nvChad = {

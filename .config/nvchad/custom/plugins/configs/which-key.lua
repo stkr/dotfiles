@@ -77,27 +77,29 @@ wk.register({
     }, }, leader_normal)
 
 
- -- A little bit of background on why substitution mappings are that convoluted:
- -- Normally one would define a command like
- -- a = { "<cmd>s/a/b/<cr>", "subst b for a" },
- -- however, that does update the pattern register and hlsearch.
- -- Per design, vim does restore those, when exiting from a function. However, this only works when
- -- the substitution is within a vimscript function - the following would still work, but also
- -- change pattern register and hlsearch:
- -- b = { "<cmd>lua vim.api.nvim_command('s/a/b/')<CR>", "subst b for a" },
- -- So, what we need to do instead is, to define a vimscript function which contains the 
- -- substitution command, and call that function. We then can bind that function to a key.
- --
- -- In visual mode one would use the marks '< and '> to select the range of lines in which to
- -- substitute. 
- -- However, the marks '< and '> are only set when you leave Visual mode.
- -- When you're using Vim interactively, this happens naturally, as you use the : to start typing 
- -- a "substitute" command Vim will leave Visual mode and enter command-line mode. But that's not 
- -- the case when you're using normal! from a function.
- -- You can add an <Esc> to leave Visual mode explicitely. You'll need :execute to encode 
- -- the <Esc> inside a string. Source:
- -- https://vi.stackexchange.com/questions/25104/how-do-i-substitute-inside-the-visual-selection-in-a-vimscript-function
- --
+-------------  Useful common substitution commands
+--
+-- A little bit of background on why substitution mappings are that convoluted:
+-- Normally one would define a command like
+-- a = { "<cmd>s/a/b/<cr>", "subst b for a" },
+-- however, that does update the pattern register and hlsearch.
+-- Per design, vim does restore those, when exiting from a function. However, this only works when
+-- the substitution is within a vimscript function - the following would still work, but also
+-- change pattern register and hlsearch:
+-- b = { "<cmd>lua vim.api.nvim_command('s/a/b/')<CR>", "subst b for a" },
+-- So, what we need to do instead is, to define a vimscript function which contains the 
+-- substitution command, and call that function. We then can bind that function to a key.
+--
+-- In visual mode one would use the marks '< and '> to select the range of lines in which to
+-- substitute. 
+-- However, the marks '< and '> are only set when you leave Visual mode.
+-- When you're using Vim interactively, this happens naturally, as you use the : to start typing 
+-- a "substitute" command Vim will leave Visual mode and enter command-line mode. But that's not 
+-- the case when you're using normal! from a function.
+-- You can add an <Esc> to leave Visual mode explicitely. You'll need :execute to encode 
+-- the <Esc> inside a string. Source:
+-- https://vi.stackexchange.com/questions/25104/how-do-i-substitute-inside-the-visual-selection-in-a-vimscript-function
+--
 function mh_substitute(command)
     vim.api.nvim_exec(string.format([[
         function s:mh_substitute_vimscript()
@@ -165,3 +167,12 @@ wk.register({
     }, }, leader_visual)
 
 
+-------------  Toggle
+wk.register({
+    t = {
+        name = "toggle",
+        l = { "<cmd>set list!<cr>", "listchars" },
+        n = { "<cmd>set relativenumber!<cr>", "numbers are relative" },
+        p = { "<cmd>set paste!<cr>", "paste" },
+        s = { "<cmd>set spell!<cr>", "spell" },
+    }, }, leader_normal)
