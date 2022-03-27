@@ -46,6 +46,7 @@ wk.register({
     f = {
         name = "find",
         b = { "<cmd>Telescope buffers<CR>", "buffer" },
+        e = { "<cmd>NvimTreeFocus<CR>", "explore" },
         f = { "<cmd>Telescope fd<CR>", "file" },
         -- g = { "<cmd>Telescope live_grep<CR>", "grep" },
         g = { "<cmd>lua require(\"telescope\").extensions.live_grep_raw.live_grep_raw()<CR>", "grep" },
