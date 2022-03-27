@@ -49,7 +49,7 @@ M.options = {
 M.ui = {
    hl_override = "", -- path of your file that contains highlights
    italic_comments = false,
-   theme = "gruvchad",
+   theme = "solarized",
 
    -- Change terminal bg to nvim theme's bg color so it'll match well
    -- For Ex : if you have onedark set in nvchad, set onedark's bg color on your terminal
@@ -111,6 +111,8 @@ M.plugins = {
    },
    default_plugin_config_replace = {
         nvim_cmp = "custom.plugins.configs.cmp",   
+        feline = "custom.plugins.configs.statusline",   
+        telescope = "custom.plugins.configs.telescope",   
    },
    default_plugin_remove = {},
    install = require "custom.plugins",
