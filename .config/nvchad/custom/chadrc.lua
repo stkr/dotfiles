@@ -27,8 +27,6 @@ M.options = {
    undofile = true,
    fillchars = { eob = " " },
    shadafile = vim.opt.shadafile,
-   wildmenu = true,
-   wildmode= "list:longest", -- " complete files like a shell
 
    -- NvChad options
    nvChad = {
@@ -229,6 +227,13 @@ M.mappings.plugins = {
       themes = "<leader>th", -- NvChad theme picker
    },
 }
+
+-- For whatever reason, NvChad has "some" options but not others... So we need to treat those
+-- separately:
+
+vim.api.nvim_set_option("virtualedit", "block,onemore")
+-- vim.api.nvim_set_option("wildmenu", true)
+-- vim.api.nvim_set_option("wildmode", "list:longest")
 
 -- This explicitly loads which-key (it makes no sense to lazy-load this).
 require "custom.plugins.configs.which-key"

@@ -35,9 +35,9 @@ wk.register({
     e = {
         name = "edit/open",
         b = { "<cmd>:e ~/.bashrc<CR>", "bashrc" },
-        i = { "<cmd>:e ~/.vim/vimrc<CR>", "vimrc" },
         g = { "<cmd>:e ~/.gitconfig<CR>", "gitconfig" },
         n = { "<cmd>:e ~/.config/nvim/custom/init.lua<CR>", "nvim-init" },
+        v = { "<cmd>:e ~/.vim/vimrc<CR>", "vimrc" },
     }, }, leader_normal)
 
 

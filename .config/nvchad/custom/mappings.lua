@@ -17,4 +17,3 @@ vim.api.nvim_set_keymap("c", "<c-j>", "<c-n>", { expr = false, noremap = true })
 vim.api.nvim_set_keymap("c", "<c-k>", "<c-p>", { expr = false, noremap = true })
 
 
-
