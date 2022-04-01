@@ -4,7 +4,10 @@ return {
     },
     {
         "tpope/vim-obsession",
-
+    },
+    {
+        "junegunn/vim-easy-align",
+        cmd = { "EasyAlign" },
     },
 }
 
