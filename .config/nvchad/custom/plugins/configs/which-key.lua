@@ -175,8 +175,10 @@ wk.register({
 wk.register({
     t = {
         name = "toggle",
+        h = { "<cmd>set hlsearch!<cr>", "hlseach" },
         l = { "<cmd>set list!<cr>", "listchars" },
-        n = { "<cmd>set relativenumber!<cr>", "numbers are relative" },
+        r = { "<cmd>set relativenumber!<cr>", "relativenumber" },
         p = { "<cmd>set paste!<cr>", "paste" },
         s = { "<cmd>set spell!<cr>", "spell" },
+        w = { "<cmd>set wrap!<cr>", "wrap" },
     }, }, leader_normal)
