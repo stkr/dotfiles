@@ -182,3 +182,11 @@ wk.register({
         s = { "<cmd>set spell!<cr>", "spell" },
         w = { "<cmd>set wrap!<cr>", "wrap" },
     }, }, leader_normal)
+
+
+-------------  Misc
+wk.register({
+    ['.'] = { "<cmd>lua require('telescope.builtin').buffers({ sort_mru = true, ignore_current_buffer = true, previewer = false })<CR>", "recent files" },
+    [','] = { "<cmd>w<cr>", "save" },
+    q = { "<cmd>bd<cr>", "close" }
+  }, leader_normal)

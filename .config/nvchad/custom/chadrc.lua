@@ -211,7 +211,7 @@ M.mappings.plugins = {
    },
 
    nvimtree = {
-      toggle = "<C-n>",
+      toggle = "",
       focus = "",
    },
 
@@ -224,7 +224,7 @@ M.mappings.plugins = {
       help_tags = "<leader>fh",
       live_grep = "<leader>fw",
       oldfiles = "<leader>fo",
-      themes = "<leader>th", -- NvChad theme picker
+      themes = "", -- NvChad theme picker
    },
 }
 

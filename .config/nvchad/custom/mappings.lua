@@ -1,9 +1,5 @@
 local map = require("core.utils").map
 
--- map("n", "<leader>.", ":BufExplorer<cr>")
-map("n", "<leader>.", "<cmd>lua require('telescope.builtin').buffers({ sort_mru = true, ignore_current_buffer = true, previewer = false })<CR>")
-map("n", "<leader>,", ":w<cr>")
-
 -- The function is called `t` for `termcodes`.
 -- You don't have to call it that, but I find the terseness convenient
 local function t(str)
