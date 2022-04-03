@@ -15,12 +15,12 @@ wk.setup {
 wk.register({
     a = {
         name = "align",
-        a = { "<cmd>EasyAlign<CR>", "easyalign" },
+        a = { "<cmd>EasyAlign<cr>", "easyalign" },
     }, }, leader_normal)
 wk.register({
     a = {
         name = "+align",
-        a = { "<cmd>EasyAlign<CR>", "easyalign" },
+        a = { "<cmd>EasyAlign<cr>", "easyalign" },
     }, }, leader_visual)
 
 
@@ -28,8 +28,8 @@ wk.register({
 wk.register({
     c = {
         name = "context",
-        i = { "<cmd>lua vim.lsp.buf.hover()<CR>", "info" },
-        s = { "<cmd>lua vim.lsp.buf.signature_help()<CR>", "signature" },
+        i = { "<cmd>lua vim.lsp.buf.hover()<cr>", "info" },
+        s = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "signature" },
     }, }, leader_normal)
 
 
@@ -37,10 +37,10 @@ wk.register({
 wk.register({
     e = {
         name = "edit/open",
-        b = { "<cmd>:e ~/.bashrc<CR>", "bashrc" },
-        g = { "<cmd>:e ~/.gitconfig<CR>", "gitconfig" },
-        n = { "<cmd>:e ~/.config/nvim/custom/init.lua<CR>", "nvim-init" },
-        v = { "<cmd>:e ~/.vim/vimrc<CR>", "vimrc" },
+        b = { "<cmd>:e ~/.bashrc<cr>", "bashrc" },
+        g = { "<cmd>:e ~/.gitconfig<cr>", "gitconfig" },
+        n = { "<cmd>:e ~/.config/nvim/custom/init.lua<cr>", "nvim-init" },
+        v = { "<cmd>:e ~/.vim/vimrc<cr>", "vimrc" },
     }, }, leader_normal)
 
 
@@ -48,18 +48,18 @@ wk.register({
 wk.register({
     f = {
         name = "find",
-        b = { "<cmd>Telescope buffers<CR>", "buffer" },
-        e = { "<cmd>NvimTreeFocus<CR>", "explore" },
-        f = { "<cmd>Telescope fd<CR>", "file" },
-        -- g = { "<cmd>Telescope live_grep<CR>", "grep" },
-        g = { "<cmd>lua require(\"telescope\").extensions.live_grep_raw.live_grep_raw()<CR>", "grep" },
-        t = { "<cmd>Telescope tags<CR>", "tag" },
-        [':'] = { "<cmd>Telescope command_history<CR>", "command history" },
-        ['*'] = { "<cmd>Telescope grep_string<CR>", "word in files" },
-        r = { "<cmd>Telescope lsp_references<CR>", "references" },
-        u = { "<cmd>Telescope lsp_references<CR>", "usages" },
-        ['/'] = { "<cmd>Telescope search_history<CR>", "search history" },
-        a = { "<cmd>Telescope<CR>", "anything" },
+        b = { "<cmd>Telescope buffers<cr>", "buffer" },
+        e = { "<cmd>NvimTreeFocus<cr>", "explore" },
+        f = { "<cmd>Telescope fd<cr>", "file" },
+        -- g = { "<cmd>Telescope live_grep<cr>", "grep" },
+        g = { "<cmd>lua require(\"telescope\").extensions.live_grep_raw.live_grep_raw()<cr>", "grep" },
+        t = { "<cmd>Telescope tags<cr>", "tag" },
+        [':'] = { "<cmd>Telescope command_history<cr>", "command history" },
+        ['*'] = { "<cmd>Telescope grep_string<cr>", "word in files" },
+        r = { "<cmd>Telescope lsp_references<cr>", "references" },
+        u = { "<cmd>Telescope lsp_references<cr>", "usages" },
+        ['/'] = { "<cmd>Telescope search_history<cr>", "search history" },
+        a = { "<cmd>Telescope<cr>", "anything" },
     }, }, leader_normal)
 
 
@@ -67,8 +67,8 @@ wk.register({
 wk.register({
     g = {
         name = "goto",
-        d = { "<cmd>lua vim.lsp.buf.definition()<CR>", "definition" },
-        h = { "<cmd>ClangdSwitchSourceHeader<CR>", "header/src" },
+        d = { "<cmd>lua vim.lsp.buf.definition()<cr>", "definition" },
+        h = { "<cmd>ClangdSwitchSourceHeader<cr>", "header/src" },
     }, }, leader_normal)
 
 
@@ -76,8 +76,9 @@ wk.register({
 wk.register({
     r = {
         name = "refactor",
-        r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "rename" },
-        f = { "<cmd>lua vim.lsp.buf.range_formatting()<CR>", "format" },
+        a = { "<cmd>lua require('telescope.builtin').lsp_code_actions()<cr>", "format" },
+        f = { "<cmd>lua vim.lsp.buf.range_formatting()<cr>", "format" },
+        r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "rename" },
     }, }, leader_normal)
 
 
@@ -90,7 +91,7 @@ wk.register({
 -- Per design, vim does restore those, when exiting from a function. However, this only works when
 -- the substitution is within a vimscript function - the following would still work, but also
 -- change pattern register and hlsearch:
--- b = { "<cmd>lua vim.api.nvim_command('s/a/b/')<CR>", "subst b for a" },
+-- b = { "<cmd>lua vim.api.nvim_command('s/a/b/')<cr>", "subst b for a" },
 -- So, what we need to do instead is, to define a vimscript function which contains the 
 -- substitution command, and call that function. We then can bind that function to a key.
 --
@@ -186,7 +187,7 @@ wk.register({
 
 -------------  Misc
 wk.register({
-    ['.'] = { "<cmd>lua require('telescope.builtin').buffers({ sort_mru = true, ignore_current_buffer = true, previewer = false })<CR>", "recent files" },
+    ['.'] = { "<cmd>lua require('telescope.builtin').buffers({ sort_mru = true, ignore_current_buffer = true, previewer = false })<cr>", "recent files" },
     [','] = { "<cmd>w<cr>", "save" },
     q = { "<cmd>bd<cr>", "close" }
   }, leader_normal)
