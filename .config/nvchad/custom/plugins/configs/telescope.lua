@@ -64,7 +64,7 @@ local default = {
 
 telescope.setup(default)
 
-local extensions = { "themes", "terms" }
+local extensions = { "themes", "terms", "live_grep_raw" }
 
 pcall(function()
     for _, ext in ipairs(extensions) do
