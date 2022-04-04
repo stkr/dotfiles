@@ -185,6 +185,23 @@ wk.register({
     }, }, leader_normal)
 
 
+-------------  Yanking
+wk.register({
+    y = {
+        name = "yank",
+        f = {
+            name = "file",
+            -- directory name (/something/src)
+            d = { ':let @*=expand("%:p:h")<cr>', "dir" },
+            -- filename       (foo.txt)
+            f = { ':let @*=expand("%:t")<cr>', "filename" },
+            -- absolute path  (/something/src/foo.txt)
+            p = { ':let @*=expand("%:p")<cr>', "path" },
+            -- relative path  (src/foo.txt)
+            r = { ':let @*=fnamemodify(expand("%"), ":~:.")<cr>', "relative path" },
+        },
+    }, }, leader_normal)
+
 -------------  Misc
 wk.register({
     ['.'] = { "<cmd>lua require('telescope.builtin').buffers({ sort_mru = true, ignore_current_buffer = true, previewer = false })<cr>", "recent files" },
