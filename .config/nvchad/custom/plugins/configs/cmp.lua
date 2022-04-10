@@ -40,6 +40,7 @@ cmp.setup {
            behavior = cmp.ConfirmBehavior.Insert,
            select = true,
        }),
+       ['<esc>'] = cmp.mapping.abort(),
 
        ['<Tab>'] = cmp.mapping(
            function(fallback)
