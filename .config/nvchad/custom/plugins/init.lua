@@ -13,7 +13,13 @@ return {
         "vim-scripts/ReplaceWithRegister",
     },
     {
-      "nvim-telescope/telescope-live-grep-raw.nvim",
+        "nvim-telescope/telescope-live-grep-raw.nvim",
+    },
+    {
+        "jackguo380/vim-lsp-cxx-highlight",
+    },
+    { 
+        "farmergreg/vim-lastplace",
     },
 }
 
