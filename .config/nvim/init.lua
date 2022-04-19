@@ -8,57 +8,10 @@ end
 local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
 vim.api.nvim_create_autocmd('BufWritePost', { command = 'source <afile> | PackerCompile', group = packer_group, pattern = 'init.lua' })
 
--- Helper functions
-local function map(mode, keys, command, opt)
-   local options = { noremap = true, silent = true }
-   if opt then
-      options = vim.tbl_extend("force", options, opt)
-   end
+--#region helper functions
+--#endregion
 
-   -- all valid modes allowed for mappings
-   -- :h map-modes
-   local valid_modes = {
-      [""] = true,
-      ["n"] = true,
-      ["v"] = true,
-      ["s"] = true,
-      ["x"] = true,
-      ["o"] = true,
-      ["!"] = true,
-      ["i"] = true,
-      ["l"] = true,
-      ["c"] = true,
-      ["t"] = true,
-   }
-
-   -- helper function for M.map
-   -- can gives multiple modes and keys
-   local function map_wrapper(sub_mode, lhs, rhs, sub_options)
-      if type(lhs) == "table" then
-         for _, key in ipairs(lhs) do
-            map_wrapper(sub_mode, key, rhs, sub_options)
-         end
-      else
-         if type(sub_mode) == "table" then
-            for _, m in ipairs(sub_mode) do
-               map_wrapper(m, lhs, rhs, sub_options)
-            end
-         else
-            if valid_modes[sub_mode] and lhs and rhs then
-               vim.api.nvim_set_keymap(sub_mode, lhs, rhs, sub_options)
-            else
-               sub_mode, lhs, rhs = sub_mode or "", lhs or "", rhs or ""
-               print(
-                  "Cannot set mapping [ mode = '" .. sub_mode .. "' | key = '" .. lhs .. "' | cmd = '" .. rhs .. "' ]"
-               )
-            end
-         end
-      end
-   end
-
-   map_wrapper(mode, keys, command, options)
-end
-
+--#region plugins
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
   use 'folke/which-key.nvim'
@@ -98,6 +51,7 @@ require('packer').startup(function(use)
   }
 
 end)
+--#endregion
 
 --Set highlight on search
 vim.o.hlsearch = false
@@ -136,6 +90,9 @@ vim.o.completeopt = 'menuone,noselect'
 -- one char after the end of the line
 vim.o.virtualedit = "block,onemore"
 
+-- Detect when a file is changed
+vim.o.autoread = true
+
 --Set statusbar
 require('lualine').setup {
   options = {
@@ -159,10 +116,36 @@ vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Don't copy the replaced text after pasting in visual mode
-map("v", "p", "p:let @+=@0<CR>")
+vim.keymap.set("v", "p", "p:let @+=@0<CR>")
 
 -- Don't yank text on cut ( x )
-map({ "n", "v" }, "x", '"_x')
+vim.keymap.set({ "n", "v" }, "x", '"_x')
+
+-- Avoid the escape key http://vim.wikia.com/wiki/Avoid_the_escape_key
+vim.keymap.set('i', 'jk', '<esc>')
+vim.keymap.set('i', 'kj', '<esc>')
+
+--#region autocommands
+
+-- Go to last position in file upon re-open.
+vim.cmd [[ au BufReadPost * if expand('%:p') !~# '\m/\.git/' && line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif ]]
+-- Reload file after change
+  -- https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/149214
+    -- Triger `autoread` when files changes on disk
+    -- https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
+    -- https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
+vim.api.nvim_create_autocmd({"FocusGained","BufEnter","CursorHold","CursorHoldI"}, {
+  command = "if mode() != 'c' | checktime | endif" })
+
+-- Notification after file change
+  -- https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
+vim.api.nvim_create_autocmd({"FileChangedShellPost"}, {
+  command = "echohl WarningMsg | echo 'File changed on disk. Buffer reloaded.' | echohl"})
+
+-- Automatically reload buffers when re-entering vim.
+vim.api.nvim_create_autocmd({"BufWinLeave"}, { command = "let b:winview = winsaveview()"})
+vim.api.nvim_create_autocmd({"BufWinEnter"}, {
+  command = "if exists('b:winview') | call winrestview(b:winview) | unlet b:winview"})
 
 -- Highlight on yank
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -173,6 +156,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
+--#endregion
 
 --Map blankline
 vim.g.indent_blankline_char = '┊'
@@ -604,7 +588,7 @@ local cmp_setup = function()
       ['<C-k>'] = cmp.mapping.select_prev_item(),
       ['<C-d>'] = cmp.mapping.scroll_docs(4),
       ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-      
+
       ['<CR>'] = cmp.mapping.confirm {
         behavior = cmp.ConfirmBehavior.Replace,
         select = true,
