@@ -83,6 +83,21 @@ vim.cmd [[colorscheme onedark]]
 --Set clipboard to use system clipboard per default
 vim.o.clipboard = "unnamedplus"
 
+-- New splits shall be below or to the right
+vim.o.splitbelow = true
+vim.o.splitright = true
+
+-- When doing command completion, do only complete as much as possible
+-- and provide a list.
+vim.o.wildmode = "longest:full,full"
+vim.keymap.set('c', '<cr>', function()
+  return vim.fn.pumvisible() == 1 and '<c-y>' or '<cr>'
+end, {expr = true})
+-- Interestingly enough, these won't work - nether their vimscript version
+-- nor the lue version. So we stick with TAB for now...
+-- vim.api.nvim_command([[ cnoremap <expr> <c-j> wildmenumode() ? "\<down>" : "\<c-j>" ]])
+-- vim.api.nvim_command([[ cnoremap <expr> <c-k> wildmenumode() ? "\<up>" : "\<c-k>" ]])
+
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
@@ -129,13 +144,16 @@ vim.keymap.set('i', 'kj', '<esc>')
 
 -- Go to last position in file upon re-open.
 vim.cmd [[ au BufReadPost * if expand('%:p') !~# '\m/\.git/' && line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif ]]
+
 -- Reload file after change
-  -- https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/149214
+    -- https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/149214
     -- Triger `autoread` when files changes on disk
     -- https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
     -- https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
+    -- https://vi.stackexchange.com/questions/14315/how-can-i-tell-if-im-in-the-command-window
+    -- getcmdwintype() returns a non-empty string if current window is the commandline window.
 vim.api.nvim_create_autocmd({"FocusGained","BufEnter","CursorHold","CursorHoldI"}, {
-  command = "if mode() != 'c' | checktime | endif" })
+  command = "if mode() != 'c' && getcmdwintype() == '' | checktime | endif" })
 
 -- Notification after file change
   -- https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
