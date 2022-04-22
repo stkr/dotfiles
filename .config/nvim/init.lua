@@ -15,8 +15,10 @@ vim.api.nvim_create_autocmd('BufWritePost', { command = 'source <afile> | Packer
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
   use 'folke/which-key.nvim'
-  use 'tpope/vim-fugitive' -- Git commands in nvim
-  use 'tpope/vim-rhubarb' -- Fugitive-companion to interact with github
+  use 'tpope/vim-repeat'
+  use 'tpope/vim-fugitive'
+  use 'tpope/vim-abolish'
+  use 'tpope/vim-unimpaired'
   use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
   use 'ludovicchabant/vim-gutentags' -- Automatic tags management
   -- UI to select things (files, grep results, open buffers...)
@@ -74,7 +76,7 @@ vim.o.smartcase = true
 
 --Decrease update time
 vim.o.updatetime = 250
-vim.wo.signcolumn = 'yes'
+vim.o.signcolumn = 'yes'
 
 --Set colorscheme
 vim.o.termguicolors = true
@@ -194,12 +196,13 @@ require('gitsigns').setup {
 }
 
 -- Telescope
+local actions = require('telescope.actions')
 require('telescope').setup {
   defaults = {
     mappings = {
       i = {
-        ['<C-u>'] = false,
-        ['<C-d>'] = false,
+        ['<C-k>'] = actions.move_selection_previous,
+        ['<C-j>'] = actions.move_selection_next,
       },
     },
   },
@@ -222,19 +225,6 @@ local function whichkey_setup()
   wk.setup {
       ignore_missing = true
   }
-
-  -------------  Alignment
-  wk.register({
-      a = {
-          name = "align",
-          a = { "<cmd>EasyAlign<cr>", "easyalign" },
-      }, }, leader_normal)
-  wk.register({
-      a = {
-          name = "+align",
-          a = { "<cmd>EasyAlign<cr>", "easyalign" },
-      }, }, leader_visual)
-
 
   -------------  Context information
   wk.register({
@@ -294,10 +284,17 @@ local function whichkey_setup()
   wk.register({
       r = {
           name = "refactor",
-          a = { "<cmd>lua require('telescope.builtin').lsp_code_actions()<cr>", "format" },
+          a = { "<cmd>EasyAlign<cr>", "align" },
           f = { "<cmd>lua vim.lsp.buf.range_formatting()<cr>", "format" },
+          m = { "<cmd>lua require('telescope.builtin').lsp_code_actions()<cr>", "menu" },
           r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "rename" },
       }, }, leader_normal)
+  wk.register({
+      r = {
+          name = "refactor",
+          a = { "<cmd>EasyAlign<cr>", "align" },
+      }, }, leader_visual)
+
 
   -------------  Useful common substitution commands
   --
