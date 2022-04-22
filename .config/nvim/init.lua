@@ -19,6 +19,8 @@ require('packer').startup(function(use)
   use 'tpope/vim-fugitive'
   use 'tpope/vim-abolish'
   use 'tpope/vim-unimpaired'
+  use 'tpope/vim-obsession'
+  use 'tpope/vim-surround'
   use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
   use 'ludovicchabant/vim-gutentags' -- Automatic tags management
   -- UI to select things (files, grep results, open buffers...)
@@ -35,6 +37,7 @@ require('packer').startup(function(use)
   -- Additional textobjects for treesitter
   use 'nvim-treesitter/nvim-treesitter-textobjects'
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
+  use 'ray-x/lsp_signature.nvim'
   -- Autocompletion plugin
   use 'hrsh7th/nvim-cmp'
   use 'hrsh7th/cmp-nvim-lsp'
@@ -51,7 +54,9 @@ require('packer').startup(function(use)
   use {
       "nvim-telescope/telescope-live-grep-raw.nvim",
   }
-
+	use {
+			"farmergreg/vim-lastplace",
+	}
 end)
 --#endregion
 
@@ -120,6 +125,11 @@ require('lualine').setup {
   },
 }
 
+-- Use treesitter for folding
+vim.o.foldmethod = 'expr'
+vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.o.foldenable = false
+
 --Enable Comment.nvim
 require('Comment').setup()
 
@@ -143,9 +153,6 @@ vim.keymap.set('i', 'jk', '<esc>')
 vim.keymap.set('i', 'kj', '<esc>')
 
 --#region autocommands
-
--- Go to last position in file upon re-open.
-vim.cmd [[ au BufReadPost * if expand('%:p') !~# '\m/\.git/' && line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif ]]
 
 -- Reload file after change
     -- https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/149214
