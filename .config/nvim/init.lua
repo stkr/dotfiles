@@ -22,7 +22,7 @@ require('packer').startup(function(use)
   use 'tpope/vim-obsession'
   use 'tpope/vim-surround'
   use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
-  use 'ludovicchabant/vim-gutentags' -- Automatic tags management
+  -- use 'ludovicchabant/vim-gutentags' -- Automatic tags management
   -- UI to select things (files, grep results, open buffers...)
   use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
@@ -237,6 +237,7 @@ local function whichkey_setup()
   wk.register({
       c = {
           name = "context",
+          d = { "<cmd>lua vim.diagnostic.setqflist()<cr>", "diagnostic" },
           i = { "<cmd>lua vim.lsp.buf.hover()<cr>", "info" },
           s = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "signature" },
       }, }, leader_normal)
@@ -348,6 +349,16 @@ local function whichkey_setup()
       ]], false)
   end
 
+  function toggle_autocomplete()
+    local cmp = require 'cmp'
+    if (cmp.get_config()['completion']['autocomplete'] == false) then
+      local types = require('cmp.types')
+      cmp.setup({ completion = { autocomplete={ types.cmp.TriggerEvent.TextChanged, }}})
+    else
+      cmp.setup({ completion = { autocomplete=false }})
+    end
+  end
+
   wk.register({
       s = {
           name = "subst",
@@ -397,6 +408,7 @@ local function whichkey_setup()
   wk.register({
       t = {
           name = "toggle",
+          c = { "<cmd>lua toggle_autocomplete()<cr>", "complete" },
           h = { "<cmd>set hlsearch!<cr>", "hlseach" },
           l = { "<cmd>set list!<cr>", "listchars" },
           r = { "<cmd>set relativenumber!<cr>", "relativenumber" },
@@ -427,8 +439,12 @@ local function whichkey_setup()
   wk.register({
       ['.'] = { "<cmd>lua require('telescope.builtin').buffers({ sort_mru = true, ignore_current_buffer = true, previewer = false })<cr>", "recent files" },
       [','] = { "<cmd>w<cr>", "save" },
+      ['/'] = { "<Plug>(comment_toggle_current_linewise)j", "comment" },
       q = { "<cmd>bd<cr>", "close" }
     }, leader_normal)
+  wk.register({
+      ['/'] = { "<Plug>(comment_toggle_linewise_visual)", "comment" },
+    }, leader_visual)
 end
 whichkey_setup()
 
@@ -456,10 +472,10 @@ require('nvim-treesitter.configs').setup {
   incremental_selection = {
     enable = true,
     keymaps = {
-      init_selection = 'gnn',
-      node_incremental = 'grn',
-      scope_incremental = 'grc',
-      node_decremental = 'grm',
+      init_selection = nil,
+      node_incremental = nil,
+      scope_incremental = 'ga',
+      node_decremental = nil,
     },
   },
   indent = {
@@ -500,11 +516,6 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
--- Diagnostic keymaps
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 
 -- LSP settings
 local lspconfig = require 'lspconfig'
@@ -579,6 +590,7 @@ local has_words_before = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
     return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
+
 local cmp_setup = function()
   local cmp = require 'cmp'
   local luasnip = require 'luasnip'
@@ -587,6 +599,7 @@ local cmp_setup = function()
   cmp.setup {
      completion = {
       completeopt = 'menu,menuone,preview',
+      autocomplete = false,
     },
     snippet = {
       expand = function(args)
