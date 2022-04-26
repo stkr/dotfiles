@@ -72,6 +72,17 @@ vim.o.mouse = 'a'
 --Enable break indent
 vim.o.breakindent = true
 
+-- Use 4 spaces for indentation
+    -- show existing tab with 4 spaces width
+vim.o.tabstop = 4
+    -- when indenting with '>', use 4 spaces width
+vim.o.shiftwidth = 4
+    -- On pressing tab, insert 4 spaces
+vim.o.expandtab = true
+
+-- Reasonable listchars
+vim.o.listchars = "eol:¬,tab:>>,trail:~,extends:>,precedes:<,space:·"
+
 --Save undo history
 vim.opt.undofile = true
 
