@@ -57,6 +57,11 @@ require('packer').startup(function(use)
 	use {
 			"farmergreg/vim-lastplace",
 	}
+  use {
+    "mhinz/vim-sayonara",
+    cmd = { "Sayonara" },
+  }
+
 end)
 --#endregion
 
@@ -451,7 +456,7 @@ local function whichkey_setup()
       ['.'] = { "<cmd>lua require('telescope.builtin').buffers({ sort_mru = true, ignore_current_buffer = true, previewer = false })<cr>", "recent files" },
       [','] = { "<cmd>w<cr>", "save" },
       ['/'] = { "<Plug>(comment_toggle_current_linewise)j", "comment" },
-      q = { "<cmd>bd<cr>", "close" }
+      q = { "<cmd>Sayonara!<cr>", "close" }
     }, leader_normal)
   wk.register({
       ['/'] = { "<Plug>(comment_toggle_linewise_visual)", "comment" },
@@ -554,14 +559,47 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
+-- For pyright, try to adapt for venv
+local util = require('lspconfig/util')
+local path = util.path
+
+local function get_python_path(workspace)
+  -- Use activated virtualenv.
+  if vim.env.VIRTUAL_ENV then
+    return path.join(vim.env.VIRTUAL_ENV, 'bin', 'python')
+  end
+
+  -- Find and use virtualenv in workspace directory.
+  for _, pattern in ipairs({'*', '.*'}) do
+    local match = vim.fn.glob(path.join(workspace, pattern, 'pyvenv.cfg'))
+    if match ~= '' then
+      return path.join(path.dirname(match), 'bin', 'python')
+    end
+  end
+
+  -- Fallback to system Python.
+  return vim.fn.exepath('python3') or vim.fn.exepath('python') or 'python'
+end
+
+lspconfig.pyright.setup({
+  before_init = function(_, config)
+    config.settings.python.pythonPath = get_python_path(config.root_dir)
+  end,
+  on_attach = on_attach,
+  capabilities = capabilities,
+})
+
 -- Enable the following language servers
-local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver' }
+local servers = { 'clangd', 'rust_analyzer', 'tsserver' }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,
     capabilities = capabilities,
   }
 end
+
+
+
 
 -- Example custom server
 -- Make runtime files discoverable to the server
