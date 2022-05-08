@@ -401,6 +401,7 @@ local function whichkey_setup()
           name = "subst",
           s = {
               name = "slashes",
+              e = { [[<cmd>lua mh_substitute(":s/\\\\/\\\\\\\\/ge")<cr>]], "escape" },
               u = { [[<cmd>lua mh_substitute(":s/\\\\/\\//ge")<cr>]], "unix" },
               w = { [[<cmd>lua mh_substitute(":s/\\//\\\\/ge")<cr>]], "windows" },
           },
