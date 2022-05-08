@@ -377,10 +377,10 @@ local function whichkey_setup()
   function mh_extract_hex()
       vim.api.nvim_exec([[
           function s:mh_extract_hex_vimscript()
-              :let @a=""
-              :s/[0-9][0-9]/\=setreg('A', submatch(0), 'c')/g
-              :d
-              :normal "ap
+              let @a=""
+              s/[0-9a-fA-F][0-9a-fA-F]/\=setreg('A', submatch(0), 'c')/g
+              normal d$
+              normal "ap
           endfunction
           call s:mh_extract_hex_vimscript()
       ]], false)
