@@ -226,6 +226,8 @@ require('telescope').setup {
       i = {
         ['<C-k>'] = actions.move_selection_previous,
         ['<C-j>'] = actions.move_selection_next,
+        ['<C-l>'] = actions.cycle_history_next,
+        ['<C-h>'] = actions.cycle_history_prev,
       },
     },
   },
@@ -282,7 +284,7 @@ local function whichkey_setup()
           t = { "<cmd>Telescope tags<cr>", "tag" },
           [':'] = { "<cmd>Telescope command_history<cr>", "command history" },
           ['*'] = { "<cmd>Telescope grep_string<cr>", "word in files" },
-          r = { "<cmd>Telescope lsp_references<cr>", "references" },
+          r = { "<cmd>Telescope resume<cr>", "resume" },
           u = { "<cmd>Telescope lsp_references<cr>", "usages" },
           ['/'] = { "<cmd>Telescope search_history<cr>", "search history" },
           a = { "<cmd>Telescope<cr>", "anything" },
