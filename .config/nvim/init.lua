@@ -51,9 +51,6 @@ require('packer').startup(function(use)
   use {
       "vim-scripts/ReplaceWithRegister",
   }
-  use {
-      "nvim-telescope/telescope-live-grep-raw.nvim",
-  }
 	use {
 			"farmergreg/vim-lastplace",
 	}
@@ -220,6 +217,18 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 --#endregion
 
+--#region alignment
+
+-- Additional alignment rules (easy align)
+vim.cmd [[
+    let g:easy_align_delimiters = {
+    \ '^': { 'pattern': '\^' },
+    \ 'b': { 'pattern': '\\' },
+    \ }
+]]
+
+--#endregion
+
 --Map blankline
 vim.g.indent_blankline_char = '┊'
 vim.g.indent_blankline_filetype_exclude = { 'help', 'packer' }
@@ -239,6 +248,7 @@ require('gitsigns').setup {
 
 -- Telescope
 local actions = require('telescope.actions')
+local action_layout = require("telescope.actions.layout")
 require('telescope').setup {
   defaults = {
     mappings = {
@@ -247,8 +257,13 @@ require('telescope').setup {
         ['<C-j>'] = actions.move_selection_next,
         ['<C-l>'] = actions.cycle_history_next,
         ['<C-h>'] = actions.cycle_history_prev,
+        ['<M-p>'] = action_layout.toggle_preview
+      },
+      n = {
+        ['<M-p>'] = action_layout.toggle_preview
       },
     },
+    path_display = {'smart'},
   },
 }
 
@@ -295,14 +310,13 @@ local function whichkey_setup()
   wk.register({
       f = {
           name = "find",
-          b = { "<cmd>Telescope buffers<cr>", "buffer" },
+          b = { "<cmd>lua require('telescope.builtin').buffers({ previewer = false })<cr>", "buffer" },
           e = { "<cmd>NvimTreeFocus<cr>", "explore" },
-          f = { "<cmd>Telescope fd<cr>", "file" },
-          -- g = { "<cmd>Telescope live_grep<cr>", "grep" },
-          g = { "<cmd>lua require(\"telescope\").extensions.live_grep_raw.live_grep_raw()<cr>", "grep" },
+          f = { "<cmd>lua require('telescope.builtin').fd({ previewer = false })<cr>", "file" },
+          g = { "<cmd>lua require('telescope.builtin').live_grep({ previewer = false })<cr>", "grep" },
           t = { "<cmd>Telescope tags<cr>", "tag" },
           [':'] = { "<cmd>Telescope command_history<cr>", "command history" },
-          ['*'] = { "<cmd>Telescope grep_string<cr>", "word in files" },
+          ['*'] = { "<cmd>lua require('telescope.builtin').grep_string({ previewer = false })<cr>", "word in files" },
           r = { "<cmd>Telescope resume<cr>", "resume" },
           u = { "<cmd>Telescope lsp_references<cr>", "usages" },
           ['/'] = { "<cmd>Telescope search_history<cr>", "search history" },
@@ -329,16 +343,10 @@ local function whichkey_setup()
   wk.register({
       r = {
           name = "refactor",
-          a = { "<cmd>EasyAlign<cr>", "align" },
           f = { "<cmd>lua vim.lsp.buf.range_formatting()<cr>", "format" },
           m = { "<cmd>lua require('telescope.builtin').lsp_code_actions()<cr>", "menu" },
           r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "rename" },
       }, }, leader_normal)
-  wk.register({
-      r = {
-          name = "refactor",
-          a = { "<cmd>EasyAlign<cr>", "align" },
-      }, }, leader_visual)
 
 
   -------------  Useful common substitution commands
