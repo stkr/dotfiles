@@ -8,13 +8,32 @@ end
 local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
 vim.api.nvim_create_autocmd('BufWritePost', { command = 'source <afile> | PackerCompile', group = packer_group, pattern = 'init.lua' })
 
+
+
+
 --#region helper functions
+local function plugin_config(plugin_name, config)
+    local utils = require("utils")
+    local module = utils.get_plugin_config_module(plugin_name)
+    module.config()
+end
+
+local function plugin_setup(plugin_name, config)
+    local utils = require("utils")
+    local module = utils.get_plugin_config_module(plugin_name)
+    module.setup()
+end
 --#endregion
+
 
 --#region plugins
 require('packer').startup(function(use)
+
   use 'wbthomason/packer.nvim' -- Package manager
-  use 'folke/which-key.nvim'
+  use 'nvim-lua/plenary.nvim' -- Utilities, ALWAYS load that, lazyloading this has very weird effects!
+    use { 
+        'folke/which-key.nvim',
+    }
   use 'tpope/vim-repeat'
   use 'tpope/vim-fugitive'
   use 'tpope/vim-abolish'
@@ -23,11 +42,29 @@ require('packer').startup(function(use)
   use 'tpope/vim-surround'
   use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
   -- use 'ludovicchabant/vim-gutentags' -- Automatic tags management
-  -- UI to select things (files, grep results, open buffers...)
-  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
-  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+
+      -- UI to select things (files, grep results, open buffers...)
+    use { 
+        'nvim-telescope/telescope.nvim', 
+        requires = { { 'nvim-lua/plenary.nvim', } },
+        opt = true,
+        cmd = { "Telescope" },
+        module = 'telescope',
+        config = plugin_config
+    }
+    use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+
   use 'mjlbach/onedark.nvim' -- Theme inspired by Atom
-  use 'nvim-lualine/lualine.nvim' -- Fancier statusline
+
+  -- Fancier statusline
+    use {
+        'nvim-lualine/lualine.nvim',
+        opt = true,
+        event = { 'BufEnter' },
+        config = plugin_config 
+    }
+        
+
   -- Add indentation guides even on blank lines
   use 'lukas-reineke/indent-blankline.nvim'
   -- Add git related info in the signs columns and popups
@@ -128,35 +165,6 @@ vim.o.virtualedit = "block,onemore"
 -- Detect when a file is changed
 vim.o.autoread = true
 
---Set statusbar
-require('lualine').setup {
-  options = {
-    icons_enabled = true,
-    theme = 'onedark',
-    component_separators = '|',
-    section_separators = '',
-  },
-
-  extensions = {},
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = { "filename" },
-    lualine_x = { "location" },
-    lualine_y = {},
-    lualine_z = {}
-  },
-  sections = {
-    lualine_a = { "mode", "vim.o.paste and 'PASTE' or ''" },
-    lualine_b = { "branch", "diff", "diagnostics" },
-    lualine_c = { "filename" },
-    lualine_x = { "encoding", "fileformat", "filetype" },
-    lualine_y = { "progress" },
-    lualine_z = { "location" }
-  },
-  tabline = {}
-}
-
 -- Use treesitter for folding
 vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
@@ -246,29 +254,6 @@ require('gitsigns').setup {
   },
 }
 
--- Telescope
-local actions = require('telescope.actions')
-local action_layout = require("telescope.actions.layout")
-require('telescope').setup {
-  defaults = {
-    mappings = {
-      i = {
-        ['<C-k>'] = actions.move_selection_previous,
-        ['<C-j>'] = actions.move_selection_next,
-        ['<C-l>'] = actions.cycle_history_next,
-        ['<C-h>'] = actions.cycle_history_prev,
-        ['<M-p>'] = action_layout.toggle_preview
-      },
-      n = {
-        ['<M-p>'] = action_layout.toggle_preview
-      },
-    },
-    path_display = {'smart'},
-  },
-}
-
--- Enable telescope fzf native
-require('telescope').load_extension 'fzf'
 
 --Add leader shortcuts via whichkey
 local function whichkey_setup()
