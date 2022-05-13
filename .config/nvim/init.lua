@@ -34,6 +34,9 @@ require('packer').startup(function(use)
     use { 
         'folke/which-key.nvim',
     }
+    use {
+      'ggandor/lightspeed.nvim',
+    }
   use 'tpope/vim-repeat'
   use 'tpope/vim-fugitive'
   use 'tpope/vim-abolish'
