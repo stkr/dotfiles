@@ -78,6 +78,8 @@ require('packer').startup(function(use)
   -- Autocompletion plugin
   use 'hrsh7th/nvim-cmp'
   use 'hrsh7th/cmp-nvim-lsp'
+  use 'hrsh7th/cmp-buffer'
+  use 'hrsh7th/cmp-path'
   use 'saadparwaiz1/cmp_luasnip'
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
   use 'rafamadriz/friendly-snippets'
@@ -667,7 +669,7 @@ local cmp_setup = function()
   cmp.setup {
      completion = {
       completeopt = 'menu,menuone,preview',
-      autocomplete = false,
+      autocomplete = false,  -- to enable, remove that line 
     },
     snippet = {
       expand = function(args)
@@ -707,13 +709,17 @@ local cmp_setup = function()
         end
       end, { 'i', 's' }),
     }),
-    sources = {
+    sources = cmp.config.sources({
       { name = 'nvim_lsp' },
-      { name = 'luasnip' },
-      { name = "buffer" },
-      { name = "nvim_lua" },
-      { name = "path" },
-    },
+      -- { name = 'vsnip' }, -- For vsnip users.
+      { name = 'luasnip' }, -- For luasnip users.
+      -- { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
+    }, {
+      { name = 'buffer' },
+    }, {
+      { name = 'path' },
+    })
   }
 end
 cmp_setup()
