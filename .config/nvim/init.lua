@@ -709,17 +709,12 @@ local cmp_setup = function()
         end
       end, { 'i', 's' }),
     }),
-    sources = cmp.config.sources({
-      { name = 'nvim_lsp' },
-      -- { name = 'vsnip' }, -- For vsnip users.
-      { name = 'luasnip' }, -- For luasnip users.
-      -- { name = 'ultisnips' }, -- For ultisnips users.
-      -- { name = 'snippy' }, -- For snippy users.
-    }, {
-      { name = 'buffer' },
-    }, {
-      { name = 'path' },
-    })
+    sources = {
+      { name = 'nvim_lsp', priority = 1, max_item_count = 10 },
+      { name = 'luasnip', priority = 1, max_item_count = 10  },
+      { name = 'buffer', priority = 2, max_item_count = 10 },
+      { name = 'path', priority = 3, max_item_count = 10 },
+    },
   }
 end
 cmp_setup()
