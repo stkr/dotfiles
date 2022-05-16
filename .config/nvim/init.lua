@@ -156,7 +156,7 @@ vim.keymap.set('c', '<cr>', function()
   return vim.fn.pumvisible() == 1 and '<c-y>' or '<cr>'
 end, {expr = true})
 -- Interestingly enough, these won't work - nether their vimscript version
--- nor the lue version. So we stick with TAB for now...
+-- nor the lua version. So we stick with TAB for now...
 -- vim.api.nvim_command([[ cnoremap <expr> <c-j> wildmenumode() ? "\<down>" : "\<c-j>" ]])
 -- vim.api.nvim_command([[ cnoremap <expr> <c-k> wildmenumode() ? "\<up>" : "\<c-k>" ]])
 
@@ -174,6 +174,9 @@ vim.o.autoread = true
 vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.o.foldenable = false
+
+-- Make marks always go to the marked column
+vim.keymap.set('n', "'", "`")
 
 --Enable Comment.nvim
 require('Comment').setup()
