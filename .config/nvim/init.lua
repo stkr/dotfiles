@@ -27,16 +27,58 @@ end
 
 
 --#region plugins
+
+-- disable builtins plugins
+local disabled_built_ins = {
+    "netrw",
+    "netrwPlugin",
+    "netrwSettings",
+    "netrwFileHandlers",
+    "gzip",
+    "zip",
+    "zipPlugin",
+    "tar",
+    "tarPlugin",
+    "getscript",
+    "getscriptPlugin",
+    "vimball",
+    "vimballPlugin",
+    "2html_plugin",
+    "logipat",
+    "rrhelper",
+    "spellfile_plugin",
+    "matchit"
+}
+
+for _, plugin in pairs(disabled_built_ins) do
+    vim.g["loaded_" .. plugin] = 1
+end
+
 require('packer').startup(function(use)
 
-  use 'wbthomason/packer.nvim' -- Package manager
-  use 'nvim-lua/plenary.nvim' -- Utilities, ALWAYS load that, lazyloading this has very weird effects!
+    -- Speed up loading Lua modules
+    use { 
+        'lewis6991/impatient.nvim'
+    }
+
+    -- Package manager
+    use {
+        'wbthomason/packer.nvim',
+    }
+
+    -- Utilities, ALWAYS load that, lazyloading this has very weird effects!
+    use {
+        'nvim-lua/plenary.nvim'
+    }
+
     use { 
         'folke/which-key.nvim',
     }
+
     use {
-      'ggandor/lightspeed.nvim',
+        'ggandor/lightspeed.nvim',
     }
+
   use 'tpope/vim-repeat'
   use 'tpope/vim-fugitive'
   use 'tpope/vim-abolish'
@@ -59,33 +101,63 @@ require('packer').startup(function(use)
 
   use 'mjlbach/onedark.nvim' -- Theme inspired by Atom
 
-  -- Fancier statusline
+    -- Fancier statusline
     use {
         'nvim-lualine/lualine.nvim',
         opt = true,
         event = { 'BufEnter' },
         config = plugin_config 
     }
-        
 
-  -- Add indentation guides even on blank lines
-  use 'lukas-reineke/indent-blankline.nvim'
-  -- Add git related info in the signs columns and popups
-  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
-  -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use 'nvim-treesitter/nvim-treesitter'
-  -- Additional textobjects for treesitter
-  use 'nvim-treesitter/nvim-treesitter-textobjects'
+    -- Add indentation guides even on blank lines
+    use { 
+        'lukas-reineke/indent-blankline.nvim'
+    }
+    
+    -- Add git related info in the signs columns and popups
+    use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
+    -- Highlight, edit, and navigate code using a fast incremental parsing library
+    use {
+      'nvim-treesitter/nvim-treesitter'
+    }
+
+    -- Additional textobjects for treesitter
+    use { 
+      'nvim-treesitter/nvim-treesitter-textobjects'
+    }
+
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
   use 'ray-x/lsp_signature.nvim'
-  -- Autocompletion plugin
-  use 'hrsh7th/nvim-cmp'
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/cmp-buffer'
-  use 'hrsh7th/cmp-path'
-  use 'saadparwaiz1/cmp_luasnip'
-  use 'L3MON4D3/LuaSnip' -- Snippets plugin
-  use 'rafamadriz/friendly-snippets'
+
+    -- Autocompletion plugin
+    use {
+        "hrsh7th/nvim-cmp",
+        module = { "nvim-cmp" },
+
+        config = plugin_config,
+        wants = { "LuaSnip" },
+        requires = {
+            {
+                "L3MON4D3/LuaSnip",
+                module = { "nvim-cmp" },
+                wants = "friendly-snippets",
+            },
+            {
+                "rafamadriz/friendly-snippets",
+                module = { "nvim-cmp" },
+            },
+        },
+    }
+
+    use { 
+        "hrsh7th/cmp-nvim-lsp", 
+        after = "nvim-cmp",
+        module = 'cmp_nvim_lsp',
+    }
+    use { "hrsh7th/cmp-buffer", after = "nvim-cmp" }
+    use { "hrsh7th/cmp-path", after = "nvim-cmp" }
+    use { "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" }
+
   use {
     "junegunn/vim-easy-align",
     cmd = { "EasyAlign" },
@@ -251,16 +323,16 @@ vim.g.indent_blankline_filetype_exclude = { 'help', 'packer' }
 vim.g.indent_blankline_buftype_exclude = { 'terminal', 'nofile' }
 vim.g.indent_blankline_show_trailing_blankline_indent = false
 
--- Gitsigns
-require('gitsigns').setup {
-  signs = {
-    add = { text = '+' },
-    change = { text = '~' },
-    delete = { text = '_' },
-    topdelete = { text = '‾' },
-    changedelete = { text = '~' },
-  },
-}
+-- -- Gitsigns
+-- require('gitsigns').setup {
+--   signs = {
+--     add = { text = '+' },
+--     change = { text = '~' },
+--     delete = { text = '_' },
+--     topdelete = { text = '‾' },
+--     changedelete = { text = '~' },
+--   },
+-- }
 
 
 --Add leader shortcuts via whichkey
@@ -388,7 +460,8 @@ local function whichkey_setup()
   end
 
   function toggle_autocomplete()
-    local cmp = require 'cmp'
+    require("packer.load")({'nvim-cmp'}, {}, _G.packer_plugins)
+    local cmp = require('cmp')
     if (cmp.get_config()['completion']['autocomplete'] == false) then
       local types = require('cmp.types')
       cmp.setup({ completion = { autocomplete={ types.cmp.TriggerEvent.TextChanged, }}})
@@ -583,8 +656,8 @@ local on_attach = function(_, bufnr)
 end
 
 -- nvim-cmp supports additional completion capabilities
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+-- local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
 -- For pyright, try to adapt for venv
 local util = require('lspconfig/util')
@@ -660,69 +733,5 @@ lspconfig.sumneko_lua.setup {
     },
   },
 }
-
--- nvim-cmp setup
-local has_words_before = function()
-    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-end
-
-local cmp_setup = function()
-  local cmp = require 'cmp'
-  local luasnip = require 'luasnip'
-  -- make luasnip aware of the friendly-snippets
-  require("luasnip.loaders.from_vscode").lazy_load()
-  cmp.setup {
-     completion = {
-      completeopt = 'menu,menuone,preview',
-      autocomplete = false,  -- to enable, remove that line 
-    },
-    snippet = {
-      expand = function(args)
-        luasnip.lsp_expand(args.body)
-      end,
-    },
-    formatting = {
-      format = function(entry, vim_item)
-        -- local icons = require "plugins.configs.lspkind_icons"
-        -- vim_item.kind = string.format("%s %s", icons[vim_item.kind], vim_item.kind)
-        vim_item.menu = ({
-          nvim_lsp = "[LSP]",
-          nvim_lua = "[Lua]",
-          buffer = "[BUF]",
-        })[entry.source.name]
-        return vim_item
-      end,
-    },
-    mapping = cmp.mapping.preset.insert({
-      ['<C-j>'] = cmp.mapping.select_next_item(),
-      ['<C-k>'] = cmp.mapping.select_prev_item(),
-      ['<C-d>'] = cmp.mapping.scroll_docs(4),
-      ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-
-      ['<CR>'] = cmp.mapping.confirm {
-        behavior = cmp.ConfirmBehavior.Replace,
-        select = true,
-      },
-      ['<esc>'] = cmp.mapping.abort(),
-      ['<Tab>'] = cmp.mapping(function(fallback)
-        if luasnip.expand_or_locally_jumpable() then
-          luasnip.expand_or_jump()
-        elseif has_words_before() then
-          cmp.complete()
-        else
-          fallback()
-        end
-      end, { 'i', 's' }),
-    }),
-    sources = {
-      { name = 'nvim_lsp', priority = 1, max_item_count = 10 },
-      { name = 'luasnip', priority = 1, max_item_count = 10  },
-      { name = 'buffer', priority = 2, max_item_count = 10 },
-      { name = 'path', priority = 3, max_item_count = 10 },
-    },
-  }
-end
-cmp_setup()
 
 -- vim: ts=2 sts=2 sw=2 et
