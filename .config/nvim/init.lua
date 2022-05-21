@@ -275,59 +275,82 @@ vim.keymap.set('n', "'", "`")
 -- trigger to load nvim-cmp AND then to startup the completion as well.
 -- So we bind it to a function that does that. Note that
 -- loading nvim-cmp effectively replces this mapping with the one that is
--- defined as config for nvim-cmp, making this map a one-time thing.
+-- defined as config for nvim-cmp, however, in case nvim-cmp does not trigger
+-- the completion menu, it will still fall back to the default <tab>
+-- mapping - i.e. this function. To avoid executing this function over and
+-- over again, after loading nvim-cmp, we remove the mapping again, making
+-- this map a one-time thing.
 vim.keymap.set('i', "<tab>",
     function()
-        local utils = require("utils")
-        if utils.is_text_before_cursor() then
-            require("packer").loader("nvim-cmp")
-            -- Calling the fongi callback is not necessary.
-            -- Due to the deferred nvim_input the full plugin loading
-            -- (incl. config) seems to be done before.
-            -- local cmp_config = require("config.nvim-cmp")
-            -- cmp_config.config()
-
-            -- Unfortunately, any method of immediatly invoking the
-            -- completion menu was not successful. It really seems to
-            -- be necessary to exit insert mode and get back into it
-            -- (probably the plugin requires EnterInsert events or
-            -- something along those lines.).
-            -- Also, the exit and re-enter seems to have to be
-            -- scheduled for later - not sure why that is...
-            -- This is the best I could come up with. It results in
-            -- a very small difference in behaviour - as we are
-            -- exiting insert mode, in fact the completion results in
-            -- two changes instead of one. This is only happening on
-            -- the first completion that was triggered by tab in a
-            -- session that previously had not loaded the nvim-cmp
-            -- plugin, so is negligible.
+        if packer_plugins["nvim-cmp"] and packer_plugins["nvim-cmp"].loaded then
+            -- After loading the plugin, there is no need to keep this mapping
+            -- any longer.
+            vim.keymap.set("i", "<tab>", "<tab>")
+            -- We still need to input the <tab> that this callback consumes
             vim.defer_fn(
                 function()
-                    vim.api.nvim_input("<esc>a<tab>")
+                    vim.api.nvim_input("<tab>")
                 end, 0)
+        else
 
-            -- For reference, these methods were also tried:
-            --
-            --   * invocation of cmp.complete directly: does nothing
-            -- local cmp = require("cmp")
-            -- cmp.complete()
-            --
-            --   * nvim_feedkeys: results in actually a tab being inserted, does
-            --     not trigger the completion
-            -- local esc = vim.api.nvim_replace_termcodes("<esc>", true, false, true)
-            -- local tab = vim.api.nvim_replace_termcodes("<tab>", true, false, true)
-            -- vim.api.nvim_feedkeys(esc, 'i', false)
-            -- vim.api.nvim_feedkeys('a', 'n', false)
-            -- vim.api.nvim_feedkeys(tab, 'n', false)
-            --
-            --   * nvim_input: results in very weird behaviour
-            -- vim.api.nvim_input("<esc>a<tab>")
-            --
-            --   * vim feedkeys: results in very weird behaviour
-            -- vim.cmd([[ call feedkeys("\<esc>a\<tab>") ]])
-            --
-            -- Also nvim_input and vim feedkeys were the only ones working from
-            -- within the deferred_fn callback.
+            local utils = require("utils")
+            if utils.is_text_before_cursor() then
+                vim.notify("load-nvim-cmp")
+                require("packer").loader("nvim-cmp")
+                -- Calling the config callback is not necessary.
+                -- Due to the deferred nvim_input the full plugin loading
+                -- (incl. config) seems to be done before.
+                -- local cmp_config = require("config.nvim-cmp")
+                -- cmp_config.config()
+
+                -- Unfortunately, any method of immediatly invoking the
+                -- completion menu was not successful. It really seems to
+                -- be necessary to exit insert mode and get back into it
+                -- (probably the plugin requires EnterInsert events or
+                -- something along those lines.).
+                -- Also, the exit and re-enter seems to have to be
+                -- scheduled for later - not sure why that is...
+                -- This is the best I could come up with. It results in
+                -- a very small difference in behaviour - as we are
+                -- exiting insert mode, in fact the completion results in
+                -- two changes instead of one. This is only happening on
+                -- the first completion that was triggered by tab in a
+                -- session that previously had not loaded the nvim-cmp
+                -- plugin, so is negligible.
+                vim.defer_fn(
+                    function()
+                        vim.api.nvim_input("<esc>a<tab>")
+                    end, 0)
+
+                -- For reference, these methods were also tried:
+                --
+                --   * invocation of cmp.complete directly: does nothing
+                -- local cmp = require("cmp")
+                -- cmp.complete()
+                --
+                --   * nvim_feedkeys: results in actually a tab being inserted, does
+                --     not trigger the completion
+                -- local esc = vim.api.nvim_replace_termcodes("<esc>", true, false, true)
+                -- local tab = vim.api.nvim_replace_termcodes("<tab>", true, false, true)
+                -- vim.api.nvim_feedkeys(esc, 'i', false)
+                -- vim.api.nvim_feedkeys('a', 'n', false)
+                -- vim.api.nvim_feedkeys(tab, 'n', false)
+                --
+                --   * nvim_input: results in very weird behaviour
+                -- vim.api.nvim_input("<esc>a<tab>")
+                --
+                --   * vim feedkeys: results in very weird behaviour
+                -- vim.cmd([[ call feedkeys("\<esc>a\<tab>") ]])
+                --
+                -- Also nvim_input and vim feedkeys were the only ones working from
+                -- within the deferred_fn callback.
+            else
+                -- We still need to input the <tab> that this callback consumes
+                vim.defer_fn(
+                    function()
+                        vim.api.nvim_input("<tab>")
+                    end, 0)
+            end
         end
     end)
 
