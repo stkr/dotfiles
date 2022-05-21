@@ -132,32 +132,46 @@ require('packer').startup(function(use)
   use 'ray-x/lsp_signature.nvim'
 
     -- Autocompletion plugin
+    -- Lazy loading of cmp is a bit of an issue (see also https://github.com/hrsh7th/nvim-cmp/issues/65)
+    -- Triggering on module "cmp" is not reliably working unfortunately, so we rely on a keybinding to 
+    -- enable completion.
+    -- However, if we also loas LuaSnip from the same keybinding, the cursor moves!? This is VERY 
+    -- annoying, so we cannot lazy-load LuaSnip :-(
+    use {
+        "L3MON4D3/LuaSnip",
+        wants = { "friendly-snippets" },
+    }
+
+    use {
+        "rafamadriz/friendly-snippets",
+        module = { "cmp", "cmp_nvim_lsp" },
+    }
+
     use {
         "hrsh7th/nvim-cmp",
-        module = { "cmp" },
-
+        after = { "friendly-snippets" },
         config = plugin_config,
-        wants = { "LuaSnip" },
-        requires = {
-            {
-                "L3MON4D3/LuaSnip",
-                module = { "cmp" },
-                wants = "friendly-snippets",
-            },
-            {
-                "rafamadriz/friendly-snippets",
-                module = { "cmp" },
-            },
-        },
     }
 
     use { 
-        "hrsh7th/cmp-nvim-lsp", 
+        "saadparwaiz1/cmp_luasnip", 
         after = "nvim-cmp",
     }
-    use { "hrsh7th/cmp-buffer", after = "nvim-cmp" }
-    use { "hrsh7th/cmp-path", after = "nvim-cmp" }
-    use { "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" }
+
+    use {
+        "hrsh7th/cmp-nvim-lsp",
+        after = "nvim-cmp",
+    }
+
+    use { 
+        "hrsh7th/cmp-buffer", 
+        after = "nvim-cmp",
+    }
+
+    use { 
+        "hrsh7th/cmp-path",
+        after = "nvim-cmp",
+    }
 
   use {
     "junegunn/vim-easy-align",
@@ -175,6 +189,7 @@ require('packer').startup(function(use)
   }
 
 end)
+
 --#endregion
 
 --Set highlight on search
@@ -250,6 +265,70 @@ vim.o.foldenable = false
 
 -- Make marks always go to the marked column
 vim.keymap.set('n', "'", "`")
+
+-- Load completion plugin on tab in insert mode.
+-- Now, this is a bit of a hack... 
+-- We do lazy-load nvim-cmp. This means, that per default it's mappings are not 
+-- active, the tab in insert mode usually used to trigger completion does 
+-- nothing. However, in this case the tab in insert mode SHALL be used as 
+-- trigger to load nvim-cmp AND then to startup the completion as well.
+-- So we bind it to a function that does that. Note that 
+-- loading nvim-cmp effectively replces this mapping with the one that is 
+-- defined as config for nvim-cmp, making this map a one-time thing.
+vim.keymap.set('i', "<tab>", 
+    function()
+        local utils = require("utils")
+        if utils.is_text_before_cursor() then
+            require("packer").loader("nvim-cmp")
+            -- Calling the fongi callback is not necessary. 
+            -- Due to the deferred nvim_input the full plugin loading 
+            -- (incl. config) seems to be done before.
+            -- local cmp_config = require("config.nvim-cmp")
+            -- cmp_config.config()
+
+            -- Unfortunately, any method of immediatly invoking the 
+            -- completion menu was not successful. It really seems to 
+            -- be necessary to exit insert mode and get back into it
+            -- (probably the plugin requires EnterInsert events or 
+            -- something along those lines.). 
+            -- Also, the exit and re-enter seems to have to be 
+            -- scheduled for later - not sure why that is...
+            -- This is the best I could come up with. It results in 
+            -- a very small difference in behaviour - as we are 
+            -- exiting insert mode, in fact the completion results in
+            -- two changes instead of one. This is only happening on 
+            -- the first completion that was triggered by tab in a 
+            -- session that previously had not loaded the nvim-cmp 
+            -- plugin, so is negligible.
+            vim.defer_fn(
+                function()
+                    vim.api.nvim_input("<esc>a<tab>")
+                end, 0)
+
+            -- For reference, these methods were also tried:
+            --
+            --   * invocation of cmp.complete directly: does nothing
+            -- local cmp = require("cmp")
+            -- cmp.complete()
+            --
+            --   * nvim_feedkeys: results in actually a tab being inserted, does 
+            --     not trigger the completion
+            -- local esc = vim.api.nvim_replace_termcodes("<esc>", true, false, true)
+            -- local tab = vim.api.nvim_replace_termcodes("<tab>", true, false, true)
+            -- vim.api.nvim_feedkeys(esc, 'i', false)
+            -- vim.api.nvim_feedkeys('a', 'n', false)
+            -- vim.api.nvim_feedkeys(tab, 'n', false)
+            --
+            --   * nvim_input: results in very weird behaviour
+            -- vim.api.nvim_input("<esc>a<tab>")
+            --
+            --   * vim feedkeys: results in very weird behaviour
+            -- vim.cmd([[ call feedkeys("\<esc>a\<tab>") ]])
+            --
+            -- Also nvim_input and vim feedkeys were the only ones working from 
+            -- within the deferred_fn callback.
+        end
+    end)
 
 --Enable Comment.nvim
 require('Comment').setup()
@@ -505,4 +584,4 @@ lspconfig.sumneko_lua.setup {
   },
 }
 
--- vim: ts=2 sts=2 sw=2 et
+-- vim: ts=4 sts=4 sw=4 et

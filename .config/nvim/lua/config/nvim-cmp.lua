@@ -4,15 +4,16 @@ if not present then
     return
 end
 
-local present, luasnip = pcall(require, "luasnip")
-if not present then
+local luasnip_present, luasnip = pcall(require, "luasnip")
+if not luasnip_present then
     vim.notify("Failed to require module [luasnip].")
     return
 end
 
-local has_words_before = function()
-    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+local utils_present, utils = pcall(require, "utils")
+if not utils_present then
+    vim.notify("Failed to require module [utils].")
+    return
 end
 
 local callbacks = {}
@@ -48,15 +49,24 @@ function callbacks.config()
       ['<C-d>'] = cmp.mapping.scroll_docs(4),
       ['<C-u>'] = cmp.mapping.scroll_docs(-4),
 
-      ['<CR>'] = cmp.mapping.confirm {
-        behavior = cmp.ConfirmBehavior.Replace,
-        select = true,
-      },
+      ['<CR>'] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          cmp.confirm({
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true,
+            })
+        elseif luasnip.expand_or_locally_jumpable() then
+          luasnip.expand_or_jump()
+        else
+          fallback()
+        end
+      end, { 'i', 's' }),
+
       ['<esc>'] = cmp.mapping.abort(),
       ['<Tab>'] = cmp.mapping(function(fallback)
-        if luasnip.expand_or_locally_jumpable() then
-          luasnip.expand_or_jump()
-        elseif has_words_before() then
+        if cmp.visible() then
+          cmp.select_next_item()
+        elseif utils.is_text_before_cursor() then
           cmp.complete()
         else
           fallback()

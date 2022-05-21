@@ -14,6 +14,10 @@ function utils.get_plugin_config_module(plugin_name)
     return module
 end
 
+function utils.is_text_before_cursor()
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
 
 return utils
 
