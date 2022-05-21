@@ -74,11 +74,16 @@ function callbacks.config()
   wk.register({
       r = {
           name = "refactor",
-          f = { "<cmd>lua vim.lsp.buf.range_formatting()<cr>", "format" },
+          f = { "<cmd>lua vim.lsp.buf.formatting_seq_sync(nil, 5000, nil)<cr>", "format" },
           m = { "<cmd>lua require('telescope.builtin').lsp_code_actions()<cr>", "menu" },
           r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "rename" },
       }, }, leader_normal)
 
+  wk.register({
+      r = {
+          name = "refactor",
+          f = { "<cmd>lua vim.lsp.buf.range_formatting()<cr>", "format" },
+      }, }, leader_visual)
 
   -------------  Useful common substitution commands
   --
