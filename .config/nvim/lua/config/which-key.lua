@@ -125,16 +125,15 @@ function callbacks.config()
       ]], false)
   end
 
-  function toggle_autocomplete()
-    require("packer.load")({'nvim-cmp'}, {}, _G.packer_plugins)
-    local cmp = require('cmp')
-    if (cmp.get_config()['completion']['autocomplete'] == false) then
-      local types = require('cmp.types')
-      cmp.setup({ completion = { autocomplete={ types.cmp.TriggerEvent.TextChanged, }}})
-    else
-      cmp.setup({ completion = { autocomplete=false }})
+    function toggle_autocomplete()
+        local cmp = require('cmp')
+        if (cmp.get_config()['completion']['autocomplete'] == false) then
+            local types = require('cmp.types')
+            cmp.setup({ completion = { autocomplete={ types.cmp.TriggerEvent.TextChanged, }}})
+        else
+            cmp.setup({ completion = { autocomplete=false }})
+        end
     end
-  end
 
   wk.register({
       s = {
