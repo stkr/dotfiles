@@ -1,4 +1,3 @@
-
 local present, lualine = pcall(require, "lualine")
 if not present then
     vim.notify("Failed to require module [lualine].")
@@ -10,10 +9,10 @@ local callbacks = {}
 function callbacks.config()
     lualine.setup {
         options = {
-          icons_enabled = true,
-          theme = 'onedark',
-          component_separators = '|',
-          section_separators = '',
+            icons_enabled = true,
+            theme = 'onedark',
+            component_separators = '|',
+            section_separators = '',
         },
 
         extensions = {},
@@ -38,5 +37,3 @@ function callbacks.config()
 end
 
 return callbacks
-
-

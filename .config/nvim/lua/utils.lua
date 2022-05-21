@@ -1,4 +1,3 @@
-
 local utils = {}
 
 function utils.get_plugin_config_module(plugin_name)
@@ -20,4 +19,3 @@ function utils.is_text_before_cursor()
 end
 
 return utils
-
