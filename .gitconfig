@@ -1,7 +1,7 @@
 [core]
 	eol = lf
 	autocrlf = input
-	editor = vim -f
+	editor = nvim -f
 [alias]
     co = checkout
     ci = commit
