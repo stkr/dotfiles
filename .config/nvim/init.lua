@@ -2,7 +2,7 @@
 local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
 
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
+    vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
 end
 
 local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
@@ -23,6 +23,7 @@ local function plugin_setup(plugin_name, config)
     local module = utils.get_plugin_config_module(plugin_name)
     module.setup()
 end
+
 --#endregion
 
 
@@ -57,7 +58,7 @@ end
 require('packer').startup(function(use)
 
     -- Speed up loading Lua modules
-    use { 
+    use {
         'lewis6991/impatient.nvim'
     }
 
@@ -71,7 +72,7 @@ require('packer').startup(function(use)
         'nvim-lua/plenary.nvim'
     }
 
-    use { 
+    use {
         'folke/which-key.nvim',
         keys = { "," },
         config = plugin_config
@@ -81,18 +82,18 @@ require('packer').startup(function(use)
         'ggandor/lightspeed.nvim',
     }
 
-  use 'tpope/vim-repeat'
-  use 'tpope/vim-fugitive'
-  use 'tpope/vim-abolish'
-  use 'tpope/vim-unimpaired'
-  use 'tpope/vim-obsession'
-  use 'tpope/vim-surround'
-  use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
-  -- use 'ludovicchabant/vim-gutentags' -- Automatic tags management
+    use 'tpope/vim-repeat'
+    use 'tpope/vim-fugitive'
+    use 'tpope/vim-abolish'
+    use 'tpope/vim-unimpaired'
+    use 'tpope/vim-obsession'
+    use 'tpope/vim-surround'
+    use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
+    -- use 'ludovicchabant/vim-gutentags' -- Automatic tags management
 
-      -- UI to select things (files, grep results, open buffers...)
-    use { 
-        'nvim-telescope/telescope.nvim', 
+    -- UI to select things (files, grep results, open buffers...)
+    use {
+        'nvim-telescope/telescope.nvim',
         requires = { { 'nvim-lua/plenary.nvim', } },
         opt = true,
         cmd = { "Telescope" },
@@ -101,41 +102,41 @@ require('packer').startup(function(use)
     }
     use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
-  use 'mjlbach/onedark.nvim' -- Theme inspired by Atom
+    use 'mjlbach/onedark.nvim' -- Theme inspired by Atom
 
     -- Fancier statusline
     use {
         'nvim-lualine/lualine.nvim',
         opt = true,
         event = { 'BufEnter' },
-        config = plugin_config 
+        config = plugin_config
     }
 
     -- Add indentation guides even on blank lines
-    use { 
+    use {
         'lukas-reineke/indent-blankline.nvim'
     }
-    
+
     -- Add git related info in the signs columns and popups
     use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
     -- Highlight, edit, and navigate code using a fast incremental parsing library
     use {
-      'nvim-treesitter/nvim-treesitter'
+        'nvim-treesitter/nvim-treesitter'
     }
 
     -- Additional textobjects for treesitter
-    use { 
-      'nvim-treesitter/nvim-treesitter-textobjects'
+    use {
+        'nvim-treesitter/nvim-treesitter-textobjects'
     }
 
-  use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
-  use 'ray-x/lsp_signature.nvim'
+    use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
+    use 'ray-x/lsp_signature.nvim'
 
     -- Autocompletion plugin
     -- Lazy loading of cmp is a bit of an issue (see also https://github.com/hrsh7th/nvim-cmp/issues/65)
-    -- Triggering on module "cmp" is not reliably working unfortunately, so we rely on a keybinding to 
+    -- Triggering on module "cmp" is not reliably working unfortunately, so we rely on a keybinding to
     -- enable completion.
-    -- However, if we also loas LuaSnip from the same keybinding, the cursor moves!? This is VERY 
+    -- However, if we also loas LuaSnip from the same keybinding, the cursor moves!? This is VERY
     -- annoying, so we cannot lazy-load LuaSnip :-(
     use {
         "L3MON4D3/LuaSnip",
@@ -153,8 +154,8 @@ require('packer').startup(function(use)
         config = plugin_config,
     }
 
-    use { 
-        "saadparwaiz1/cmp_luasnip", 
+    use {
+        "saadparwaiz1/cmp_luasnip",
         after = "nvim-cmp",
     }
 
@@ -163,30 +164,30 @@ require('packer').startup(function(use)
         after = "nvim-cmp",
     }
 
-    use { 
-        "hrsh7th/cmp-buffer", 
+    use {
+        "hrsh7th/cmp-buffer",
         after = "nvim-cmp",
     }
 
-    use { 
+    use {
         "hrsh7th/cmp-path",
         after = "nvim-cmp",
     }
 
-  use {
-    "junegunn/vim-easy-align",
-    cmd = { "EasyAlign" },
-  }
-  use {
-      "vim-scripts/ReplaceWithRegister",
-  }
-	use {
-			"farmergreg/vim-lastplace",
-	}
-  use {
-    "mhinz/vim-sayonara",
-    cmd = { "Sayonara" },
-  }
+    use {
+        "junegunn/vim-easy-align",
+        cmd = { "EasyAlign" },
+    }
+    use {
+        "vim-scripts/ReplaceWithRegister",
+    }
+    use {
+        "farmergreg/vim-lastplace",
+    }
+    use {
+        "mhinz/vim-sayonara",
+        cmd = { "Sayonara" },
+    }
 
 end)
 
@@ -205,11 +206,11 @@ vim.o.mouse = 'a'
 vim.o.breakindent = true
 
 -- Use 4 spaces for indentation
-    -- show existing tab with 4 spaces width
+-- show existing tab with 4 spaces width
 vim.o.tabstop = 4
-    -- when indenting with '>', use 4 spaces width
+-- when indenting with '>', use 4 spaces width
 vim.o.shiftwidth = 4
-    -- On pressing tab, insert 4 spaces
+-- On pressing tab, insert 4 spaces
 vim.o.expandtab = true
 
 -- Reasonable listchars
@@ -241,8 +242,8 @@ vim.o.splitright = true
 -- and provide a list.
 vim.o.wildmode = "longest:full,full"
 vim.keymap.set('c', '<cr>', function()
-  return vim.fn.pumvisible() == 1 and '<c-y>' or '<cr>'
-end, {expr = true})
+    return vim.fn.pumvisible() == 1 and '<c-y>' or '<cr>'
+end, { expr = true })
 -- Interestingly enough, these won't work - nether their vimscript version
 -- nor the lua version. So we stick with TAB for now...
 -- vim.api.nvim_command([[ cnoremap <expr> <c-j> wildmenumode() ? "\<down>" : "\<c-j>" ]])
@@ -267,38 +268,38 @@ vim.o.foldenable = false
 vim.keymap.set('n', "'", "`")
 
 -- Load completion plugin on tab in insert mode.
--- Now, this is a bit of a hack... 
--- We do lazy-load nvim-cmp. This means, that per default it's mappings are not 
--- active, the tab in insert mode usually used to trigger completion does 
--- nothing. However, in this case the tab in insert mode SHALL be used as 
+-- Now, this is a bit of a hack...
+-- We do lazy-load nvim-cmp. This means, that per default it's mappings are not
+-- active, the tab in insert mode usually used to trigger completion does
+-- nothing. However, in this case the tab in insert mode SHALL be used as
 -- trigger to load nvim-cmp AND then to startup the completion as well.
--- So we bind it to a function that does that. Note that 
--- loading nvim-cmp effectively replces this mapping with the one that is 
+-- So we bind it to a function that does that. Note that
+-- loading nvim-cmp effectively replces this mapping with the one that is
 -- defined as config for nvim-cmp, making this map a one-time thing.
-vim.keymap.set('i', "<tab>", 
+vim.keymap.set('i', "<tab>",
     function()
         local utils = require("utils")
         if utils.is_text_before_cursor() then
             require("packer").loader("nvim-cmp")
-            -- Calling the fongi callback is not necessary. 
-            -- Due to the deferred nvim_input the full plugin loading 
+            -- Calling the fongi callback is not necessary.
+            -- Due to the deferred nvim_input the full plugin loading
             -- (incl. config) seems to be done before.
             -- local cmp_config = require("config.nvim-cmp")
             -- cmp_config.config()
 
-            -- Unfortunately, any method of immediatly invoking the 
-            -- completion menu was not successful. It really seems to 
+            -- Unfortunately, any method of immediatly invoking the
+            -- completion menu was not successful. It really seems to
             -- be necessary to exit insert mode and get back into it
-            -- (probably the plugin requires EnterInsert events or 
-            -- something along those lines.). 
-            -- Also, the exit and re-enter seems to have to be 
+            -- (probably the plugin requires EnterInsert events or
+            -- something along those lines.).
+            -- Also, the exit and re-enter seems to have to be
             -- scheduled for later - not sure why that is...
-            -- This is the best I could come up with. It results in 
-            -- a very small difference in behaviour - as we are 
+            -- This is the best I could come up with. It results in
+            -- a very small difference in behaviour - as we are
             -- exiting insert mode, in fact the completion results in
-            -- two changes instead of one. This is only happening on 
-            -- the first completion that was triggered by tab in a 
-            -- session that previously had not loaded the nvim-cmp 
+            -- two changes instead of one. This is only happening on
+            -- the first completion that was triggered by tab in a
+            -- session that previously had not loaded the nvim-cmp
             -- plugin, so is negligible.
             vim.defer_fn(
                 function()
@@ -311,7 +312,7 @@ vim.keymap.set('i', "<tab>",
             -- local cmp = require("cmp")
             -- cmp.complete()
             --
-            --   * nvim_feedkeys: results in actually a tab being inserted, does 
+            --   * nvim_feedkeys: results in actually a tab being inserted, does
             --     not trigger the completion
             -- local esc = vim.api.nvim_replace_termcodes("<esc>", true, false, true)
             -- local tab = vim.api.nvim_replace_termcodes("<tab>", true, false, true)
@@ -325,7 +326,7 @@ vim.keymap.set('i', "<tab>",
             --   * vim feedkeys: results in very weird behaviour
             -- vim.cmd([[ call feedkeys("\<esc>a\<tab>") ]])
             --
-            -- Also nvim_input and vim feedkeys were the only ones working from 
+            -- Also nvim_input and vim feedkeys were the only ones working from
             -- within the deferred_fn callback.
         end
     end)
@@ -355,33 +356,33 @@ vim.keymap.set('i', 'kj', '<esc>')
 --#region autocommands
 
 -- Reload file after change
-    -- https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/149214
-    -- Triger `autoread` when files changes on disk
-    -- https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
-    -- https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
-    -- https://vi.stackexchange.com/questions/14315/how-can-i-tell-if-im-in-the-command-window
-    -- getcmdwintype() returns a non-empty string if current window is the commandline window.
-vim.api.nvim_create_autocmd({"FocusGained","BufEnter","CursorHold","CursorHoldI"}, {
-  command = "if mode() != 'c' && getcmdwintype() == '' | checktime | endif" })
+-- https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/149214
+-- Triger `autoread` when files changes on disk
+-- https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
+-- https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
+-- https://vi.stackexchange.com/questions/14315/how-can-i-tell-if-im-in-the-command-window
+-- getcmdwintype() returns a non-empty string if current window is the commandline window.
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+    command = "if mode() != 'c' && getcmdwintype() == '' | checktime | endif" })
 
 -- Notification after file change
-  -- https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
-vim.api.nvim_create_autocmd({"FileChangedShellPost"}, {
-  command = "echohl WarningMsg | echo 'File changed on disk. Buffer reloaded.' | echohl"})
+-- https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
+vim.api.nvim_create_autocmd({ "FileChangedShellPost" }, {
+    command = "echohl WarningMsg | echo 'File changed on disk. Buffer reloaded.' | echohl" })
 
 -- Automatically reload buffers when re-entering vim.
-vim.api.nvim_create_autocmd({"BufWinLeave"}, { command = "let b:winview = winsaveview()"})
-vim.api.nvim_create_autocmd({"BufWinEnter"}, {
-  command = "if exists('b:winview') | call winrestview(b:winview) | unlet b:winview"})
+vim.api.nvim_create_autocmd({ "BufWinLeave" }, { command = "let b:winview = winsaveview()" })
+vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
+    command = "if exists('b:winview') | call winrestview(b:winview) | unlet b:winview" })
 
 -- Highlight on yank
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
-  callback = function()
-    vim.highlight.on_yank()
-  end,
-  group = highlight_group,
-  pattern = '*',
+    callback = function()
+        vim.highlight.on_yank()
+    end,
+    group = highlight_group,
+    pattern = '*',
 })
 --#endregion
 
@@ -405,13 +406,13 @@ vim.g.indent_blankline_show_trailing_blankline_indent = false
 
 -- Gitsigns
 require('gitsigns').setup {
-  signs = {
-    add = { text = '+' },
-    change = { text = '~' },
-    delete = { text = '_' },
-    topdelete = { text = '‾' },
-    changedelete = { text = '~' },
-  },
+    signs = {
+        add = { text = '+' },
+        change = { text = '~' },
+        delete = { text = '_' },
+        topdelete = { text = '‾' },
+        changedelete = { text = '~' },
+    },
 }
 
 
@@ -432,82 +433,82 @@ require('gitsigns').setup {
 -- Treesitter configuration
 -- Parsers must be installed manually via :TSInstall
 require('nvim-treesitter.configs').setup {
-  highlight = {
-    enable = true, -- false will disable the whole extension
-  },
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = nil,
-      node_incremental = nil,
-      scope_incremental = 'ga',
-      node_decremental = nil,
+    highlight = {
+        enable = true, -- false will disable the whole extension
     },
-  },
-  indent = {
-    enable = true,
-  },
-  textobjects = {
-    select = {
-      enable = true,
-      lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-      keymaps = {
-        -- You can use the capture groups defined in textobjects.scm
-        ['af'] = '@function.outer',
-        ['if'] = '@function.inner',
-        ['ac'] = '@class.outer',
-        ['ic'] = '@class.inner',
-      },
+    incremental_selection = {
+        enable = true,
+        keymaps = {
+            init_selection = nil,
+            node_incremental = nil,
+            scope_incremental = 'ga',
+            node_decremental = nil,
+        },
     },
-    move = {
-      enable = true,
-      set_jumps = true, -- whether to set jumps in the jumplist
-      goto_next_start = {
-        [']m'] = '@function.outer',
-        [']]'] = '@class.outer',
-      },
-      goto_next_end = {
-        [']M'] = '@function.outer',
-        [']['] = '@class.outer',
-      },
-      goto_previous_start = {
-        ['[m'] = '@function.outer',
-        ['[['] = '@class.outer',
-      },
-      goto_previous_end = {
-        ['[M'] = '@function.outer',
-        ['[]'] = '@class.outer',
-      },
+    indent = {
+        enable = true,
     },
-  },
+    textobjects = {
+        select = {
+            enable = true,
+            lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+            keymaps = {
+                -- You can use the capture groups defined in textobjects.scm
+                ['af'] = '@function.outer',
+                ['if'] = '@function.inner',
+                ['ac'] = '@class.outer',
+                ['ic'] = '@class.inner',
+            },
+        },
+        move = {
+            enable = true,
+            set_jumps = true, -- whether to set jumps in the jumplist
+            goto_next_start = {
+                [']m'] = '@function.outer',
+                [']]'] = '@class.outer',
+            },
+            goto_next_end = {
+                [']M'] = '@function.outer',
+                [']['] = '@class.outer',
+            },
+            goto_previous_start = {
+                ['[m'] = '@function.outer',
+                ['[['] = '@class.outer',
+            },
+            goto_previous_end = {
+                ['[M'] = '@function.outer',
+                ['[]'] = '@class.outer',
+            },
+        },
+    },
 }
 
 
 -- LSP settings
 local lspconfig = require 'lspconfig'
 local on_attach = function(_, bufnr)
-  local opts = { buffer = bufnr }
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-  vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
-  vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
-  vim.keymap.set('n', '<leader>wl', function()
-    vim.inspect(vim.lsp.buf.list_workspace_folders())
-  end, opts)
-  vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
-  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-  vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-  vim.keymap.set('n', '<leader>so', require('telescope.builtin').lsp_document_symbols, opts)
-  vim.api.nvim_create_user_command("Format", vim.lsp.buf.formatting, {})
+    local opts = { buffer = bufnr }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set('n', '<leader>wl', function()
+        vim.inspect(vim.lsp.buf.list_workspace_folders())
+    end, opts)
+    vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', '<leader>so', require('telescope.builtin').lsp_document_symbols, opts)
+    vim.api.nvim_create_user_command("Format", vim.lsp.buf.formatting, {})
 end
 
--- This is a copy from cmp_nvim_lsp/init.lua. The rationale here is that in order 
--- to use cmp_nvim_lsp one would need to require nvim-cmp in addition. However, we 
--- definitely want to lazy-load nvim-cmp as it is the biggest contributor to 
+-- This is a copy from cmp_nvim_lsp/init.lua. The rationale here is that in order
+-- to use cmp_nvim_lsp one would need to require nvim-cmp in addition. However, we
+-- definitely want to lazy-load nvim-cmp as it is the biggest contributor to
 -- startuptime. This function is actually required for lsp confiuration and
 -- independent from nvim-cmp so it can be easily extracted.
 local if_nil = function(val, default)
@@ -544,38 +545,38 @@ local util = require('lspconfig/util')
 local path = util.path
 
 local function get_python_path(workspace)
-  -- Use activated virtualenv.
-  if vim.env.VIRTUAL_ENV then
-    return path.join(vim.env.VIRTUAL_ENV, 'bin', 'python')
-  end
-
-  -- Find and use virtualenv in workspace directory.
-  for _, pattern in ipairs({'*', '.*'}) do
-    local match = vim.fn.glob(path.join(workspace, pattern, 'pyvenv.cfg'))
-    if match ~= '' then
-      return path.join(path.dirname(match), 'bin', 'python')
+    -- Use activated virtualenv.
+    if vim.env.VIRTUAL_ENV then
+        return path.join(vim.env.VIRTUAL_ENV, 'bin', 'python')
     end
-  end
 
-  -- Fallback to system Python.
-  return vim.fn.exepath('python3') or vim.fn.exepath('python') or 'python'
+    -- Find and use virtualenv in workspace directory.
+    for _, pattern in ipairs({ '*', '.*' }) do
+        local match = vim.fn.glob(path.join(workspace, pattern, 'pyvenv.cfg'))
+        if match ~= '' then
+            return path.join(path.dirname(match), 'bin', 'python')
+        end
+    end
+
+    -- Fallback to system Python.
+    return vim.fn.exepath('python3') or vim.fn.exepath('python') or 'python'
 end
 
 lspconfig.pyright.setup({
-  before_init = function(_, config)
-    config.settings.python.pythonPath = get_python_path(config.root_dir)
-  end,
-  on_attach = on_attach,
-  capabilities = capabilities,
+    before_init = function(_, config)
+        config.settings.python.pythonPath = get_python_path(config.root_dir)
+    end,
+    on_attach = on_attach,
+    capabilities = capabilities,
 })
 
 -- Enable the following language servers
 local servers = { 'clangd', 'rust_analyzer', 'tsserver' }
 for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-  }
+    lspconfig[lsp].setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+    }
 end
 
 
@@ -588,30 +589,30 @@ table.insert(runtime_path, 'lua/?.lua')
 table.insert(runtime_path, 'lua/?/init.lua')
 
 lspconfig.sumneko_lua.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  settings = {
-    Lua = {
-      runtime = {
-        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-        version = 'LuaJIT',
-        -- Setup your lua path
-        path = runtime_path,
-      },
-      diagnostics = {
-        -- Get the language server to recognize the `vim` global
-        globals = { 'vim' },
-      },
-      workspace = {
-        -- Make the server aware of Neovim runtime files
-        library = vim.api.nvim_get_runtime_file('', true),
-      },
-      -- Do not send telemetry data containing a randomized but unique identifier
-      telemetry = {
-        enable = false,
-      },
+    on_attach = on_attach,
+    capabilities = capabilities,
+    settings = {
+        Lua = {
+            runtime = {
+                -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+                version = 'LuaJIT',
+                -- Setup your lua path
+                path = runtime_path,
+            },
+            diagnostics = {
+                -- Get the language server to recognize the `vim` global
+                globals = { 'vim' },
+            },
+            workspace = {
+                -- Make the server aware of Neovim runtime files
+                library = vim.api.nvim_get_runtime_file('', true),
+            },
+            -- Do not send telemetry data containing a randomized but unique identifier
+            telemetry = {
+                enable = false,
+            },
+        },
     },
-  },
 }
 
 -- vim: ts=4 sts=4 sw=4 et

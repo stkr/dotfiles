@@ -1,4 +1,3 @@
-
 local present, telescope = pcall(require, "telescope")
 if not present then
     vim.notify("Failed to require module [telescope].")
@@ -14,20 +13,20 @@ local callbacks = {}
 -- Telescope
 function callbacks.config()
     telescope.setup {
-    defaults = {
-        mappings = {
-            i = {
-                ['<C-k>'] = actions.move_selection_previous,
-                ['<C-j>'] = actions.move_selection_next,
-                ['<C-l>'] = actions.cycle_history_next,
-                ['<C-h>'] = actions.cycle_history_prev,
-                ['<M-p>'] = action_layout.toggle_preview
+        defaults = {
+            mappings = {
+                i = {
+                    ['<C-k>'] = actions.move_selection_previous,
+                    ['<C-j>'] = actions.move_selection_next,
+                    ['<C-l>'] = actions.cycle_history_next,
+                    ['<C-h>'] = actions.cycle_history_prev,
+                    ['<M-p>'] = action_layout.toggle_preview
+                },
+                n = {
+                    ['<M-p>'] = action_layout.toggle_preview
+                },
             },
-            n = {
-                ['<M-p>'] = action_layout.toggle_preview
-            },
-        },
-        path_display = {'smart'},
+            path_display = { 'smart' },
         },
     }
 
@@ -36,4 +35,3 @@ function callbacks.config()
 end
 
 return callbacks
-
