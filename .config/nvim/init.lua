@@ -189,7 +189,74 @@ require('packer').startup(function(use)
         cmd = { "Sayonara" },
     }
 
+    -- debugging
+    use {
+        "mfussenegger/nvim-dap",
+    }
+    use {
+        "theHamsta/nvim-dap-virtual-text",
+    }
+
+    -- This looks promising, but is not quite
+    -- mature enough
+    -- use {
+    --     "simrat39/rust-tools.nvim",
+    -- }
+
 end)
+
+require("nvim-dap-virtual-text").setup()
+
+local dap = require('dap')
+dap.adapters.lldb = {
+    type = 'executable',
+    command = '/usr/bin/lldb-vscode', -- adjust as needed, must be absolute path
+    name = 'lldb'
+}
+
+vim.cmd([[
+    nnoremap <silent> <F5> <Cmd>lua require'dap'.continue()<CR>
+    nnoremap <silent> <F10> <Cmd>lua require'dap'.step_over()<CR>
+    nnoremap <silent> <F11> <Cmd>lua require'dap'.step_into()<CR>
+    nnoremap <silent> <F12> <Cmd>lua require'dap'.step_out()<CR>
+    nnoremap <silent> <F6> <Cmd>lua require'dap'.toggle_breakpoint()<CR>
+    ]])
+
+dap.configurations.cpp = {
+    {
+        name = 'Launch',
+        type = 'lldb',
+        request = 'launch',
+        program = function()
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/target/debug/ant_simulation')
+        end,
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+        args = {},
+
+        -- 💀
+        -- if you change `runInTerminal` to true, you might need to change the yama/ptrace_scope setting:
+        --
+        --    echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+        --
+        -- Otherwise you might get the following error:
+        --
+        --    Error on launch: Failed to attach to the target process
+        --
+        -- But you should be aware of the implications:
+        -- https://www.kernel.org/doc/html/latest/admin-guide/LSM/Yama.html
+        -- runInTerminal = false,
+
+        -- 💀
+        -- If you use `runInTerminal = true` and resize the terminal window,
+        -- lldb-vscode will receive a `SIGWINCH` signal which can cause problems
+        -- To avoid that uncomment the following option
+        -- See https://github.com/mfussenegger/nvim-dap/issues/236#issuecomment-1066306073
+        -- postRunCommands = {'process handle -p true -s false -n false SIGWINCH'}
+    },
+}
+
+dap.configurations.rust = dap.configurations.cpp
 
 --#endregion
 
