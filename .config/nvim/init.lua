@@ -113,6 +113,9 @@ require('packer').startup(function(use)
     use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
     use 'mjlbach/onedark.nvim' -- Theme inspired by Atom
+    use {
+        'Iron-E/nvim-soluarized'
+    }
 
     -- Fancier statusline
     use {
@@ -239,7 +242,9 @@ vim.o.signcolumn = 'yes'
 
 --Set colorscheme
 vim.o.termguicolors = true
-vim.cmd [[colorscheme onedark]]
+vim.o.background='light'
+vim.cmd [[ colorscheme soluarized ]]
+
 
 --Set clipboard to use system clipboard per default
 vim.o.clipboard = "unnamedplus"
