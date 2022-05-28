@@ -83,13 +83,12 @@ require('packer').startup(function(use)
     }
     use {
         "gbprod/cutlass.nvim",
-        config = 
-            function()
-                require("cutlass").setup({
-                    exclude = { "ns", "nS" },
-                    cut_key = "x",
-                })
-            end,
+        config = function()
+            require("cutlass").setup({
+                exclude = { "ns", "nS" },
+                cut_key = "x",
+            })
+        end,
     }
 
     use 'tpope/vim-repeat'
@@ -103,14 +102,19 @@ require('packer').startup(function(use)
 
     -- UI to select things (files, grep results, open buffers...)
     use {
+        'nvim-telescope/telescope-fzf-native.nvim',
+        run = 'make',
+    }
+    use {
+        'nvim-telescope/telescope-ui-select.nvim',
+    }
+    use {
         'nvim-telescope/telescope.nvim',
-        requires = { { 'nvim-lua/plenary.nvim', } },
         opt = true,
         cmd = { "Telescope" },
         module = 'telescope',
-        config = plugin_config
+        config = plugin_config,
     }
-    use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
     use 'mjlbach/onedark.nvim' -- Theme inspired by Atom
     use {
@@ -242,7 +246,7 @@ vim.o.signcolumn = 'yes'
 
 --Set colorscheme
 vim.o.termguicolors = true
-vim.o.background='light'
+vim.o.background = 'light'
 vim.cmd [[ colorscheme soluarized ]]
 
 

@@ -75,7 +75,7 @@ function callbacks.config()
         r = {
             name = "refactor",
             f = { "<cmd>lua vim.lsp.buf.formatting_seq_sync(nil, 5000, nil)<cr>", "format" },
-            m = { "<cmd>lua require('telescope.builtin').lsp_code_actions()<cr>", "menu" },
+            m = { "<cmd>lua require('telescope'); vim.lsp.buf.code_action()<cr>", "menu" },
             r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "rename" },
         }, }, leader_normal)
 
