@@ -81,6 +81,16 @@ require('packer').startup(function(use)
     use {
         'ggandor/lightspeed.nvim',
     }
+    use {
+        "gbprod/cutlass.nvim",
+        config = 
+            function()
+                require("cutlass").setup({
+                    exclude = { "ns", "nS" },
+                    cut_key = "x",
+                })
+            end,
+    }
 
     use 'tpope/vim-repeat'
     use 'tpope/vim-fugitive'
@@ -366,11 +376,11 @@ vim.g.maplocalleader = ','
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
--- Don't copy the replaced text after pasting in visual mode
+--- Don't copy the replaced text after pasting in visual mode
 vim.keymap.set("v", "p", "p:let @+=@0<CR>")
 
--- Don't yank text on cut ( x )
-vim.keymap.set({ "n", "v" }, "x", '"_x')
+-- Make gp select the recently pasted text
+vim.keymap.set("n", "gp", "'[V']")
 
 -- Avoid the escape key http://vim.wikia.com/wiki/Avoid_the_escape_key
 vim.keymap.set('i', 'jk', '<esc>')
