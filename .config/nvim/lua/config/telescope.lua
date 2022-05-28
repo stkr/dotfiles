@@ -28,10 +28,16 @@ function callbacks.config()
             },
             path_display = { 'smart' },
         },
+        extensions = {
+            ["ui-select"] = {
+                require("telescope.themes").get_dropdown {}
+            }
+        },
     }
 
     -- Enable telescope fzf native
     telescope.load_extension('fzf')
+    telescope.load_extension('ui-select')
 end
 
 return callbacks
