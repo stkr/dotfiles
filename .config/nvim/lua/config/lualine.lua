@@ -10,7 +10,7 @@ function callbacks.config()
     lualine.setup {
         options = {
             icons_enabled = true,
-            theme = 'onedark',
+            theme = 'solarized',
             component_separators = '|',
             section_separators = '',
         },
