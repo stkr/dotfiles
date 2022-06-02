@@ -101,10 +101,17 @@ require('packer').startup(function(use)
     -- use 'ludovicchabant/vim-gutentags' -- Automatic tags management
 
     -- UI to select things (files, grep results, open buffers...)
-    use {
-        'nvim-telescope/telescope-fzf-native.nvim',
-        run = 'make',
-    }
+    if vim.loop.os_uname().sysname:match 'Linux' then
+        use {
+            'nvim-telescope/telescope-fzf-native.nvim',
+            run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
+        }
+    else
+        use {
+            'nvim-telescope/telescope-fzf-native.nvim',
+            run = 'make',
+        }
+    end
     use {
         'nvim-telescope/telescope-ui-select.nvim',
     }
