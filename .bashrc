@@ -92,6 +92,7 @@ alias dt='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 # some project-specific aliases and settings
 alias mlogin=/pkg/fs-foundation-/dynamic/bin/mlogin
+alias rr='python2 /home/rfinch0_scratch/brom_regression/scripts/regression_test_runner.py'
 export EDA_ENV=TR
 unset CADENV_HOME
 
