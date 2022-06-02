@@ -90,10 +90,14 @@ alias la='ls -A'
 alias dotfiles='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias dt='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
-# some project-specific aliases
+# some project-specific aliases and settings
 alias mlogin=/pkg/fs-foundation-/dynamic/bin/mlogin
 export EDA_ENV=TR
 unset CADENV_HOME
+
+if [ -f /home/$USER/.trpolicy ]; then
+    export TRPOLICYFILE="/home/$USER/.trpolicy:${TRPOLICYFILE}"
+fi
 
 # This is a bit convoluted, the goal is to fix man pages - per default they use
 # some highlights which do clash with colorschemes that have a bright background.
