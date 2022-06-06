@@ -1,0 +1,7 @@
+feh                  \
+--image-bg black     \
+--draw-tinted        \
+--draw-filename      \
+--draw-actions       \
+--geometry 1900x1000 \
+--auto-zoom          \
