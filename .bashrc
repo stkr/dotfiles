@@ -95,6 +95,7 @@ alias mlogin=/pkg/fs-foundation-/dynamic/bin/mlogin
 alias rr='python2 /home/rfinch0_scratch/brom_regression/scripts/regression_test_runner.py'
 export EDA_ENV=TR
 unset CADENV_HOME
+export PATH="/pkg/fs-foundation-/dynamic/bin:$PATH:/proj/rfinch0/wa/usr/local"
 
 if [ -f /home/$USER/.trpolicy ]; then
     export TRPOLICYFILE="/home/$USER/.trpolicy:${TRPOLICYFILE}"
