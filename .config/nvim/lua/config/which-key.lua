@@ -45,6 +45,7 @@ function callbacks.config()
             e = { "<cmd>NvimTreeFocus<cr>", "explore" },
             f = { "<cmd>lua require('telescope.builtin').fd({ previewer = false })<cr>", "file" },
             g = { "<cmd>lua require('telescope.builtin').live_grep({ previewer = false })<cr>", "grep" },
+            q = { "<cmd>lua require('telescope.builtin').quickfixhistory()<cr>", "quickfix" },
             t = { "<cmd>Telescope tags<cr>", "tag" },
             [':'] = { "<cmd>Telescope command_history<cr>", "command history" },
             ['*'] = { "<cmd>lua require('telescope.builtin').grep_string({ previewer = false })<cr>", "word in files" },

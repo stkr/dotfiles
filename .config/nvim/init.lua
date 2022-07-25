@@ -264,13 +264,18 @@ vim.o.clipboard = "unnamedplus"
 vim.o.splitbelow = true
 vim.o.splitright = true
 
+-- Add a keybinding to zoom in on the current split. This copies the split and creates a new 
+-- tab from it, so a simple close of the window is good enough to get back to the prev split 
+-- layout.
+vim.keymap.set('n', '<C-W>z', ":tabnew %<CR>") 
+
 -- When doing command completion, do only complete as much as possible
 -- and provide a list.
 vim.o.wildmode = "longest:full,full"
 vim.keymap.set('c', '<cr>', function()
     return vim.fn.pumvisible() == 1 and '<c-y>' or '<cr>'
 end, { expr = true })
--- Interestingly enough, these won't work - nether their vimscript version
+-- Interestingly enough, these won't work - neither their vimscript version
 -- nor the lua version. So we stick with TAB for now...
 -- vim.api.nvim_command([[ cnoremap <expr> <c-j> wildmenumode() ? "\<down>" : "\<c-j>" ]])
 -- vim.api.nvim_command([[ cnoremap <expr> <c-k> wildmenumode() ? "\<up>" : "\<c-k>" ]])
