@@ -9,10 +9,10 @@
 
     st = status --short
 
-    logs = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate -n 20
-    logsa = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate 
-    logl = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
-    logg = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --all --graph -n 20
+    logs = log --pretty=format:"%C(auto)%h%d\\ %s%Cblue\\ [%cn]" -n 20
+    logsa = log --pretty=format:"%C(auto)%h%d\\ %s%Cblue\\ [%cn]"
+    logl = log --pretty=format:"%C(auto)%h%d\\ %s%Cblue\\ [%cn]" --stat
+    logg = log --pretty=format:"%C(auto)%h%d\\ %s%Cblue\\ [%cn]" --all --graph
 
     ls = ls-files
     lsm = ls-files -m
