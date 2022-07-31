@@ -6,7 +6,8 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
 end
 
 local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
-vim.api.nvim_create_autocmd('BufWritePost', { command = 'source <afile> | PackerCompile', group = packer_group, pattern = 'init.lua' })
+vim.api.nvim_create_autocmd('BufWritePost',
+    { command = 'source <afile> | PackerCompile', group = packer_group, pattern = 'init.lua' })
 
 
 
@@ -264,10 +265,10 @@ vim.o.clipboard = "unnamedplus"
 vim.o.splitbelow = true
 vim.o.splitright = true
 
--- Add a keybinding to zoom in on the current split. This copies the split and creates a new 
--- tab from it, so a simple close of the window is good enough to get back to the prev split 
+-- Add a keybinding to zoom in on the current split. This copies the split and creates a new
+-- tab from it, so a simple close of the window is good enough to get back to the prev split
 -- layout.
-vim.keymap.set('n', '<C-W>z', ":tabnew %<CR>") 
+vim.keymap.set('n', '<C-W>z', ":tabnew %<CR>")
 
 -- When doing command completion, do only complete as much as possible
 -- and provide a list.
@@ -417,17 +418,20 @@ vim.keymap.set('i', 'kj', '<esc>')
 -- https://vi.stackexchange.com/questions/14315/how-can-i-tell-if-im-in-the-command-window
 -- getcmdwintype() returns a non-empty string if current window is the commandline window.
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
-    command = "if mode() != 'c' && getcmdwintype() == '' | checktime | endif" })
+    command = "if mode() != 'c' && getcmdwintype() == '' | checktime | endif"
+})
 
 -- Notification after file change
 -- https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
 vim.api.nvim_create_autocmd({ "FileChangedShellPost" }, {
-    command = "echohl WarningMsg | echo 'File changed on disk. Buffer reloaded.' | echohl" })
+    command = "echohl WarningMsg | echo 'File changed on disk. Buffer reloaded.' | echohl"
+})
 
 -- Automatically reload buffers when re-entering vim.
 vim.api.nvim_create_autocmd({ "BufWinLeave" }, { command = "let b:winview = winsaveview()" })
 vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
-    command = "if exists('b:winview') | call winrestview(b:winview) | unlet b:winview" })
+    command = "if exists('b:winview') | call winrestview(b:winview) | unlet b:winview"
+})
 
 -- Highlight on yank
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
