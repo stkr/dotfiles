@@ -126,7 +126,8 @@ require('packer').startup(function(use)
 
     use 'mjlbach/onedark.nvim' -- Theme inspired by Atom
     use {
-        'Iron-E/nvim-soluarized'
+        -- 'Iron-E/nvim-soluarized'
+        'stkr/nvim-soluarized'
     }
 
     -- Fancier statusline
