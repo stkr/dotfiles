@@ -423,6 +423,9 @@ vim.keymap.set("n", "gp", "'[V']")
 vim.keymap.set('i', 'jk', '<esc>')
 vim.keymap.set('i', 'kj', '<esc>')
 
+-- Search for word under cursor without jumping around.
+vim.keymap.set('n', '*', ':set hlsearch <bar> :let @/=expand(\'<cword>\')<CR>')
+
 --#region autocommands
 
 -- Reload file after change
