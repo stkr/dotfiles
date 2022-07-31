@@ -138,6 +138,11 @@ require('packer').startup(function(use)
         config = plugin_config
     }
 
+    -- Display a scrollbar that is dragable with the mouse.
+    use {
+        'dstein64/nvim-scrollview'
+    }
+
     -- Add indentation guides even on blank lines
     use {
         'lukas-reineke/indent-blankline.nvim'
@@ -299,6 +304,15 @@ vim.o.foldenable = false
 
 -- Make marks always go to the marked column
 vim.keymap.set('n', "'", "`")
+
+-- Configuration of the scollbar
+require('scrollview').setup({
+    excluded_filetypes = {},
+    current_only = true,
+    winblend = 0,
+    base = 'right',
+    column = 1,
+})
 
 -- Load completion plugin on tab in insert mode.
 -- Now, this is a bit of a hack...
