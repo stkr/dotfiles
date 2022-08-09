@@ -26,6 +26,7 @@
     mt = mergetool
 
     su = submodule update --recursive
+    po = push -u origin HEAD
 
     unstage = restore --staged .
     delete-nontracking-branches = "! git branch --list --format \"%(if:equals=[gone])%(upstream:track)%(then)%(refname:short)%(end)\" | sed '/^$/d' | xargs git branch -d "
