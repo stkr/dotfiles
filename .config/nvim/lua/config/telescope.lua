@@ -34,7 +34,20 @@ function callbacks.config()
                 require("telescope.themes").get_dropdown {}
             }
         },
+
         pickers = {
+            buffers = {
+                prompt_prefix = " ﬘ > ",
+            },
+            fd = {
+                prompt_prefix = "  > ",
+            },
+            live_grep = {
+                prompt_prefix = "  > ",
+            },
+            tags = {
+                prompt_prefix = " 笠> ",
+            },
             quickfixhistory = {
                 mappings = {
                     -- In quickfixhistory use <CR> to reload that particular entry of 
@@ -51,7 +64,7 @@ function callbacks.config()
                       end
                     }
                 }
-            }
+            },
         },
     }
 
