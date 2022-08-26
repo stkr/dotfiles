@@ -6,6 +6,7 @@ end
 
 local actions = require("telescope.actions")
 local action_layout = require("telescope.actions.layout")
+local action_state = require("telescope.actions.state")
 
 
 local callbacks = {}
@@ -31,6 +32,25 @@ function callbacks.config()
         extensions = {
             ["ui-select"] = {
                 require("telescope.themes").get_dropdown {}
+            }
+        },
+        pickers = {
+            quickfixhistory = {
+                mappings = {
+                    -- In quickfixhistory use <CR> to reload that particular entry of 
+                    -- the quickfixhistory. The default seems to be to use 
+                    -- telecsope (again) to pick from within that particular 
+                    -- quickfixlist - this seems overkill.
+                    i = {
+                      ["<CR>"] = function(prompt_buf)
+                        local entry = action_state.get_selected_entry()
+                        if entry then
+                            actions.close(prompt_buf)
+                            vim.cmd(string.format("%schistory | copen", entry.nr))
+                        end
+                      end
+                    }
+                }
             }
         },
     }
