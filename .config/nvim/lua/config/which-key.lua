@@ -42,16 +42,15 @@ function callbacks.config()
         f = {
             name = "find",
             b = { "<cmd>lua require('telescope.builtin').buffers({ previewer = false })<cr>", "buffer" },
-            e = { "<cmd>NvimTreeFocus<cr>", "explore" },
             f = { "<cmd>lua require('telescope.builtin').fd({ previewer = false })<cr>", "file" },
             g = { "<cmd>lua require('telescope.builtin').live_grep({ previewer = false })<cr>", "grep" },
             q = { "<cmd>lua require('telescope.builtin').quickfixhistory()<cr>", "quickfix" },
-            t = { "<cmd>Telescope tags<cr>", "tag" },
-            [':'] = { "<cmd>Telescope command_history<cr>", "command history" },
+            t = { "<cmd>lua require('telescope.builtin').tags()<cr>", "tag" },
+            [':'] = { "<cmd>lua require('telescope.builtin').command_history()<cr>", "command history" },
             ['*'] = { "<cmd>lua require('telescope.builtin').grep_string({ previewer = false })<cr>", "word in files" },
             r = { "<cmd>Telescope resume<cr>", "resume" },
-            u = { "<cmd>Telescope lsp_references<cr>", "usages" },
-            ['/'] = { "<cmd>Telescope search_history<cr>", "search history" },
+            u = { "<cmd>lua require('telescope.builtin').lsp_references()<cr>", "usages" },
+            ['/'] = { "<cmd>lua require('telescope.builtin').search_history<cr>", "search history" },
             a = { "<cmd>Telescope<cr>", "anything" },
         }, }, leader_normal)
 
