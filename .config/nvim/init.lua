@@ -220,7 +220,13 @@ require('packer').startup(function(use)
         cmd = { "Sayonara" },
     }
 
+    use {
+        "mickael-menu/zk-nvim",
+    }
+
 end)
+
+require("zk").setup()
 
 --#endregion
 
