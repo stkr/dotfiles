@@ -169,6 +169,9 @@ if command -v fd &> /dev/null ; then
     export FZF_DEFAULT_COMMAND='fd --type f'
 fi
 
+# setup directory for notes
+export ZK_NOTEBOOK_DIR=~/data/notes
+
 # We keep the user's shell to be bash (to get all the benefits of .bashrc and .profile etc.), but in
 # case of an interactive shell we drop to fish. 
 # This aproach is inspired by ArchWiki:
