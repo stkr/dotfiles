@@ -96,7 +96,7 @@ require('packer').startup(function(use)
     use 'tpope/vim-abolish'
     use 'tpope/vim-unimpaired'
     use 'tpope/vim-obsession'
-    use 'tpope/vim-surround'
+
     use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
     -- use 'ludovicchabant/vim-gutentags' -- Automatic tags management
 
@@ -121,6 +121,20 @@ require('packer').startup(function(use)
         cmd = { "Telescope" },
         module = 'telescope',
         config = plugin_config,
+    }
+
+    use {
+        "gbprod/stay-in-place.nvim",
+        config = function()
+            require("stay-in-place").setup({})
+        end
+    }
+
+    use {
+        'echasnovski/mini.nvim',
+        config = function()
+            require("mini.surround").setup({})
+        end
     }
 
     use 'mjlbach/onedark.nvim' -- Theme inspired by Atom
