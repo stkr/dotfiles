@@ -97,9 +97,6 @@ require('packer').startup(function(use)
     use 'tpope/vim-unimpaired'
     use 'tpope/vim-obsession'
 
-    use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
-    -- use 'ludovicchabant/vim-gutentags' -- Automatic tags management
-
     -- UI to select things (files, grep results, open buffers...)
     if vim.loop.os_uname().sysname:match 'Linux' then
         use {
@@ -134,6 +131,8 @@ require('packer').startup(function(use)
         'echasnovski/mini.nvim',
         config = function()
             require("mini.surround").setup({})
+            require("mini.cursorword").setup({})
+            require("mini.comment").setup({})
         end
     }
 
@@ -419,9 +418,6 @@ vim.keymap.set('i', "<tab>",
             end
         end
     end)
-
---Enable Comment.nvim
-require('Comment').setup()
 
 --Remap comma as leader key
 vim.keymap.set({ 'n', 'v' }, ',', '<Nop>', { silent = true })

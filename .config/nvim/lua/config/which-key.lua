@@ -225,7 +225,6 @@ function callbacks.config()
     wk.register({
         ['.'] = { "<cmd>lua require('telescope.builtin').buffers({ sort_mru = true, ignore_current_buffer = true, previewer = false })<cr>", "recent files" },
         [','] = { "<cmd>w<cr>", "save" },
-        ['/'] = { "<Plug>(comment_toggle_current_linewise)j", "comment" },
         q = { "<cmd>Sayonara!<cr>", "close" }
     }, leader_normal)
     wk.register({
