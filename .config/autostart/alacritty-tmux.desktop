@@ -1,9 +1,21 @@
 [Desktop Entry]
-Version=1.0
-Name=alacritty + tmux
-Comment=BLA
-Exec=alacritty -o window.startup_mode=Maximized -e tmux
-Icon=gimp
-Terminal=false
-Type=Application
 Categories=Application
+Comment=BLA
+Comment=BLA
+Exec=alacritty -o window.startup_mode=Maximized -e tmux -u
+GenericName=
+GenericName=
+Icon=gimp
+MimeType=
+Name=alacritty + tmux
+Name=alacritty + tmux
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+Version=1.0
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=
