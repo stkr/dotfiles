@@ -323,6 +323,10 @@ vim.o.foldenable = false
 -- Make marks always go to the marked column
 vim.keymap.set('n', "'", "`")
 
+-- Write a file as root
+vim.api.nvim_create_user_command("SudoWrite", function(opts) require('utils').sudo_write() end, {})
+-- vim.keymap.set('c', 'w!!<CR>', require('utils').sudo_write)
+
 -- Configuration of the scollbar
 require('scrollview').setup({
     excluded_filetypes = {},
