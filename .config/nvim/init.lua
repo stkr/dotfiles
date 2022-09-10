@@ -244,12 +244,12 @@ require('packer').startup(function(use)
         "mickael-menu/zk-nvim",
     }
 
-    use { 
-        'sindrets/diffview.nvim', 
+    use {
+        'sindrets/diffview.nvim',
         requires = 'nvim-lua/plenary.nvim',
-        cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose", 
-                "DiffviewToggleFiles", "DiffviewFocusFiles", 
-                "DiffviewRefresh", "DiffviewLog",
+        cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose",
+            "DiffviewToggleFiles", "DiffviewFocusFiles",
+            "DiffviewRefresh", "DiffviewLog",
         },
     }
 
