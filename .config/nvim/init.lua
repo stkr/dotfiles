@@ -15,12 +15,20 @@ pcall(require, "impatient")
 local function plugin_config(plugin_name, config)
     local utils = require("utils")
     local module = utils.get_plugin_config_module(plugin_name)
+    if module == nil then
+        vim.notify("Unable to load config for [" .. plugin_name .. "]")
+        return
+    end
     module.config()
 end
 
 local function plugin_setup(plugin_name, config)
     local utils = require("utils")
     local module = utils.get_plugin_config_module(plugin_name)
+    if module == nil then
+        vim.notify("Unable to load config for [" .. plugin_name .. "]")
+        return
+    end
     module.setup()
 end
 
