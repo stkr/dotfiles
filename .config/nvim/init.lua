@@ -339,7 +339,7 @@ require('scrollview').setup({
 -- nothing. However, in this case the tab in insert mode SHALL be used as
 -- trigger to load nvim-cmp AND then to startup the completion as well.
 -- So we bind it to a function that does that. Note that
--- loading nvim-cmp effectively replces this mapping with the one that is
+-- loading nvim-cmp effectively replaces this mapping with the one that is
 -- defined as config for nvim-cmp, however, in case nvim-cmp does not trigger
 -- the completion menu, it will still fall back to the default <tab>
 -- mapping - i.e. this function. To avoid executing this function over and
@@ -357,10 +357,8 @@ vim.keymap.set('i', "<tab>",
                     vim.api.nvim_input("<tab>")
                 end, 0)
         else
-
             local utils = require("utils")
             if utils.is_text_before_cursor() then
-                vim.notify("load-nvim-cmp")
                 require("packer").loader("nvim-cmp")
                 -- Calling the config callback is not necessary.
                 -- Due to the deferred nvim_input the full plugin loading
@@ -382,11 +380,7 @@ vim.keymap.set('i', "<tab>",
                 -- the first completion that was triggered by tab in a
                 -- session that previously had not loaded the nvim-cmp
                 -- plugin, so is negligible.
-                vim.defer_fn(
-                    function()
-                        vim.api.nvim_input("<esc>a<tab>")
-                    end, 0)
-
+                --
                 -- For reference, these methods were also tried:
                 --
                 --   * invocation of cmp.complete directly: does nothing
@@ -409,12 +403,15 @@ vim.keymap.set('i', "<tab>",
                 --
                 -- Also nvim_input and vim feedkeys were the only ones working from
                 -- within the deferred_fn callback.
-            else
-                -- We still need to input the <tab> that this callback consumes
                 vim.defer_fn(
                     function()
-                        vim.api.nvim_input("<tab>")
+                        vim.api.nvim_input("<esc>a<tab>")
                     end, 0)
+            else
+                -- There is no text before the cursor, we did not load the plugin, this
+                -- shall be a simple insertion of <tab>.
+                local tab = vim.api.nvim_replace_termcodes("<tab>", true, false, true)
+                vim.api.nvim_feedkeys(tab, 'nt', true)
             end
         end
     end)
