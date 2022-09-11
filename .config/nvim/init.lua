@@ -242,6 +242,11 @@ require('packer').startup(function(use)
 
     use {
         "mickael-menu/zk-nvim",
+        cmd = {
+            "ZkBacklinks", "ZkCd", "ZkIndex", "ZkLinks", "ZkMatch", "ZkNew", "ZkNewFromContentSelection",
+            "ZkNewFromTitleSelection", "ZkNotes", "ZkTags",
+        },
+        config = plugin_config,
     }
 
     use {
@@ -254,8 +259,6 @@ require('packer').startup(function(use)
     }
 
 end)
-
-require("zk").setup()
 
 --#endregion
 

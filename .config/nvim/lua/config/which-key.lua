@@ -25,17 +25,25 @@ function callbacks.config()
             s = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "signature" },
         }, }, leader_normal)
 
-
     -------------  Edit commonly used files
     wk.register({
         e = {
             name = "edit/open",
             b = { "<cmd>:e ~/.bashrc<cr>", "bashrc" },
             g = { "<cmd>:e ~/.gitconfig<cr>", "gitconfig" },
-            n = { "<cmd>:e ~/.config/nvim/custom/init.lua<cr>", "nvim-init" },
+            n = {
+                name = "notes",
+                i = { "<cmd>ZkIndex<cr>", "index", },
+                n = {
+                    name = "new",
+                    i = { "<cmd>ZkNew { dir = 'info', title = vim.fn.input('Title: ') }<cr>", "info", },
+                    j = { "<cmd>ZkNew { dir = 'journal', title = vim.fn.input('Title: ') }<cr>", "journal", },
+                    p = { "<cmd>ZkNew { dir = 'persons', title = vim.fn.input('Name: ') }<cr>", "person", },
+                },
+                f = { "<cmd>ZkNotes<cr>", "find", },
+            },
             v = { "<cmd>:e ~/.vim/vimrc<cr>", "vimrc" },
         }, }, leader_normal)
-
 
     -------------  Finding stuff
     wk.register({
@@ -44,6 +52,7 @@ function callbacks.config()
             b = { "<cmd>lua require('telescope.builtin').buffers({ previewer = false })<cr>", "buffer" },
             f = { "<cmd>lua require('telescope.builtin').fd({ previewer = false })<cr>", "file" },
             g = { "<cmd>lua require('telescope.builtin').live_grep({ previewer = false })<cr>", "grep" },
+            i = { "<cmd>ZkNotes { hrefs = { 'info' } }<cr>", "info", },
             q = { "<cmd>lua require('telescope.builtin').quickfixhistory()<cr>", "quickfix" },
             t = { "<cmd>lua require('telescope.builtin').tags()<cr>", "tag" },
             [':'] = { "<cmd>lua require('telescope.builtin').command_history()<cr>", "command history" },
