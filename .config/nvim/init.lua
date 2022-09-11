@@ -305,6 +305,42 @@ vim.cmd [[ colorscheme soluarized ]]
 --Set clipboard to use system clipboard per default
 vim.o.clipboard = "unnamedplus"
 
+-- If run from within tmux, nvim per default on yank does copy also to a tmux
+-- buffer. This a kind of shared clipboard between tmux panes. In addition,
+-- tmux has the feature that it can copy this buffer to the client. This would
+-- be using an OSC52 sequence, therefore requiring a terminal that supports
+-- that.
+-- 
+-- To yank to tmux, nvim uses the "tmux load-buffer" command (see man tmux). In
+-- order for that additional copy step to the client to happen, the -w argument
+-- to load-buffer is required. Now per design nvim does not enable that
+-- (https://github.com/neovim/neovim/issues/14545). Therefore, we need to
+-- override the clipboard command ourselfves and add that -w option with the
+-- following configuration.
+--
+-- Note, there would also be an alternative to this approach - an alias for
+-- "load-buffer" to "load-buffer -w" from within tmux
+-- (https://github.com/tmux/tmux/issues/3088). This was tried and working as
+-- well, however, it seems to be quite invasive and therefore this approach was
+-- taken.
+
+if os.getenv("TMUX") then
+    vim.api.nvim_exec([[
+let g:clipboard = {
+          \   'name': 'myClipboard',
+          \   'copy': {
+          \      '+': ['tmux', 'load-buffer', '-w', '-'],
+          \      '*': ['tmux', 'load-buffer', '-w', '-'],
+          \    },
+          \   'paste': {
+          \      '+': ['tmux', 'save-buffer', '-'],
+          \      '*': ['tmux', 'save-buffer', '-'],
+          \   },
+          \   'cache_enabled': 1,
+          \ }
+    ]], false)
+end
+
 -- New splits shall be below or to the right
 vim.o.splitbelow = true
 vim.o.splitright = true
