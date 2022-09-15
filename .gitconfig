@@ -2,6 +2,7 @@
 	eol = lf
 	autocrlf = input
 	editor = nvim -f
+	fscache = true
 [alias]
     co = checkout
     ci = commit
