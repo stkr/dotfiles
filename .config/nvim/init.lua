@@ -1,3 +1,4 @@
+
 -- Install packer
 local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
 
@@ -5,6 +6,7 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
     vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
 end
 
+-- Re-compile packer after saving init.lua
 local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
 vim.api.nvim_create_autocmd('BufWritePost',
     { command = 'source <afile> | PackerCompile', group = packer_group, pattern = 'init.lua' })
@@ -504,7 +506,7 @@ vim.keymap.set('n', '*', ':set hlsearch <bar> :let @/=expand(\'<cword>\')<CR>')
 
 -- Reload file after change
 -- https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/149214
--- Triger `autoread` when files changes on disk
+-- Trigger `autoread` when files changes on disk
 -- https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
 -- https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
 -- https://vi.stackexchange.com/questions/14315/how-can-i-tell-if-im-in-the-command-window
@@ -512,6 +514,9 @@ vim.keymap.set('n', '*', ':set hlsearch <bar> :let @/=expand(\'<cword>\')<CR>')
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
     command = "if mode() != 'c' && getcmdwintype() == '' | checktime | endif"
 })
+
+-- Save file when focus is lost
+require("autosave").enable()
 
 -- Notification after file change
 -- https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
