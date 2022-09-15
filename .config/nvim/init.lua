@@ -545,6 +545,17 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     group = highlight_group,
     pattern = '*',
 })
+
+-- Do not prefix newlines with the comment char if they are inserted 
+-- with O. The typical usecase for when we want that prefix is if we are editing 
+-- a comment and creating a newline with <cr>.
+-- Normally one would just change the setting here. However A LOT of ftplugins 
+-- override the option. The suggested way to deal with it is to define yet another 
+-- autocommand that overrides the ftplugin's override :-(
+-- https://codeahoy.com/q/287/vim-faq
+-- https://stackoverflow.com/questions/23691236/vim-removing-r-from-format-options-for-all-filetypes
+vim.api.nvim_create_autocmd({ "Filetype" }, { command = "set formatoptions-=o" })
+
 --#endregion
 
 --#region alignment
