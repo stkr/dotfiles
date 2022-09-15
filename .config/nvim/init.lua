@@ -142,7 +142,6 @@ require('packer').startup(function(use)
         config = function()
             require("mini.surround").setup({})
             require("mini.cursorword").setup({})
-            require("mini.comment").setup({})
         end
     }
 
@@ -240,6 +239,13 @@ require('packer').startup(function(use)
     use {
         "mhinz/vim-sayonara",
         cmd = { "Sayonara" },
+    }
+
+    use {
+        "numToStr/Comment.nvim",
+        config = function()
+            require('Comment').setup()
+        end,
     }
 
     use {
