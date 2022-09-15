@@ -206,10 +206,11 @@ function callbacks.config()
             c = { "<cmd>lua toggle_autocomplete()<cr>", "complete" },
             h = { "<cmd>set hlsearch!<cr>", "hlseach" },
             l = { "<cmd>set list!<cr>", "listchars" },
-            r = { "<cmd>set relativenumber!<cr>", "relativenumber" },
             p = { "<cmd>set paste!<cr>", "paste" },
+            r = { "<cmd>set relativenumber!<cr>", "relativenumber" },
             s = { "<cmd>set spell!<cr>", "spell" },
             w = { "<cmd>set wrap!<cr>", "wrap" },
+            q = { function() require("autosave").toggle() end, "autosave" },
         }, }, leader_normal)
 
 
