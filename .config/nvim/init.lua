@@ -89,8 +89,14 @@ require('packer').startup(function(use)
     }
 
     use {
-        'ggandor/lightspeed.nvim',
+        'phaazon/hop.nvim',
+        branch = 'v2', -- optional but strongly recommended
+        config = function()
+            require('hop').setup()
+        end,
+        module = ("hop"),
     }
+
     use {
         "gbprod/cutlass.nvim",
         config = function()
@@ -507,6 +513,14 @@ vim.keymap.set('i', 'kj', '<esc>')
 
 -- Search for word under cursor without jumping around.
 vim.keymap.set('n', '*', ':set hlsearch <bar> :let @/=expand(\'<cword>\')<CR>')
+
+-- Jump using Hop plugin
+vim.keymap.set('', 'f', function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.AFTER_CURSOR, current_line_only = true }) end, {})
+vim.keymap.set('', 'F', function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.BEFORE_CURSOR, current_line_only = true }) end, {})
+vim.keymap.set('', 't', function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.AFTER_CURSOR, current_line_only = true, hint_offset = -1 }) end, {})
+vim.keymap.set('', 'T', function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 }) end, {})
+vim.keymap.set('', '\\', function() require("hop").hint_char2({ direction = require("hop.hint").HintDirection.AFTER_CURSOR }) end, {})
+vim.keymap.set('', '|', function() require("hop").hint_char2({ direction = require("hop.hint").HintDirection.BEFORE_CURSOR }) end, {})
 
 --#region autocommands
 
