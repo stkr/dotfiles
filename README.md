@@ -15,6 +15,10 @@ Sumarizing, to bootstrap:
 
 In case files are existing, move them out of the way and redo the checkout.
 
+Note, in case the port 22 is blocked, github is also available on https port on a different subdomain:
+
+    ssh://git@ssh.github.com:443/stkr/dotfiles.git
+
 ## Exemplary ~/.dotfiles/config:
 
     [user]
