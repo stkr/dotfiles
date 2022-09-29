@@ -148,6 +148,7 @@ require('packer').startup(function(use)
         config = function()
             require("mini.surround").setup({})
             require("mini.cursorword").setup({})
+            require("mini.align").setup({})
         end
     }
 
@@ -232,10 +233,6 @@ require('packer').startup(function(use)
         after = "nvim-cmp",
     }
 
-    use {
-        "junegunn/vim-easy-align",
-        cmd = { "EasyAlign" },
-    }
     use {
         "vim-scripts/ReplaceWithRegister",
     }
