@@ -26,17 +26,17 @@ function callbacks.config()
         },
         sections = {
             lualine_a = { "mode", "vim.o.paste and 'PASTE' or ''" },
-            lualine_b = { 
-                "branch", 
-                { 
-                    "diff", 
+            lualine_b = {
+                "branch",
+                {
+                    "diff",
                     diff_color = {
                         added = { fg = '#aec800' },
                         removed = { fg = '#ff6f6c' },
                         modified = { fg = '#f3bf21' },
                     },
-                }, 
-                { 
+                },
+                {
                     "diagnostics",
                     diagnostics_color = {
                         error = { fg = '#ff6f6c' },

@@ -1,4 +1,3 @@
-
 -- Install packer
 local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
 
@@ -321,7 +320,7 @@ vim.o.clipboard = "unnamedplus"
 -- tmux has the feature that it can copy this buffer to the client. This would
 -- be using an OSC52 sequence, therefore requiring a terminal that supports
 -- that.
--- 
+--
 -- To yank to tmux, nvim uses the "tmux load-buffer" command (see man tmux). In
 -- order for that additional copy step to the client to happen, the -w argument
 -- to load-buffer is required. Now per design nvim does not enable that
@@ -512,10 +511,18 @@ vim.keymap.set('i', 'kj', '<esc>')
 vim.keymap.set('n', '*', ':set hlsearch <bar> :let @/=expand(\'<cword>\')<CR>')
 
 -- Jump using Hop plugin
-vim.keymap.set('', 'f', function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.AFTER_CURSOR, current_line_only = true }) end, {})
-vim.keymap.set('', 'F', function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.BEFORE_CURSOR, current_line_only = true }) end, {})
-vim.keymap.set('', 't', function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.AFTER_CURSOR, current_line_only = true, hint_offset = -1 }) end, {})
-vim.keymap.set('', 'T', function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 }) end, {})
+vim.keymap.set('', 'f',
+    function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.AFTER_CURSOR,
+        current_line_only = true }) end, {})
+vim.keymap.set('', 'F',
+    function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.BEFORE_CURSOR,
+        current_line_only = true }) end, {})
+vim.keymap.set('', 't',
+    function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.AFTER_CURSOR,
+        current_line_only = true, hint_offset = -1 }) end, {})
+vim.keymap.set('', 'T',
+    function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.BEFORE_CURSOR,
+        current_line_only = true, hint_offset = 1 }) end, {})
 vim.keymap.set('', 'ss', function() require("hop").hint_char2() end, {})
 
 --#region autocommands
@@ -556,11 +563,11 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     pattern = '*',
 })
 
--- Do not prefix newlines with the comment char if they are inserted 
--- with O. The typical usecase for when we want that prefix is if we are editing 
+-- Do not prefix newlines with the comment char if they are inserted
+-- with O. The typical usecase for when we want that prefix is if we are editing
 -- a comment and creating a newline with <cr>.
--- Normally one would just change the setting here. However A LOT of ftplugins 
--- override the option. The suggested way to deal with it is to define yet another 
+-- Normally one would just change the setting here. However A LOT of ftplugins
+-- override the option. The suggested way to deal with it is to define yet another
 -- autocommand that overrides the ftplugin's override :-(
 -- https://codeahoy.com/q/287/vim-faq
 -- https://stackoverflow.com/questions/23691236/vim-removing-r-from-format-options-for-all-filetypes

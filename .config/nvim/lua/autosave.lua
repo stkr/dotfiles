@@ -39,4 +39,3 @@ function autosave.toggle()
 end
 
 return autosave
-

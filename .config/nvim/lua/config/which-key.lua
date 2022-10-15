@@ -25,7 +25,8 @@ function callbacks.config()
             d = { "<cmd>lua vim.diagnostic.setqflist()<cr>", "diagnostic" },
             i = { "<cmd>lua vim.lsp.buf.hover()<cr>", "info" },
             s = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "signature" },
-        }, }, leader_normal)
+        },
+    }, leader_normal)
 
     -------------  Edit commonly used files
     wk.register({
@@ -45,7 +46,8 @@ function callbacks.config()
                 f = { "<cmd>ZkNotes<cr>", "find", },
             },
             v = { "<cmd>:e ~/.vim/vimrc<cr>", "vimrc" },
-        }, }, leader_normal)
+        },
+    }, leader_normal)
 
     -------------  Finding stuff
     wk.register({
@@ -63,7 +65,8 @@ function callbacks.config()
             u = { "<cmd>lua require('telescope.builtin').lsp_references()<cr>", "usages" },
             ['/'] = { "<cmd>lua require('telescope.builtin').search_history<cr>", "search history" },
             a = { "<cmd>Telescope<cr>", "anything" },
-        }, }, leader_normal)
+        },
+    }, leader_normal)
 
 
     -------------  Going to / jumping to
@@ -72,14 +75,16 @@ function callbacks.config()
             name = "goto",
             d = { "<cmd>lua vim.lsp.buf.definition()<cr>", "definition" },
             h = { "<cmd>ClangdSwitchSourceHeader<cr>", "header/src" },
-        }, }, leader_normal)
+        },
+    }, leader_normal)
 
     -------------  Navigation
     wk.register({
         n = {
             name = "navigate",
             c = { "<cmd>cd %:p:h<cr>", "current" },
-        }, }, leader_normal)
+        },
+    }, leader_normal)
 
     -------------  Refactoring
     wk.register({
@@ -88,13 +93,15 @@ function callbacks.config()
             f = { "<cmd>lua vim.lsp.buf.formatting_seq_sync(nil, 5000, nil)<cr>", "format" },
             m = { "<cmd>lua require('telescope'); vim.lsp.buf.code_action()<cr>", "menu" },
             r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "rename" },
-        }, }, leader_normal)
+        },
+    }, leader_normal)
 
     wk.register({
         r = {
             name = "refactor",
             f = { "<cmd>lua vim.lsp.buf.range_formatting()<cr>", "format" },
-        }, }, leader_visual)
+        },
+    }, leader_visual)
 
     -------------  Useful common substitution commands
     --
@@ -205,7 +212,8 @@ function callbacks.config()
                 u = { "<cmd>set ff=unix<cr>", "unix" },
                 w = { "<cmd>set ff=dos<cr>", "windows" },
             },
-        }, }, leader_normal)
+        },
+    }, leader_normal)
 
     wk.register({
         s = {
@@ -218,7 +226,8 @@ function callbacks.config()
             h = {
                 name = "hex",
                 c = { [[<cmd>lua mh_substitute(":\'<,\'>s!\\(\\%V[0-9a-fA-F]\\%V[0-9a-fA-F]\\)!0x\\1, !ge")<cr>]], "c" },
-                j = { [[<cmd>lua mh_substitute(":\'<,\'>s!\\(\\%V[0-9a-fA-F]\\%V[0-9a-fA-F]\\)!(byte) 0x\\1, !ge")<cr>]], "java" },
+                j = { [[<cmd>lua mh_substitute(":\'<,\'>s!\\(\\%V[0-9a-fA-F]\\%V[0-9a-fA-F]\\)!(byte) 0x\\1, !ge")<cr>]],
+                    "java" },
                 s = { [[<cmd>lua mh_substitute(":\'<,\'>s!\\(\\%V[0-9a-fA-F]\\%V[0-9a-fA-F]\\)!\\1 !ge")<cr>]], "spaces" },
             },
             w = {
@@ -226,7 +235,8 @@ function callbacks.config()
                 e = { [[<cmd>lua mh_substitute(":\'<,\'>s!\\s\\+$!!")<cr>]], "delete whitespace before eol" },
                 n = { [[<cmd>lua mh_substitute(":\'<,\'>s/\\n\\{2,}/\\r\\r/g")<cr>]], "delete consecutive newlines" },
             },
-        }, }, leader_visual)
+        },
+    }, leader_visual)
 
 
     -------------  Toggle
@@ -241,7 +251,8 @@ function callbacks.config()
             s = { "<cmd>set spell!<cr>", "spell" },
             w = { "<cmd>set wrap!<cr>", "wrap" },
             q = { function() require("autosave").toggle() end, "autosave" },
-        }, }, leader_normal)
+        },
+    }, leader_normal)
 
 
     -------------  Yanking
@@ -259,11 +270,13 @@ function callbacks.config()
                 -- relative path  (src/foo.txt)
                 r = { ':let @*=fnamemodify(expand("%"), ":~:.")<cr>', "relative path" },
             },
-        }, }, leader_normal)
+        },
+    }, leader_normal)
 
     -------------  Misc
     wk.register({
-        ['.'] = { "<cmd>lua require('telescope.builtin').buffers({ sort_mru = true, ignore_current_buffer = true, previewer = false })<cr>", "recent files" },
+        ['.'] = { "<cmd>lua require('telescope.builtin').buffers({ sort_mru = true, ignore_current_buffer = true, previewer = false })<cr>",
+            "recent files" },
         [','] = { "<cmd>w<cr>", "save" },
         q = { "<cmd>Sayonara!<cr>", "close" }
     }, leader_normal)
