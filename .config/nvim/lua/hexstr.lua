@@ -9,15 +9,15 @@ local function last_hexchar_pos(str, pos)
     return i_end - 1
 end
 
--- The pos must be on a valid hexstring or on a prefix to a hexstring (0x). 
--- Search from the pos to the left and to the right until a character that 
+-- The pos must be on a valid hexstring or on a prefix to a hexstring (0x).
+-- Search from the pos to the left and to the right until a character that
 -- is no valid hex character is found (ignoring a prefix).
--- Returns the position in the string of the first character that is part 
--- of the hexstring (after a potential prefix) and of the last character 
+-- Returns the position in the string of the first character that is part
+-- of the hexstring (after a potential prefix) and of the last character
 -- that is part of the hexstring. Also, checks that the number of
 -- characters in the hexstring is divisible by two (or it is not consideres a
 -- valid hexstring.
--- 
+--
 -- In case no valid hexstring is found around the pos, it returns 0,0
 function hexstr.find_around(str, pos)
     if pos > 1 then
