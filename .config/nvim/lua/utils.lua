@@ -83,4 +83,37 @@ function utils.sudo_write(tmpfile, filepath)
   vim.fn.delete(tmpfile)
 end
 
+function utils.current_line_subst_callback(func)
+    local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+    -- get_cursor is "mark-like" indexed (1-based lines, 0-based columns).
+    -- lua in general is using 1-based indexing, so we keep row & col
+    -- consistent to use 1-based indexing.
+    col = col + 1
+    -- nvim_buf_get_lines uses 0-based indexing. We need to
+    -- compensate for that difference.
+    local line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1]
+    local s, e, replacement = func(line, col)
+    if replacement ~= nil then
+        local str = line:sub(s, e)
+        line = line:sub(1, s - 1) .. replacement .. line:sub(e + 1, line:len())
+        vim.api.nvim_buf_set_lines(0, row - 1, row, false, { line })
+    end
+end
+
+local dotrepeat_func = utils.dotrepeat_nop
+
+function utils.dotrepeat_nop()
+end
+
+function utils.dotrepeat_set_func(func)
+    vim.go.operatorfunc = "v:lua.require'utils'.dotrepeat_nop"
+    vim.cmd("normal! g@l")
+    vim.go.operatorfunc = "v:lua.require'utils'.dotrepeat_exec"
+    dotrepeat_func = func
+end
+
+function utils.dotrepeat_exec()
+    dotrepeat_func()
+end
+
 return utils

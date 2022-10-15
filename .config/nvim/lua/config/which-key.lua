@@ -4,6 +4,8 @@ if not present then
     return
 end
 
+local utils = require("utils")
+
 local callbacks = {}
 
 --Add leader shortcuts via whichkey
@@ -139,6 +141,35 @@ function callbacks.config()
       ]] , false)
     end
 
+    local function hexstring_swap(width)
+        utils.current_line_subst_callback(
+            function(line, col)
+                local hexstr = require("hexstr")
+                local s, e = hexstr.find_around(line, col)
+                if (s < 1) then
+                    return 0, 0, nil
+                end
+                local str = line:sub(s, e)
+                local swapped = hexstr.swap(str, width)
+                return s, e, swapped
+            end)
+    end
+
+    local function hexstring_swap_2()
+        hexstring_swap(2)
+        utils.dotrepeat_set_func(hexstring_swap_2)
+    end
+
+    local function hexstring_swap_4()
+        hexstring_swap(4)
+        utils.dotrepeat_set_func(hexstring_swap_4)
+    end
+
+    local function hexstring_swap_8()
+        hexstring_swap(8)
+        utils.dotrepeat_set_func(hexstring_swap_8)
+    end
+
     function toggle_autocomplete()
         local cmp = require('cmp')
         if (cmp.get_config()['completion']['autocomplete'] == false) then
@@ -164,10 +195,9 @@ function callbacks.config()
                 j = { [[<cmd>lua mh_substitute(":s!\\([0-9a-fA-F][0-9a-fA-F]\\)!(byte) 0x\\1, !ge")<cr>]], "java" },
                 s = { [[<cmd>lua mh_substitute(":s!\\([0-9a-fA-F][0-9a-fA-F]\\)!\\1 !ge")<cr>]], "spaces" },
                 x = { [[<cmd>lua mh_extract_hex()<cr>]], "extract hex" },
-                ['2'] = { [[<cmd>lua mh_substitute(":s!\\([0-9a-fA-F][0-9a-fA-F]\\)\\([0-9a-fA-F][0-9a-fA-F]\\)!\\2\\1!ge")<cr>]], "swap 2 bytes" },
-                ['4'] = { [[<cmd>lua mh_substitute(":s!\\([0-9a-fA-F][0-9a-fA-F]\\)\\([0-9a-fA-F][0-9a-fA-F]\\)\\([0-9a-fA-F][0-9a-fA-F]\\)\\([0-9a-fA-F][0-9a-fA-F]\\)!\\4\\3\\2\\1!ge")<cr>]], "swap 4 bytes" },
-                ['8'] = { [[<cmd>lua mh_substitute(":s!\\([0-9a-fA-F][0-9a-fA-F]\\)\\([0-9a-fA-F][0-9a-fA-F]\\)\\([0-9a-fA-F][0-9a-fA-F]\\)\\([0-9a-fA-F][0-9a-fA-F]\\)\\([0-9a-fA-F][0-9a-fA-F]\\)\\([0-9a-fA-F][0-9a-fA-F]\\)\\([0-9a-fA-F][0-9a-fA-F]\\)\\([0-9a-fA-F][0-9a-fA-F]\\)!\\8\\7\\6\\5\\4\\3\\2\\1!ge")<cr>]], "swap 8 bytes" },
-
+                ['2'] = { hexstring_swap_2, "swap 2 bytes" },
+                ['4'] = { hexstring_swap_4, "swap 4 bytes" },
+                ['8'] = { hexstring_swap_8, "swap 8 bytes" },
             },
             w = {
                 name = "whitespace",
