@@ -3,10 +3,10 @@
 A neat way of managing dotfiles that is usable cross-platform is described at [1].
 
 Essentially the idea is to have the home directory a git workspace but to keep the repository data 
-not in .git but in a separate folder and define an alias to access the conbination of workspace and 
+not in .git but in a separate folder and define an alias to access the combination of workspace and 
 repository.
 
-Sumarizing, to bootstrap:
+Summarizing, to bootstrap:
 
 	git clone --bare ssh://git@github.com/stkr/dotfiles.git $HOME/.dotfiles
 	alias dt="git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
@@ -39,7 +39,7 @@ Note, in case the port 22 is blocked, github is also available on https port on 
         merge = refs/heads/master 
 
 
-# msys2 specific intallation notes
+# msys2 specific installation notes
 
 
 ## Starting an msys2 bash under ConEmu
@@ -167,7 +167,7 @@ On windows, the directories where nvim and vim searches for plugin is:
 
     ~/AppData/Local/nvim-data/site
 
-It is possible ot make nvim pick up the plugins of vim by including vim's plugin path into nvim's
+It is possible to make nvim pick up the plugins of vim by including vim's plugin path into nvim's
 runtimepath and also use the same vimrc file:
 
     set runtimepath^=~/.vim runtimepath+=~/.vim/after
@@ -175,14 +175,44 @@ runtimepath and also use the same vimrc file:
     source ~/.vim/vimrc
 
 
-## Alacritty and the conpty desaster
+## building nvim from sources and install using stow
+
+As mentioned in [10], the assumption of stow is that a package is compiled for
+the target tree. That means no custom installation prefix for compilation of
+nvim is required/expected. However, it is a bit "special" to get nvim installed
+into the stow tree. The nvim discussion forum has a solution at [11].
+
+    # checkout the tag to build
+    git checkout v0.8.0
+
+    export NVIM_VERSION="$( git describe )"
+    export STOW_TREE="/usr/local/stow"
+    export NVIM_INSTALL_PREFIX="${STOW_TREE}/nvim-${NVIM_VERSION}"
+    export MACHINE="$( gcc -dumpmachine )"
+
+    # build with final target
+    make CMAKE_BUILD_TYPE=Release 
+
+    # create a stow folder for this version
+    sudo mkdir "${NVIM_INSTALL_PREFIX}"
+
+    # "install" neovim into the stow folder
+    cd build
+    sudo cmake -DCMAKE_INSTALL_PREFIX="${NVIM_INSTALL_PREFIX}" -P cmake_install.cmake
+
+    # create an archive of the build
+    cd "${STOW_TREE}"
+    tar cvzf "/tmp/nvim-${NVIM_VERSION}-${MACHINE}.tar.gz" "nvim-${NVIM_VERSION}"
+
+
+## Alacritty and the conpty disaster
 
 On windows, alacritty since some time uses the conpty. However, the version of conpty +
 conhost/OpenConsole shipped with windows is quite outdated and broken. There is no way in default
 alacritty to replace those components as they are taken from the windows installation. Howver a
 patch exists to have alacritty take conpty.dll and OpenConsole.exe from the same directory as the
 alacritty.exe [6]. A PR for that was declined [7], [8], so that will not make it into an alacritty
-release, however, compiling alacritty from scratch is quite straightworward. Source and compilation
+release, however, compiling alacritty from scratch is quite straightforward. Source and compilation
 instructions for conpty.dll and OpenConsole can be found at [8]. After opening the .sln file in
 visual studio it prompts to install one million of things (20 GB!). However, the only thing really
 needed is the Windows SDK.
@@ -202,7 +232,7 @@ blue       | colour255  | graz-pi3, nxdi.us-cdc01.nxp.com
 green      | colour255  | ardning-pi3
 yellow     | colour255  | atlanta
 red        | colour255  | 
-magente    | colour255  | 
+magenta    | colour255  | 
 black      | white      | others
 
 
@@ -215,3 +245,5 @@ black      | white      | others
 [7]: https://github.com/alacritty/alacritty/pull/4501
 [8]: https://github.com/alacritty/alacritty/issues/3889
 [9]: https://github.com/microsoft/terminal
+[10]: https://www.gnu.org/software/stow/manual/stow.html#Compile_002dtime-vs-Install_002dtime
+[11]: https://neovim.discourse.group/t/building-and-installing-neovim-to-location-different-from-cmake-install-prefix/1859/2
