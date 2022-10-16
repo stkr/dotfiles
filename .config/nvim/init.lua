@@ -187,6 +187,12 @@ require('packer').startup(function(use)
         'nvim-treesitter/nvim-treesitter-textobjects'
     }
 
+    use {
+        'andrewferrier/debugprint.nvim',
+        module = { "debugprint" },
+        config = plugin_config,
+    }
+
     use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
     use 'ray-x/lsp_signature.nvim'
 
@@ -194,7 +200,7 @@ require('packer').startup(function(use)
     -- Lazy loading of cmp is a bit of an issue (see also https://github.com/hrsh7th/nvim-cmp/issues/65)
     -- Triggering on module "cmp" is not reliably working unfortunately, so we rely on a keybinding to
     -- enable completion.
-    -- However, if we also loas LuaSnip from the same keybinding, the cursor moves!? This is VERY
+    -- However, if we also load LuaSnip from the same keybinding, the cursor moves!? This is VERY
     -- annoying, so we cannot lazy-load LuaSnip :-(
     use {
         "L3MON4D3/LuaSnip",
@@ -513,17 +519,30 @@ vim.keymap.set('n', '*', ':set hlsearch <bar> :let @/=expand(\'<cword>\')<CR>')
 -- Jump using Hop plugin
 vim.keymap.set('', 'f',
     function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.AFTER_CURSOR,
-        current_line_only = true }) end, {})
+            current_line_only = true })
+    end, {})
 vim.keymap.set('', 'F',
     function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.BEFORE_CURSOR,
-        current_line_only = true }) end, {})
+            current_line_only = true })
+    end, {})
 vim.keymap.set('', 't',
     function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.AFTER_CURSOR,
-        current_line_only = true, hint_offset = -1 }) end, {})
+            current_line_only = true, hint_offset = -1 })
+    end, {})
 vim.keymap.set('', 'T',
     function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.BEFORE_CURSOR,
-        current_line_only = true, hint_offset = 1 }) end, {})
+            current_line_only = true, hint_offset = 1 })
+    end, {})
 vim.keymap.set('', 'ss', function() require("hop").hint_char2() end, {})
+
+-- Insert debug print lines
+-- (Note, these are the default keymappings, however debugprint is lazy-loaded, so the mappings are 
+-- not per-default active.
+vim.keymap.set('n', 'g?p', function() return require('debugprint').debugprint() end, { expr = true })
+vim.keymap.set('n', 'g?P', function() return require('debugprint').debugprint({ above = true }) end, { expr = true })
+vim.keymap.set('n', 'g?v', function() return require('debugprint').debugprint({ variable = true }) end, { expr = true })
+vim.keymap.set('n', 'g?V', function() return require('debugprint').debugprint({ variable = true, above = true }) end, { expr = true })
+vim.keymap.set('n', 'g?d', function() require('debugprint').deleteprints() end, {})
 
 --#region autocommands
 
