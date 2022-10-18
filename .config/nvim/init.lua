@@ -257,10 +257,12 @@ require('packer').startup(function(use)
     }
 
     use {
-        "mickael-menu/zk-nvim",
+        "renerocksai/telekasten.nvim",
         cmd = {
-            "ZkBacklinks", "ZkCd", "ZkIndex", "ZkLinks", "ZkMatch", "ZkNew", "ZkNewFromContentSelection",
-            "ZkNewFromTitleSelection", "ZkNotes", "ZkTags",
+            "Telekasten",
+        },
+        module = {
+            "telekasten",
         },
         config = plugin_config,
     }
@@ -536,12 +538,13 @@ vim.keymap.set('', 'T',
 vim.keymap.set('', 'ss', function() require("hop").hint_char2() end, {})
 
 -- Insert debug print lines
--- (Note, these are the default keymappings, however debugprint is lazy-loaded, so the mappings are 
+-- (Note, these are the default keymappings, however debugprint is lazy-loaded, so the mappings are
 -- not per-default active.
 vim.keymap.set('n', 'g?p', function() return require('debugprint').debugprint() end, { expr = true })
 vim.keymap.set('n', 'g?P', function() return require('debugprint').debugprint({ above = true }) end, { expr = true })
 vim.keymap.set('n', 'g?v', function() return require('debugprint').debugprint({ variable = true }) end, { expr = true })
-vim.keymap.set('n', 'g?V', function() return require('debugprint').debugprint({ variable = true, above = true }) end, { expr = true })
+vim.keymap.set('n', 'g?V', function() return require('debugprint').debugprint({ variable = true, above = true }) end,
+    { expr = true })
 vim.keymap.set('n', 'g?d', function() require('debugprint').deleteprints() end, {})
 
 --#region autocommands

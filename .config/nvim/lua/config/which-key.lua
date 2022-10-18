@@ -36,14 +36,19 @@ function callbacks.config()
             g = { "<cmd>:e ~/.gitconfig<cr>", "gitconfig" },
             n = {
                 name = "notes",
-                i = { "<cmd>ZkIndex<cr>", "index", },
                 n = {
                     name = "new",
-                    i = { "<cmd>ZkNew { dir = 'info', title = vim.fn.input('Title: ') }<cr>", "info", },
-                    j = { "<cmd>ZkNew { dir = 'journal', title = vim.fn.input('Title: ') }<cr>", "journal", },
-                    p = { "<cmd>ZkNew { dir = 'persons', title = vim.fn.input('Name: ') }<cr>", "person", },
+                    i = { function() require("telekasten").new_note() end, "info", },
+                    j = { function() require("telekasten").goto_today() end, "journal", },
+                    p = {
+                        function()
+                            local tk = require("telekasten")
+                            tk.chdir(tk.vaults['persons'])
+                            tk.new_note()
+                        end, "persons",
+                    },
                 },
-                f = { "<cmd>ZkNotes<cr>", "find", },
+                f = { function() require("telekasten").find_notes() end, "find", },
             },
             v = { "<cmd>:e ~/.vim/vimrc<cr>", "vimrc" },
         },
@@ -56,7 +61,17 @@ function callbacks.config()
             b = { "<cmd>lua require('telescope.builtin').buffers({ previewer = false })<cr>", "buffer" },
             f = { "<cmd>lua require('telescope.builtin').fd({ previewer = false })<cr>", "file" },
             g = { "<cmd>lua require('telescope.builtin').live_grep({ previewer = false })<cr>", "grep" },
-            i = { "<cmd>ZkNotes { hrefs = { 'info' } }<cr>", "info", },
+            n = {
+                name = "notes",
+                f = { function() require("telekasten").find_notes() end, "info", },
+                p = {
+                    function()
+                        local tk = require("telekasten")
+                        tk.chdir(tk.vaults['persons'])
+                        tk.find_notes()
+                    end, "persons",
+                },
+            },
             q = { "<cmd>lua require('telescope.builtin').quickfixhistory()<cr>", "quickfix" },
             t = { "<cmd>lua require('telescope.builtin').tags()<cr>", "tag" },
             [':'] = { "<cmd>lua require('telescope.builtin').command_history()<cr>", "command history" },
