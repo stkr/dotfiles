@@ -88,6 +88,10 @@ require('packer').startup(function(use)
     }
 
     use {
+        'rcarriga/nvim-notify',
+    }
+
+    use {
         'phaazon/hop.nvim',
         branch = 'v2', -- optional but strongly recommended
         config = function()
@@ -280,6 +284,13 @@ require('packer').startup(function(use)
 end)
 
 --#endregion
+
+require("notify").setup({
+    stages = "static",
+    timeout = 2000,
+})
+vim.notify = require("notify")
+
 
 --Set highlight on search
 vim.o.hlsearch = false

@@ -71,6 +71,7 @@ function callbacks.config()
     -- Enable telescope fzf native
     telescope.load_extension('fzf')
     telescope.load_extension('ui-select')
+    telescope.load_extension("notify")
 end
 
 return callbacks

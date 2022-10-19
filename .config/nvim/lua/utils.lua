@@ -20,28 +20,58 @@ end
 
 -- Inspired by
 -- https://github.com/ibhagwan/nvim-lua/blob/main/lua/utils.lua
+local _, notify = pcall(require, "notify")
+
 local function echo_multiline(msg)
     for _, s in ipairs(vim.fn.split(msg, "\n")) do
         vim.cmd("echom '" .. s:gsub("'", "''") .. "'")
     end
 end
 
+function utils.trace(msg)
+    if notify ~= nil then
+        notify(msg, "TRACE", { render = "minimal" })
+    else
+        echo_multiline(msg)
+    end
+end
+
+function utils.debug(msg)
+    if notify ~= nil then
+        notify(msg, "DEBUG", { render = "minimal" })
+    else
+        echo_multiline(msg)
+    end
+end
+
 function utils.info(msg)
-    vim.cmd('echohl Directory')
-    echo_multiline(msg)
-    vim.cmd('echohl None')
+    if notify ~= nil then
+        notify(msg, "INFO", { render = "minimal" })
+    else
+        vim.cmd('echohl Directory')
+        echo_multiline(msg)
+        vim.cmd('echohl None')
+    end
 end
 
 function utils.warn(msg)
-    vim.cmd('echohl WarningMsg')
-    echo_multiline(msg)
-    vim.cmd('echohl None')
+    if notify ~= nil then
+        notify(msg, "WARN", { render = "minimal" })
+    else
+        vim.cmd('echohl WarningMsg')
+        echo_multiline(msg)
+        vim.cmd('echohl None')
+    end
 end
 
 function utils.err(msg)
-    vim.cmd('echohl ErrorMsg')
-    echo_multiline(msg)
-    vim.cmd('echohl None')
+    if notify ~= nil then
+        notify(msg, "ERROR", { render = "minimal" })
+    else
+        vim.cmd('echohl ErrorMsg')
+        echo_multiline(msg)
+        vim.cmd('echohl None')
+    end
 end
 
 function utils.sudo_exec(cmd, print_output)
