@@ -147,14 +147,14 @@ function utils.dotrepeat_exec()
 end
 
 function utils.deep_copy(original)
-  local copy = {}
-  for k, v in pairs(original) do
-    if type(v) == "table" then
-      v = utils.deep_copy(v)
+    local copy = {}
+    for k, v in pairs(original) do
+        if type(v) == "table" then
+            v = utils.deep_copy(v)
+        end
+        copy[k] = v
     end
-    copy[k] = v
-  end
-  return copy
+    return copy
 end
 
 return utils
