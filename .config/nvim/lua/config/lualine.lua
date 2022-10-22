@@ -6,6 +6,37 @@ end
 
 local callbacks = {}
 
+local function lsp_progress()
+    if #vim.lsp.buf_get_clients() > 0 then
+        local buf_messages = require('lsp-status/messaging').messages()
+        local seen_clients = {}
+        local msgs = {}
+        for i = #buf_messages, 1, -1 do
+            msg = buf_messages[i]
+            -- We show only the last message per client, everyting else is discarded
+            -- Also, only include progress messages, no status messages
+            if seen_clients[msg.name] == nil and msg.progress then
+                local name = msg.name
+                local client_name = '[' .. name .. ']'
+                local contents
+                if msg.progress then
+                    contents = msg.title
+                    if msg.message then contents = contents .. ' ' .. msg.message end
+
+                    -- this percentage format string escapes a percent sign once to show a percentage and one more
+                    -- time to prevent errors in vim statusline's because of it's treatment of % chars
+                    if msg.percentage then contents = contents .. string.format(" (%.0f%%%%)", msg.percentage) end
+                end
+                table.insert(msgs, client_name .. ' ' .. contents)
+                seen_clients[msg.name] = true
+            end
+        end
+        return table.concat(msgs, '|')
+        -- return require('lsp-status').status()
+    end
+    return ''
+end
+
 function callbacks.config()
     lualine.setup {
         options = {
@@ -46,7 +77,7 @@ function callbacks.config()
                     }
                 },
             },
-            lualine_c = { "filename" },
+            lualine_c = { "filename", lsp_progress },
             lualine_x = { "encoding", "fileformat", "filetype" },
             lualine_y = { "progress" },
             lualine_z = { "location" }
