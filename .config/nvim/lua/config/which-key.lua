@@ -61,6 +61,7 @@ function callbacks.config()
             b = { "<cmd>lua require('telescope.builtin').buffers({ previewer = false })<cr>", "buffer" },
             f = { "<cmd>lua require('telescope.builtin').fd({ previewer = false })<cr>", "file" },
             g = { "<cmd>lua require('telescope.builtin').live_grep({ previewer = false })<cr>", "grep" },
+            h = { function() require('telescope.builtin').oldfiles({ previewer = false }) end, "file history" },
             n = {
                 name = "notes",
                 f = { function() require("telekasten").find_notes() end, "info", },
