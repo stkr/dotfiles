@@ -195,6 +195,7 @@ require('packer').startup(function(use)
 
     use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
     use 'ray-x/lsp_signature.nvim'
+    use 'nvim-lua/lsp-status.nvim'
 
     -- Autocompletion plugin
     -- Lazy loading of cmp is a bit of an issue (see also https://github.com/hrsh7th/nvim-cmp/issues/65)
@@ -697,25 +698,28 @@ require('nvim-treesitter.configs').setup {
 
 -- LSP settings
 local lspconfig = require 'lspconfig'
--- local on_attach = function(_, bufnr)
---     -- local opts = { buffer = bufnr }
---     -- vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
---     -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
---     -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
---     -- vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
---     -- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
---     -- vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
---     -- vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
---     -- vim.keymap.set('n', '<leader>wl', function()
---     --     vim.inspect(vim.lsp.buf.list_workspace_folders())
---     -- end, opts)
---     -- vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
---     -- vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
---     -- vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
---     -- vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
---     -- vim.keymap.set('n', '<leader>so', require('telescope.builtin').lsp_document_symbols, opts)
---     -- vim.api.nvim_create_user_command("Format", vim.lsp.buf.formatting, {})
--- end
+local on_attach = function(client, bufnr)
+    -- local opts = { buffer = bufnr }
+    -- vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    -- vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    -- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    -- vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
+    -- vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    -- vim.keymap.set('n', '<leader>wl', function()
+    --     vim.inspect(vim.lsp.buf.list_workspace_folders())
+    -- end, opts)
+    -- vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
+    -- vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+    -- vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    -- vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+    -- vim.keymap.set('n', '<leader>so', require('telescope.builtin').lsp_document_symbols, opts)
+    -- vim.api.nvim_create_user_command("Format", vim.lsp.buf.formatting, {})
+
+    local lsp_status = require('lsp-status')
+    lsp_status.on_attach(client, bufnr)
+end
 
 -- This is a copy from cmp_nvim_lsp/init.lua. The rationale here is that in order
 -- to use cmp_nvim_lsp one would need to require nvim-cmp in addition. However, we
@@ -750,6 +754,19 @@ end
 -- nvim-cmp supports additional completion capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = update_capabilities(capabilities)
+
+-- lsp-status.nvim supports additional capabilities
+local lsp_status = require('lsp-status')
+lsp_status.config({
+    current_function = false,
+    show_filename = false,
+    diagnostics = false,
+    update_interval = 100,
+    status_symbol = nil,
+})
+lsp_status.register_progress()
+capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
+
 
 -- For pyright, try to adapt for venv
 local util = require('lspconfig/util')
