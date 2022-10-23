@@ -157,4 +157,34 @@ function utils.deep_copy(original)
     return copy
 end
 
+function utils.get_python_path(workspace)
+    local util = require('lspconfig/util')
+    local path = util.path
+    local python_path = nil
+
+    -- Use activated virtualenv.
+    if python_path == nil and vim.env.VIRTUAL_ENV then
+        python_path = path.join(vim.env.VIRTUAL_ENV, 'bin', 'python')
+    end
+
+    -- Find and use virtualenv in workspace directory.
+    if python_path == nil then
+        for _, pattern in ipairs({ '*', '.*' }) do
+            local match = vim.fn.glob(path.join(workspace, pattern, 'pyvenv.cfg'))
+            if match ~= '' then
+                python_path = path.join(path.dirname(match), 'bin', 'python')
+                break
+            end
+        end
+    end
+
+    -- Fallback to system Python.
+    if python_path == nil then
+        python_path = vim.fn.exepath('python3') or vim.fn.exepath('python') or 'python'
+    end
+
+    utils.info("Detected python path [" .. python_path .. "]")
+    return python_path
+end
+
 return utils
