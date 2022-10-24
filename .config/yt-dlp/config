@@ -13,3 +13,6 @@
 # Sort: use the best resolution that is 1080p or lower, if there are multiple with that resolution,
 # prefer av01.
 --format-sort res:1080,vcodec:av01,
+
+# Always start livestreams from the start.
+--live-from-start
