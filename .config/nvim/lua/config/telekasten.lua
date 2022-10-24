@@ -9,7 +9,7 @@ local utils = require("utils")
 local callbacks = {}
 
 local notes = vim.fn.expand("~/data/notes")
-local templates = vim.fn.expand(notes .. "/.telekasten/templates")
+local templates = vim.fn.expand("~/.config/telekasten/templates")
 
 local default_config = {
     home              = notes .. "/info",

@@ -1,0 +1,4 @@
+
+# {{shorttitle}}
+
+Stefan Krug, {{date}}
