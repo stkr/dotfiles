@@ -106,9 +106,9 @@ function callbacks.config()
     wk.register({
         r = {
             name = "refactor",
-            f = { "<cmd>lua vim.lsp.buf.formatting_seq_sync(nil, 5000, nil)<cr>", "format" },
+            f = { function() vim.lsp.buf.format() end, "format" },
             m = { "<cmd>lua require('telescope'); vim.lsp.buf.code_action()<cr>", "menu" },
-            r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "rename" },
+            r = { function() vim.lsp.buf.rename() end, "rename" },
         },
     }, leader_normal)
 
