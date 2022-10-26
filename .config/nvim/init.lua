@@ -92,12 +92,8 @@ require('packer').startup(function(use)
     }
 
     use {
-        'phaazon/hop.nvim',
-        branch = 'v2', -- optional but strongly recommended
-        config = function()
-            require('hop').setup()
-        end,
-        module = ("hop"),
+        'ggandor/leap.nvim',
+        module = 'leap',
     }
 
     use {
@@ -149,7 +145,19 @@ require('packer').startup(function(use)
     use {
         'echasnovski/mini.nvim',
         config = function()
-            require("mini.surround").setup({})
+            require("mini.surround").setup({
+                mappings = {
+                    add = 'Sa', -- Add surrounding in Normal and Visual modes
+                    delete = 'Sd', -- Delete surrounding
+                    find = 'Sf', -- Find surrounding (to the right)
+                    find_left = 'SF', -- Find surrounding (to the left)
+                    highlight = 'Sh', -- Highlight surrounding
+                    replace = 'Sr', -- Replace surrounding
+                    update_n_lines = 'Sn', -- Update `n_lines`
+                    suffix_last = 'l', -- Suffix to search with "prev" method
+                    suffix_next = 'n', -- Suffix to search with "next" method
+                },
+            })
             require("mini.cursorword").setup({})
             require("mini.align").setup({})
         end
@@ -380,6 +388,9 @@ vim.o.splitright = true
 -- layout.
 vim.keymap.set('n', '<C-W>z', ":tabnew %<CR>")
 
+-- The s, and S keys are bound to leap and surround. Disable the inbuilt ones.
+vim.keymap.set('n', 'S', "<nop>")
+
 -- When doing command completion, do only complete as much as possible
 -- and provide a list.
 vim.o.wildmode = "longest:full,full"
@@ -530,25 +541,6 @@ vim.keymap.set('i', 'kj', '<esc>')
 -- Search for word under cursor without jumping around.
 vim.keymap.set('n', '*', ':set hlsearch <bar> :let @/=expand(\'<cword>\')<CR>')
 
--- Jump using Hop plugin
-vim.keymap.set('', 'f',
-    function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.AFTER_CURSOR,
-            current_line_only = true })
-    end, {})
-vim.keymap.set('', 'F',
-    function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.BEFORE_CURSOR,
-            current_line_only = true })
-    end, {})
-vim.keymap.set('', 't',
-    function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.AFTER_CURSOR,
-            current_line_only = true, hint_offset = -1 })
-    end, {})
-vim.keymap.set('', 'T',
-    function() require("hop").hint_char1({ direction = require("hop.hint").HintDirection.BEFORE_CURSOR,
-            current_line_only = true, hint_offset = 1 })
-    end, {})
-vim.keymap.set('', 'ss', function() require("hop").hint_char2() end, {})
-
 -- Insert debug print lines
 -- (Note, these are the default keymappings, however debugprint is lazy-loaded, so the mappings are
 -- not per-default active.
@@ -559,6 +551,13 @@ vim.keymap.set('n', 'g?V', function() return require('debugprint').debugprint({ 
     { expr = true })
 vim.keymap.set('n', 'g?d', function() require('debugprint').deleteprints() end, {})
 
+vim.keymap.set({ 'n', 'x', 'o' }, 's',
+    function()
+        require('leap').leap { target_windows = vim.tbl_filter(
+            function(win) return vim.api.nvim_win_get_config(win).focusable end,
+            vim.api.nvim_tabpage_list_wins(0)
+        ) }
+    end, {})
 --#region autocommands
 
 -- Reload file after change
