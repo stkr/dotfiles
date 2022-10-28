@@ -107,15 +107,15 @@ function callbacks.config()
         r = {
             name = "refactor",
             f = { function() vim.lsp.buf.format() end, "format" },
-            m = { "<cmd>lua require('telescope'); vim.lsp.buf.code_action()<cr>", "menu" },
-            r = { function() vim.lsp.buf.rename() end, "rename" },
+            m = { function() require('telescope'); vim.lsp.buf.code_action() end, "menu" },
+            r = { ":IncRename ", "rename" }, -- note, this is not a <cmd> mapping as is will stay in command mode.
         },
     }, leader_normal)
 
     wk.register({
         r = {
             name = "refactor",
-            f = { "<cmd>lua vim.lsp.buf.range_formatting()<cr>", "format" },
+            f = { function() vim.lsp.buf.format() end, "format" },
         },
     }, leader_visual)
 

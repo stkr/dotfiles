@@ -252,6 +252,19 @@ require('packer').startup(function(use)
     }
 
     use {
+        "smjonas/inc-rename.nvim",
+        config = function()
+            require("inc_rename").setup()
+        end,
+        -- Note, as the mapping itself is staying in command mode, lazy loading based
+        -- on the command is not possible. We want the plugin to be in effect before
+        -- it is in effect (as we want to see the effects the command would have if
+        -- it were executed. It may be possible if it was combined with an "input
+        -- dialog" kind of plugin.
+        -- cmd = { "IncRename" }
+    }
+
+    use {
         "vim-scripts/ReplaceWithRegister",
     }
     use {
