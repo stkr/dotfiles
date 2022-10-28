@@ -302,6 +302,17 @@ require('packer').startup(function(use)
         },
     }
 
+    use {
+        'nvim-tree/nvim-tree.lua',
+        requires = {
+            'nvim-tree/nvim-web-devicons', -- optional, for file icons
+        },
+        cmd = { "NvimTreeOpen", "NvimTreeClose", "NvimTreeToggle", "NvimTreeFocus", "NvimTreeRefresh", "NvimTreeFindFile",
+            "NvimTreeFindFileToggle", "NvimTreeClipboard", "NvimTreeResize", "NvimTreeCollapse",
+            "NvimTreeCollapseKeepBuffers", },
+        config = plugin_config,
+    }
+
 end)
 
 --#endregion
@@ -311,7 +322,6 @@ require("notify").setup({
     timeout = 2000,
 })
 vim.notify = require("notify")
-
 
 --Set highlight on search
 vim.o.hlsearch = false

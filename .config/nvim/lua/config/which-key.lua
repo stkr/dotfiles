@@ -265,6 +265,7 @@ function callbacks.config()
             p = { "<cmd>set paste!<cr>", "paste" },
             r = { "<cmd>set relativenumber!<cr>", "relativenumber" },
             s = { "<cmd>set spell!<cr>", "spell" },
+            t = { "<cmd>NvimTreeFindFileToggle<cr>", "tree"},
             w = { "<cmd>set wrap!<cr>", "wrap" },
             q = { function() require("autosave").toggle() end, "autosave" },
         },
