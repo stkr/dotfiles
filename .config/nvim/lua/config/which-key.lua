@@ -23,6 +23,10 @@ function callbacks.config()
         c = {
             name = "context",
             d = { "<cmd>lua vim.diagnostic.setqflist()<cr>", "diagnostic" },
+            g = {
+                name = "git",
+                d = { "<cmd>DiffviewOpen<cr>", "diff" },
+            },
             i = { "<cmd>lua vim.lsp.buf.hover()<cr>", "info" },
             s = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "signature" },
         },
@@ -265,7 +269,7 @@ function callbacks.config()
             p = { "<cmd>set paste!<cr>", "paste" },
             r = { "<cmd>set relativenumber!<cr>", "relativenumber" },
             s = { "<cmd>set spell!<cr>", "spell" },
-            t = { "<cmd>NvimTreeFindFileToggle<cr>", "tree"},
+            t = { "<cmd>NvimTreeFindFileToggle<cr>", "tree" },
             w = { "<cmd>set wrap!<cr>", "wrap" },
             q = { function() require("autosave").toggle() end, "autosave" },
         },
