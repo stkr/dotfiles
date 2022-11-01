@@ -600,7 +600,9 @@ require("autosave").enable()
 -- Notification after file change
 -- https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
 vim.api.nvim_create_autocmd({ "FileChangedShellPost" }, {
-    command = "echohl WarningMsg | echo 'File changed on disk. Buffer reloaded.' | echohl"
+    callback = function()
+        require('utils').warn('File changed on disk. Buffer reloaded.')
+    end
 })
 
 -- Automatically reload buffers when re-entering vim.
