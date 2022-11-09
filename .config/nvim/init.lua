@@ -188,7 +188,8 @@ require('packer').startup(function(use)
     }
 
     -- Add git related info in the signs columns and popups
-    use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
+    use { "airblade/vim-gitgutter" }
+
     -- Highlight, edit, and navigate code using a fast incremental parsing library
     use {
         'nvim-treesitter/nvim-treesitter'
@@ -652,17 +653,9 @@ vim.g.indent_blankline_filetype_exclude = { 'help', 'packer' }
 vim.g.indent_blankline_buftype_exclude = { 'terminal', 'nofile' }
 vim.g.indent_blankline_show_trailing_blankline_indent = false
 
--- Gitsigns
-require('gitsigns').setup {
-    signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-    },
-}
-
+-- Gitgutter settings
+vim.g.gitgutter_map_keys = 0
+vim.g.gitgutter_close_preview_on_escape = 1
 
 -- vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers)
 -- vim.keymap.set('n', '<leader>sf', function()
