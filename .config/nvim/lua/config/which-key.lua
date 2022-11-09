@@ -23,14 +23,38 @@ function callbacks.config()
         c = {
             name = "context",
             d = { "<cmd>lua vim.diagnostic.setqflist()<cr>", "diagnostic" },
-            g = {
-                name = "git",
-                d = { "<cmd>DiffviewOpen<cr>", "diff" },
-            },
             i = { "<cmd>lua vim.lsp.buf.hover()<cr>", "info" },
             s = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "signature" },
         },
     }, leader_normal)
+
+    -------------  Diffing files
+    wk.register({
+        d = {
+            name = "diff",
+            d = { "<cmd>DiffviewOpen<cr>", "diffview" },
+            h = { "<cmd>DiffviewFileHistory<cr>", "history" },
+
+            n = { "<cmd>GitGutterNextHunk<cr>", "next" },
+            N = { "<plug>GitGutterPrevHunk<cr>", "prev" },
+
+            p = { "<cmd>GitGutterPreviewHunk<cr>", "preview", },
+            q = { "<cmd>GitGutterQuickFix | copen<cr>", "quickfix" },
+
+            s = { "<cmd>GitGutterStageHunk | GitGutterNextHunk<cr>", "stage" },
+            S = { "<cmd>GitGutterUnstageHunk<cr>", "unstage" },
+        },
+    }, leader_normal)
+
+    wk.register({
+        d = {
+            name = "diff",
+            s = { "<cmd>GitGutterStageHunk<cr>", "stage" },
+            S = { "<cmd>GitGutterUnstageHunk<cr>", "unstage" },
+            n = { "<cmd>GitGutterNextHunk<cr>", "next" },
+            N = { "<plug>GitGutterPrevHunk<cr>", "prev" },
+        },
+    }, leader_visual)
 
     -------------  Edit commonly used files
     wk.register({
