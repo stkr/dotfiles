@@ -92,8 +92,15 @@ require('packer').startup(function(use)
     }
 
     use {
-        'ggandor/leap.nvim',
-        module = 'leap',
+        'https://gitlab.com/madyanov/svart.nvim',
+        as = 'svart.nvim',
+        config = function()
+            require("svart").configure({
+                label_atoms = "asdghklqwertyuiopzxcvbnmfj",
+                search_update_register = false,
+            })
+        end,
+        cmd = { "Svart" },
     }
 
     use {
@@ -413,7 +420,7 @@ vim.o.splitright = true
 -- layout.
 vim.keymap.set('n', '<C-W>z', ":tabnew %<CR>")
 
--- The s, and S keys are bound to leap and surround. Disable the inbuilt ones.
+-- The s, and S keys are bound to svart and surround. Disable the inbuilt ones.
 vim.keymap.set('n', 'S', "<nop>")
 
 -- When doing command completion, do only complete as much as possible
@@ -576,13 +583,9 @@ vim.keymap.set('n', 'g?V', function() return require('debugprint').debugprint({ 
     { expr = true })
 vim.keymap.set('n', 'g?d', function() require('debugprint').deleteprints() end, {})
 
-vim.keymap.set({ 'n', 'x', 'o' }, 's',
-    function()
-        require('leap').leap { target_windows = vim.tbl_filter(
-            function(win) return vim.api.nvim_win_get_config(win).focusable end,
-            vim.api.nvim_tabpage_list_wins(0)
-        ) }
-    end, {})
+-- Quick jump
+vim.keymap.set({ "n", "x", "o" }, "s", "<cmd>Svart<cr>")
+
 --#region autocommands
 
 -- Reload file after change
@@ -850,5 +853,8 @@ lspconfig.sumneko_lua.setup {
         },
     },
 }
+
+
+
 
 -- vim: ts=4 sts=4 sw=4 et
