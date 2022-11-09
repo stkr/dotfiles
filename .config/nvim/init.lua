@@ -300,6 +300,7 @@ require('packer').startup(function(use)
             "DiffviewToggleFiles", "DiffviewFocusFiles",
             "DiffviewRefresh", "DiffviewLog",
         },
+        config = plugin_config,
     }
 
     use {
