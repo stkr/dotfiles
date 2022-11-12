@@ -203,9 +203,11 @@ require('packer').startup(function(use)
     }
 
     -- Additional textobjects for treesitter
-    use {
-        'nvim-treesitter/nvim-treesitter-textobjects'
-    }
+    -- it is broken currently for rust, therefore disabled
+    -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects/issues/316 
+    -- use {
+        -- 'nvim-treesitter/nvim-treesitter-textobjects'
+    -- }
 
     use {
         'andrewferrier/debugprint.nvim',
