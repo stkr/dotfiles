@@ -211,8 +211,12 @@ require('packer').startup(function(use)
 
     use {
         'andrewferrier/debugprint.nvim',
-        module = { "debugprint" },
-        config = plugin_config,
+        -- This is unfortunately not working at all if layzloaded :-(
+        -- module = { "debugprint" },
+        -- config = plugin_config,
+        config = function()
+            require("debugprint").setup()
+        end
     }
 
     use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
@@ -574,16 +578,6 @@ vim.keymap.set('i', 'kj', '<esc>')
 
 -- Search for word under cursor without jumping around.
 vim.keymap.set('n', '*', ':set hlsearch <bar> :let @/=expand(\'<cword>\')<CR>')
-
--- Insert debug print lines
--- (Note, these are the default keymappings, however debugprint is lazy-loaded, so the mappings are
--- not per-default active.
-vim.keymap.set('n', 'g?p', function() return require('debugprint').debugprint() end, { expr = true })
-vim.keymap.set('n', 'g?P', function() return require('debugprint').debugprint({ above = true }) end, { expr = true })
-vim.keymap.set('n', 'g?v', function() return require('debugprint').debugprint({ variable = true }) end, { expr = true })
-vim.keymap.set('n', 'g?V', function() return require('debugprint').debugprint({ variable = true, above = true }) end,
-    { expr = true })
-vim.keymap.set('n', 'g?d', function() require('debugprint').deleteprints() end, {})
 
 -- Quick jump
 vim.keymap.set({ "n", "x", "o" }, "s", "<cmd>Svart<cr>")
