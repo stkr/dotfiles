@@ -321,8 +321,7 @@ function callbacks.config()
 
     -------------  Misc
     wk.register({
-        ['.'] = { "<cmd>lua require('telescope.builtin').buffers({ sort_mru = true, ignore_current_buffer = true, previewer = false })<cr>",
-            "recent files" },
+        ['.'] = { "<cmd>e#<cr>", "alternate file" },
         [','] = { "<cmd>w<cr>", "save" },
         q = { "<cmd>Sayonara!<cr>", "close" }
     }, leader_normal)
