@@ -28,6 +28,7 @@ function callbacks.config()
         },
     }, leader_normal)
 
+
     -------------  Diffing files
     wk.register({
         d = {
@@ -35,14 +36,13 @@ function callbacks.config()
             d = { "<cmd>DiffviewOpen<cr>", "diffview" },
             h = { "<cmd>DiffviewFileHistory<cr>", "history" },
 
-            n = { "<cmd>GitGutterNextHunk<cr>", "next" },
-            N = { "<plug>GitGutterPrevHunk<cr>", "prev" },
-
-            p = { "<cmd>GitGutterPreviewHunk<cr>", "preview", },
-            q = { "<cmd>GitGutterQuickFix | copen<cr>", "quickfix" },
-
-            s = { "<cmd>GitGutterStageHunk | GitGutterNextHunk<cr>", "stage" },
-            S = { "<cmd>GitGutterUnstageHunk<cr>", "unstage" },
+            n = { utils.dotrepeat_create_func("GitGutterNextHunk"), "next" },
+            N = { utils.dotrepeat_create_func("GitGutterPrevHunk"), "prev" },
+            p = { utils.dotrepeat_create_func("GitGutterPreviewHunk"), "preview" },
+            q = { utils.dotrepeat_create_func({ "GitGutterQuickFix", "copen" }), "quickfix" },
+            r = { utils.dotrepeat_create_func("GitGutterUndoHunk"), "revert" },
+            s = { utils.dotrepeat_create_func({ "GitGutterStageHunk", "GitGutterNextHunk" }), "stage" },
+            S = { utils.dotrepeat_create_func("GitGutterUnstageHunk"), "unstage" },
         },
     }, leader_normal)
 
@@ -52,7 +52,7 @@ function callbacks.config()
             s = { "<cmd>GitGutterStageHunk<cr>", "stage" },
             S = { "<cmd>GitGutterUnstageHunk<cr>", "unstage" },
             n = { "<cmd>GitGutterNextHunk<cr>", "next" },
-            N = { "<plug>GitGutterPrevHunk<cr>", "prev" },
+            N = { "<cmd>GitGutterPrevHunk<cr>", "prev" },
         },
     }, leader_visual)
 
