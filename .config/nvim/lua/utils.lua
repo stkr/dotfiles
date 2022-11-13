@@ -146,6 +146,39 @@ function utils.dotrepeat_exec()
     dotrepeat_func()
 end
 
+function utils.dotrepeat_exec_and_set_func(func)
+    utils.debug("dotrepeat_exec_and_set_func")
+    func()
+    utils.dotrepeat_set_func(func)
+end
+
+function utils.dotrepeat_create_func(cmd)
+    return function()
+        utils.debug("dotrepeat_create_func")
+        -- if we get a string, assume it's a vim command
+        if type(cmd) == "string" then
+            utils.debug("string")
+            utils.dotrepeat_exec_and_set_func(
+                function()
+                    utils.debug("exec_single_cmd")
+                    vim.cmd(cmd)
+                end)
+            -- if we get a function, immediately exec and set up repeat
+        elseif type(cmd) == "function" then
+            utils.dotrepeat_exec_and_set_func(cmd)
+            -- if we get a list, assume its a list of vim commands
+        elseif type(cmd) == "table" then
+            utils.dotrepeat_exec_and_set_func(
+                function()
+                    utils.debug("exec_multiple_cmds")
+                    for _, c in ipairs(cmd) do
+                        vim.cmd(c)
+                    end
+                end)
+        end
+    end
+end
+
 function utils.deep_copy(original)
     local copy = {}
     for k, v in pairs(original) do
