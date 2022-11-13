@@ -106,6 +106,7 @@ function callbacks.config()
             [':'] = { "<cmd>lua require('telescope.builtin').command_history()<cr>", "command history" },
             ['*'] = { "<cmd>lua require('telescope.builtin').grep_string({ previewer = false })<cr>", "word in files" },
             r = { "<cmd>Telescope resume<cr>", "resume" },
+            s = { function() require('telescope.builtin').lsp_document_symbols() end, "symbols" },
             u = { "<cmd>lua require('telescope.builtin').lsp_references()<cr>", "usages" },
             ['/'] = { "<cmd>lua require('telescope.builtin').search_history<cr>", "search history" },
             a = { "<cmd>Telescope<cr>", "anything" },
