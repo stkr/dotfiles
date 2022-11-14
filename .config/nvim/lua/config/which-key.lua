@@ -92,7 +92,7 @@ function callbacks.config()
             h = { function() require('telescope.builtin').oldfiles({ previewer = false }) end, "file history" },
             n = {
                 name = "notes",
-                f = { function() require("telekasten").find_notes() end, "info", },
+                i = { function() require("telekasten").find_notes() end, "info", },
                 p = {
                     function()
                         local tk = require("telekasten")
