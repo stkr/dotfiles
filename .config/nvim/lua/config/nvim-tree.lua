@@ -7,7 +7,9 @@ end
 local callbacks = {}
 
 function callbacks.config()
-    tree.setup()
+    tree.setup({
+        sync_root_with_cwd = true,
+    })
 end
 
 return callbacks
