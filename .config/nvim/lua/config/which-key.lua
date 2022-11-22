@@ -33,7 +33,7 @@ function callbacks.config()
     wk.register({
         d = {
             name = "diff",
-            d = { "<cmd>DiffviewOpen<cr>", "diffview" },
+            d = { "<cmd>DiffviewOpen -uno<cr>", "diffview" },
             h = { "<cmd>DiffviewFileHistory<cr>", "history" },
 
             n = { utils.dotrepeat_create_func("GitGutterNextHunk"), "next" },
