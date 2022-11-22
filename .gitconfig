@@ -9,6 +9,7 @@
     cm = commit
 
     st = status --short
+    stm = status --short --untracked-files=no
 
     logs = log --pretty=format:"%C(auto)%h%d\\ %s%Cblue\\ [%cn]" -n 20
     logsa = log --pretty=format:"%C(auto)%h%d\\ %s%Cblue\\ [%cn]"
