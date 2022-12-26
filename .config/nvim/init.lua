@@ -165,6 +165,7 @@ require('packer').startup(function(use)
             })
             require("mini.cursorword").setup({})
             require("mini.align").setup({})
+            require("mini.pairs").setup({})
         end
     }
 
