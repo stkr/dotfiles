@@ -86,7 +86,8 @@ function callbacks.config()
     wk.register({
         f = {
             name = "find",
-            b = { "<cmd>lua require('telescope.builtin').buffers({ previewer = false })<cr>", "buffer" },
+
+            b = { "<cmd>lua require('telescope.builtin').buffers({ previewer = false, sort_lastused = true, ignore_current_buffer = true })<cr>", "buffer" },
             f = { "<cmd>lua require('telescope.builtin').fd({ previewer = false })<cr>", "file" },
             g = { "<cmd>lua require('telescope.builtin').live_grep({ previewer = false })<cr>", "grep" },
             h = { function() require('telescope.builtin').oldfiles({ previewer = false }) end, "file history" },
@@ -323,11 +324,7 @@ function callbacks.config()
     wk.register({
         ['.'] = { "<cmd>e#<cr>", "alternate file" },
         [','] = { "<cmd>w<cr>", "save" },
-        q = { "<cmd>Sayonara!<cr>", "close" }
     }, leader_normal)
-    wk.register({
-        ['/'] = { "<Plug>(comment_toggle_linewise_visual)", "comment" },
-    }, leader_visual)
 end
 
 return callbacks

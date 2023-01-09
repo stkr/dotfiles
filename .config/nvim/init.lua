@@ -283,10 +283,6 @@ require('packer').startup(function(use)
     use {
         "farmergreg/vim-lastplace",
     }
-    use {
-        "mhinz/vim-sayonara",
-        cmd = { "Sayonara" },
-    }
 
     use {
         "numToStr/Comment.nvim",
