@@ -50,8 +50,11 @@ if [ -d ~/.bashrc.d/ ]; then
     for f in ~/.bashrc.d/*.bash; do source "$f"; done
 fi
 
+set editing-mode vi
+set show-mode-in-prompt on
+
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]'$'\n$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]'$'\n $ '
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h \w'$'\n$ '
 fi
