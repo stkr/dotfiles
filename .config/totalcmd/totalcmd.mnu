@@ -1,0 +1,253 @@
+POPUP "&Files"
+  MENUITEM "&Associate With...", $1FB
+  MENUITEM "&Change Attributes...\tAlt+A", $1F6
+  MENUITEM "P&roperties...\tAlt+Enter", $3EB
+  MENUITEM "&Show context menu\tShift+F10", $9C4
+  MENUITEM "Edit file co&mment\tCtrl+Z", $A8C
+  MENUITEM SEPARATOR
+  MENUITEM "C&opy name(s)\tF11", $7E1
+  MENUITEM "Copy pat&h\tShift+F11", $7ED
+  MENUITEM "Cop&y target path\tAlt+F11", $7EE
+  MENUITEM "Co&py name(s) with path\tF12", $7E2
+  MENUITEM "Copy name(s) with &UNC path\tShift+F12", $7E5
+  MENUITEM "Copy source path to C&L\tCtrl+P", $7E3
+  MENUITEM SEPARATOR
+  MENUITEM "Turn long names on and o&ff", $7DA
+  MENUITEM "Turn h&idden/system files on and off\tCtrl+H", $7DB
+  MENUITEM "Turn 8.&3 names lowercase on/off", $7DD
+  MENUITEM SEPARATOR
+  POPUP "Prin&t"
+    MENUITEM "File &list...", $7EB
+    MENUITEM "File list with &subdirs...", $7EC
+    MENUITEM "File con&tents\tCtrl+F9", $1F8
+  END_POPUP
+  MENUITEM SEPARATOR
+  MENUITEM "&Quit\tAlt+X", $5F14
+END_POPUP
+
+POPUP "Mana&ge"
+  MENUITEM "&Pack...\tAlt+F5", $1FC
+  MENUITEM "&Unpack...\tAlt+F9", $1FD
+  MENUITEM "Test Archi&ve(s)\tAlt+Shift+F9",$206
+  MENUITEM "Open dir or Arc&hive under cursor\tCtrl+PgDn", $7D3
+  MENUITEM SEPARATOR
+  MENUITEM "Re&name &within panel...\tShift+F6", $3EA
+  MENUITEM "Copy &within panel...\tShift+F5", $C1C
+  MENUITEM "Cr&eate Shortcut...\tCtrl+Shift+F5", $3EC
+  MENUITEM SEPARATOR
+  MENUITEM "Calculate &Occupied Space...\tCtrl+L", $1F7
+  MENUITEM "C&alculate subdirs space\tAlt+Shift+Enter", $7DE
+  MENUITEM SEPARATOR
+  MENUITEM "Compare Files &by content...\tCtrl+Shift+C", $7E6
+  MENUITEM "&Compare Directories\tShift+F2", $215
+  MENUITEM "&Mark Newer, Hide Same Files", $216
+  MENUITEM "Synchroni&ze dirs\tAlt+D", $7E4
+  MENUITEM SEPARATOR
+  MENUITEM "&Split File...", $230
+  MENUITEM "Co&mbine Files...", $231
+  MENUITEM "Create CRC chec&ksums", $234
+  MENUITEM "Veri&fy CRC checksums", $235
+  MENUITEM SEPARATOR
+  MENUITEM "&Encode File (MIME, UUE, XXE)", $232
+  MENUITEM "&Decode File (MIME, UUE, XXE, BinHex)s", $233
+  MENUITEM SEPARATOR
+  MENUITEM "Multi-&Rename-Tool...\tCtrl+M", $960
+END_POPUP
+
+POPUP "&Mark"
+  MENUITEM "Select &All\tSTRG Gray +", $20B
+  MENUITEM "&Unselect All\tSTRG Gray -", $20C
+  MENUITEM "&Invert Selection\tGray *", $20D
+  MENUITEM "Select &Group\tGray +", $209
+  MENUITEM "U&nselect Group\tGray -", $20A
+  MENUITEM "&Select all the same files\tAlt+Gray +", $20F
+  MENUITEM "Unsele&ct the same files\tAlt+Gray -", $210
+  MENUITEM SEPARATOR
+  MENUITEM "&Restore selection\tGray /", $211
+  MENUITEM "Sa&ve selection\tAlt+S", $212
+  MENUITEM "Save se&lection to file\tAlt+Shift+S", $7EF
+  MENUITEM "R&ead selection from file\tCtrl+Shift+S", $7F0
+  MENUITEM "Rea&d selection from clipboard\tAlt+Shift+R", $7F1
+END_POPUP
+
+POPUP "&Panels"
+  POPUP "&Tabs"
+   MENUITEM "Open &new tab\tCtrl+T", $BB9
+   MENUITEM "Open new tab in &background\tCtrl+Shift+T", $BBA
+   MENUITEM "Open dir &under cursor in tab\tCtrl+Up", $BBB
+   MENUITEM "Open dir under cursor (&other window)\tCtrl+Shift+Up", $BBC
+   MENUITEM "S&witch to next tab\tCtrl+Tab", $BBD
+   MENUITEM "Switch to &previous tab\tCtrl+Shift+Tab", $BBE
+   MENUITEM "&Close current tab\tCtrl+W", $BBF
+   MENUITEM "Close &all tabs\tCtrl+Shift+W", $BC0
+   MENUITEM "&Toggle current tab locking", $BC2
+   MENUITEM SEPARATOR
+   MENUITEM "Show tab &menu", $BC1
+  END_POPUP
+  MENUITEM SEPARATOR
+  MENUITEM "&Change Drive\tAlt+F1/F2", $14B
+  MENUITEM "&Reread Source\tCtrl+R (F2)", $21C
+  MENUITEM "Target&=Source\tCtrl+J", $214
+  MENUITEM "&Swap Panels\tCtrl+U", 531
+  MENUITEM "S&wap Panels with tubs\tCtrl+Shift+U", $217
+  MENUITEM "Open dir under cursor to &Left", $7E8
+  MENUITEM "Open dir under cursor to Ri&ght", $7E9
+  MENUITEM SEPARATOR
+  MENUITEM "Simultaneous &identical trees traverse", $A28
+  MENUITEM SEPARATOR
+  MENUITEM "&Branch mode\tCtrl+B", $7EA
+  MENUITEM SEPARATOR
+  POPUP "S&how\Sort"
+   MENUITEM "&Brief\tCtrl+F1", $12D
+   MENUITEM "&Full\tCtrl+F2", $12E
+   MENUITEM "&Tree\tCtrl+F8", $12F
+   MENUITEM "&Quick view\tCtrl+Q",$130
+   MENUITEM "&Comments\tCtrl+Shift+F2", $12C
+   MENUITEM "Thumb&nails\tCtrl+Shift+F1", 269
+   MENUITEM SEPARATOR
+   MENUITEM "&Name\tCtrl+F3", $141
+   MENUITEM "E&xtension\tCtrl+F4", $142
+   MENUITEM "&Modified\tCtrl+F5", $144
+   MENUITEM "&Size\tCtrl+F6", $143
+   MENUITEM "&Unsorted\tCtrl+F7", $145
+  END_POPUP
+  MENUITEM "&All Files\tCtrl+F10", $138
+  MENUITEM "&Programs\tCtrl+F11", $137
+  MENUITEM "&Custom...\tCtrl+F12", $13A
+  MENUITEM "*.*", $139
+  MENUITEM "Show &Only Selected\tCtrl+S", $7E7
+  MENUITEM "&Reversed Order", $14A
+  MENUITEM SEPARATOR
+  MENUITEM "&Horizontal Panels\tCtrl+G", $131
+  MENUITEM SEPARATOR  
+  MENUITEM "&Window separator at 50%", $38D
+END_POPUP
+
+POPUP "&Commands"
+  MENUITEM "&Search...\tAlt+F7", $1F5
+  MENUITEM "&Quick search...\tCtrl+Alt+", 2915
+  MENUITEM "CD &Tree...\tAlt+F10", $1F4
+  MENUITEM "&Volume Label...", $1F9
+  MENUITEM "System &Information...", $1FA
+  MENUITEM SEPARATOR
+  MENUITEM "Lister &Without Plugins\tF3", cm_ListInternalOnly
+  MENUITEM "Lister &With Plugins\tShift+F3", cm_List
+  MENUITEM SEPARATOR
+  MENUITEM "Directory &Hotlist\tCtrl+D", $20E
+  MENUITEM "Go to &Root\tCtrl+<", $7D1
+  MENUITEM "Go to &Parent Directory\tBackspace", $7D2
+  MENUITEM "Go &Back\tAlt+Left", $23A
+  MENUITEM "Go &Forward\tAlt+Right", $23B
+  MENUITEM "Panel &History list\tAlt+Down", $23C
+  MENUITEM SEPARATOR
+  MENUITEM "&Edit path field above panel\tAlt+Up", $B60
+  MENUITEM SEPARATOR
+  MENUITEM "Pre&vious Command Line\tCtrl+E", $7D6
+  MENUITEM "Ne&xt Command Line\tCtrl+2", $7D5
+  MENUITEM "&Clear Command Line\tCtrl+Y", $7D4
+  MENUITEM SEPARATOR
+  MENUITEM "Run &under cursor\tEnter", $3E9
+  MENUITEM SEPARATOR
+  MENUITEM "Run Comman&d Shell", $1FF
+END_POPUP
+
+POPUP "N&et"
+  MENUITEM "&Open new BTM instance\tCtrl+O", $22F
+  MENUITEM SEPARATOR  
+  MENUITEM "&FTP Connect\tCtrl+F", $226
+  MENUITEM "FT&P New Connection\tCtrl+N", $227
+  MENUITEM "FTP Disc&onnect\tCtrl+Shift+F", $228
+  MENUITEM "FTP Sho&w Hidden Files on NIX Servers (LIST -la)", $229
+  MENUITEM "FTP &Add to download list", $22D
+  MENUITEM "FTP Download from &list", $22E
+  MENUITEM "FTP &Resume aborted download", $22B
+  MENUITEM "FTP A&bort current FTP command", $22A
+  MENUITEM "FTP Select Transfer &Mode\tCtrl+Shift+M", $22C
+  MENUITEM SEPARATOR
+  MENUITEM "Map &Network Drive...", $200
+  MENUITEM "&Disconnect Network Drives...", $201
+  MENUITEM "Share &Current Directory...", $202
+  MENUITEM "&Unshare Directory...", $203
+  MENUITEM "&Show File User...", $89B
+  MENUITEM "Show &Admin shares (\c$ etc.)", $89C
+  MENUITEM SEPARATOR
+  POPUP "LPT l&ink"
+   MENUITEM "LPT connection to other PC...", $8FC
+   MENUITEM "Install LPT driver (NT)", $8FD
+   MENUITEM "Remove LPT driver (NT)", $8FE
+  END_POPUP
+END_POPUP
+
+POPUP "&NTFS"
+  MENUITEM "&Permissions dialog...", $898
+  MENUITEM "File &auditing...", $899
+  MENUITEM "&Take ownership...", $89A
+  MENUITEM "&Open program under cursor as different user...", $AF0
+END_POPUP
+
+POPUP "S&ystem"
+  MENUITEM "&Control Panel\tAlt+T", $84B
+  MENUITEM "&Desktop folder", $849
+  MENUITEM "&My Computer", $84A
+  MENUITEM "&Fonts folder", $84C
+  MENUITEM "&Network Neighborhood\tAlt+R", $84D
+  MENUITEM "&Printers folder", $84E
+  MENUITEM "&Open Recycle Bin", $84F
+END_POPUP
+
+POPUP "C&onfiguration"
+  MENUITEM "&Edit Configuration...", $1EA
+   POPUP "&Interface"
+   MENUITEM "Show/hide &button bar", $B55
+   MENUITEM "Show/hide &function keys", $B5F
+   MENUITEM "Show/hide &drive button bars", $B56
+   MENUITEM "Show/hide &two drive bars", $B57
+   MENUITEM "Show/hide dri&ve combobox", $B5A
+   MENUITEM "Show/hide cu&rrent directory", $B5B
+   MENUITEM "Show/hide tab &headers", $B5C
+   MENUITEM "Show/hide &status bar", $B5D
+   MENUITEM "Show/hide &CL", $B5E
+   MENUITEM "Show/hide folder t&abs", $B64
+   MENUITEM "Drive buttons: F&lat/normal mode", $B58
+   MENUITEM "Interface: Flat/n&ormal mode", $B59
+   END_POPUP
+  MENUITEM SEPARATOR
+;  MENUITEM "&Button Bar...", $1F2
+;  MENUITEM "&User Menu...", $2BC
+;  MENUITEM SEPARATOR
+;  MENUITEM "&Layout...", $1EA
+;  MENUITEM "&Display...", $1E6
+;  MENUITEM "&Font...", $1EC
+;  MENUITEM "&Color...", $1EE
+;  MENUITEM "&Tabstops...", $1F1
+;  MENUITEM "&Dir Tabs...", $1E8
+;  MENUITEM "Lan&guage...", $1F3
+;  MENUITEM "&Operation...", $204
+;  MENUITEM "&Edit/View...", $1F0
+;  MENUITEM "&Copy/Delete...", $1E7
+;  MENUITEM "&FTP...", $1E9
+;  MENUITEM "&Packer...", $1EB
+;  MENUITEM "&ZIP Packer...", $1E5
+;  MENUITEM "&Misc", $1EF
+;  MENUITEM SEPARATOR
+  MENUITEM "Unload &all plugins\tAlt+L", $B61
+  MENUITEM SEPARATOR
+  MENUITEM "&Save Position", $1ED
+  MENUITEM "Sa&ve Settings", $244
+  MENUITEM "Open ini files in notepad", $245
+END_POPUP
+
+STARTMENU
+
+HELP_BREAK
+
+POPUP "&Help"
+  MENUITEM "&Index\tF1", $262
+  MENUITEM "&Keyboard", $26C
+  MENUITEM "&Registration Info", $276
+  MENUITEM "&Visit Totalcmd's Web Site", $280
+  MENUITEM SEPARATOR
+  MENUITEM "&About Total Commander...", $2B2
+END_POPUP
+
+;Copyleft é Black Dog
