@@ -23,6 +23,7 @@ function callbacks.config()
         c = {
             name = "context",
             d = { "<cmd>lua vim.diagnostic.setqflist()<cr>", "diagnostic" },
+            p = { function() utils.info(vim.fn.expand("%:p")) end, "path to file" },
             i = { "<cmd>lua vim.lsp.buf.hover()<cr>", "info" },
             s = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "signature" },
         },
