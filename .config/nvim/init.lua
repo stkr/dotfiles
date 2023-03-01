@@ -139,6 +139,10 @@ require('packer').startup(function(use)
         module = 'telescope',
         config = plugin_config,
     }
+    use {
+      "nvim-telescope/telescope-frecency.nvim",
+      requires = {"kkharji/sqlite.lua"}
+    }
 
     use {
         "gbprod/stay-in-place.nvim",
