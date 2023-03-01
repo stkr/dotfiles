@@ -72,6 +72,7 @@ function callbacks.config()
     telescope.load_extension('fzf')
     telescope.load_extension('ui-select')
     telescope.load_extension("notify")
+    telescope.load_extension("frecency")
 end
 
 return callbacks

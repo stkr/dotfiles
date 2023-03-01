@@ -323,7 +323,7 @@ function callbacks.config()
 
     -------------  Misc
     wk.register({
-        ['.'] = { "<cmd>e#<cr>", "alternate file" },
+        ['.'] = { function() require("telescope").extensions.frecency.frecency({ workspace = 'CWD', previewer = false }) end, "text"},
         [','] = { "<cmd>w<cr>", "save" },
     }, leader_normal)
 end
