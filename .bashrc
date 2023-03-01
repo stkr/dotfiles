@@ -172,6 +172,11 @@ if command -v fd &> /dev/null ; then
     export FZF_DEFAULT_COMMAND='fd --type f'
 fi
 
+function bin2hex() {
+    xxd -g 1 "$1" > "$1.hex"
+    echo "Hex dump written to $1.hex"
+}
+
 # We keep the user's shell to be bash (to get all the benefits of .bashrc and .profile etc.), but in
 # case of an interactive shell we drop to fish. 
 # This aproach is inspired by ArchWiki:
