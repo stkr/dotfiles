@@ -146,6 +146,7 @@ require("lazy").setup({
     -- autocompletion
     {
         "hrsh7th/nvim-cmp",
+        event = "InsertEnter",
         dependencies = {
 
             {
@@ -222,6 +223,8 @@ require("lazy").setup({
 
     {
         "renerocksai/telekasten.nvim",
+        cmd = { "Telekasten", },
+        module = { "telekasten", },
         config = function() require("config.telekasten").config() end,
     },
 
