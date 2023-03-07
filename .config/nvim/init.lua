@@ -1,38 +1,18 @@
--- Install packer
-local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
-
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-    vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
+-- bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
+    })
 end
-
--- Re-compile packer after saving init.lua
-local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
-vim.api.nvim_create_autocmd('BufWritePost',
-    { command = 'source <afile> | PackerCompile', group = packer_group, pattern = 'init.lua' })
-
-pcall(require, "impatient")
+vim.opt.rtp:prepend(lazypath)
 
 --#region helper functions
-local function plugin_config(plugin_name, config)
-    local utils = require("utils")
-    local module = utils.get_plugin_config_module(plugin_name)
-    if module == nil then
-        vim.notify("Unable to load config for [" .. plugin_name .. "]")
-        return
-    end
-    module.config()
-end
-
-local function plugin_setup(plugin_name, config)
-    local utils = require("utils")
-    local module = utils.get_plugin_config_module(plugin_name)
-    if module == nil then
-        vim.notify("Unable to load config for [" .. plugin_name .. "]")
-        return
-    end
-    module.setup()
-end
-
 --#endregion
 
 
@@ -64,36 +44,53 @@ for _, plugin in pairs(disabled_built_ins) do
     vim.g["loaded_" .. plugin] = 1
 end
 
-require('packer').startup(function(use)
+require("lazy").setup({
+    { "nvim-lua/plenary.nvim", },
 
-    -- Speed up loading Lua modules
-    use {
-        'lewis6991/impatient.nvim'
-    }
-
-    -- Package manager
-    use {
-        'wbthomason/packer.nvim',
-    }
-
-    -- Utilities, ALWAYS load that, lazyloading this has very weird effects!
-    use {
-        'nvim-lua/plenary.nvim'
-    }
-
-    use {
-        'folke/which-key.nvim',
-        keys = { "," },
-        config = plugin_config
-    }
-
-    use {
+    {
         'rcarriga/nvim-notify',
-    }
+        config = function()
+            local notify = require("notify")
+            notify.setup({
+                stages = "static",
+                timeout = 2000,
+            })
+            vim.notify = notify
+        end
+    },
 
-    use {
-        'https://gitlab.com/madyanov/svart.nvim',
-        as = 'svart.nvim',
+    {
+        'dstein64/nvim-scrollview',
+        opts = {
+            excluded_filetypes = {},
+            current_only = true,
+            winblend = 0,
+            base = 'right',
+            column = 1,
+        }
+    },
+    {
+        -- 'Iron-E/nvim-soluarized'
+        'stkr/nvim-soluarized'
+    },
+    {
+        'nvim-lualine/lualine.nvim',
+        config = function() require("config.lualine").config() end,
+    },
+
+    -- Add indentation guides even on blank lines
+    { 'lukas-reineke/indent-blankline.nvim', },
+
+    -- Add git related info in the signs columns and popups
+    { "airblade/vim-gitgutter", },
+
+    {
+        'folke/which-key.nvim',
+        config = function() require("config.which-key").config() end,
+    },
+    {
+        "svart",
+        url = 'https://gitlab.com/madyanov/svart.nvim',
         config = function()
             require("svart").configure({
                 label_atoms = "asdghklqwertyuiopzxcvbnmfj",
@@ -101,9 +98,18 @@ require('packer').startup(function(use)
             })
         end,
         cmd = { "Svart" },
-    }
+    },
 
-    use {
+    {
+        "ethanholz/nvim-lastplace",
+        opts = {
+            lastplace_ignore_buftype = { "quickfix", "nofile", "help" },
+            lastplace_ignore_filetype = { "gitcommit", "gitrebase", "svn", "hgcommit" },
+            lastplace_open_folds = true
+        }
+    },
+
+    {
         "gbprod/cutlass.nvim",
         config = function()
             require("cutlass").setup({
@@ -111,231 +117,142 @@ require('packer').startup(function(use)
                 cut_key = "x",
             })
         end,
-    }
+    },
 
-    use 'tpope/vim-abolish'
-    use 'tpope/vim-unimpaired'
-    use 'tpope/vim-obsession'
+    { "vim-scripts/ReplaceWithRegister", },
 
-    -- UI to select things (files, grep results, open buffers...)
-    if vim.loop.os_uname().sysname:match 'Linux' then
-        use {
-            'nvim-telescope/telescope-fzf-native.nvim',
-            run = 'make',
-        }
-    else
-        use {
-            'nvim-telescope/telescope-fzf-native.nvim',
-            run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
-        }
-    end
-    use {
-        'nvim-telescope/telescope-ui-select.nvim',
-    }
-    use {
+    { "gbprod/stay-in-place.nvim", },
+
+    { 'tpope/vim-abolish', },
+    { 'tpope/vim-obsession', },
+
+    {
+        'nvim-treesitter/nvim-treesitter',
+        dependencies = {
+            { 'nvim-treesitter/nvim-treesitter-textobjects' },
+        },
+    },
+
+
+    {
+        'neovim/nvim-lspconfig',
+        dependencies = {
+            { 'nvim-lua/lsp-status.nvim', },
+            { 'ray-x/lsp_signature.nvim', },
+        },
+    },
+
+
+    -- autocompletion
+    {
+        "hrsh7th/nvim-cmp",
+        dependencies = {
+
+            {
+                "L3MON4D3/LuaSnip",
+                dependencies = { { "rafamadriz/friendly-snippets", }, },
+            },
+
+            { "saadparwaiz1/cmp_luasnip", },
+            { "hrsh7th/cmp-nvim-lsp", },
+            { "hrsh7th/cmp-buffer", },
+            { "hrsh7th/cmp-path", },
+        },
+        config = function() require("config.nvim-cmp").config() end,
+    },
+
+    {
         'nvim-telescope/telescope.nvim',
-        opt = true,
         cmd = { "Telescope" },
         module = 'telescope',
-        config = plugin_config,
-    }
-    use {
-      "nvim-telescope/telescope-frecency.nvim",
-      requires = {"kkharji/sqlite.lua"}
-    }
+        config = function() require("config.telescope").config() end,
+        dependencies = {
+            {
+                'nvim-telescope/telescope-fzf-native.nvim',
+                build = function()
+                    local build_cmd = "make"
+                    if not vim.loop.os_uname().sysname:match 'Linux' then
+                        -- for windows, a simple make is not enough...
+                        build_cmd =
+                            "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && " ..
+                            "cmake --build build --config Release && " ..
+                            "cmake --install build --prefix build"
+                    end
+                    os.execute(build_cmd)
+                end,
+            },
+            {
+                "nvim-telescope/telescope-frecency.nvim",
+                dependencies = { { "kkharji/sqlite.lua" }, }
+            },
+            {
+                'nvim-telescope/telescope-ui-select.nvim',
+            },
 
-    use {
-        "gbprod/stay-in-place.nvim",
-        config = function()
-            require("stay-in-place").setup({})
-        end
-    }
+        }
+    },
 
-    use {
+    {
         'echasnovski/mini.nvim',
         config = function()
             require("mini.surround").setup({
                 mappings = {
-                    add = 'Sa', -- Add surrounding in Normal and Visual modes
-                    delete = 'Sd', -- Delete surrounding
-                    find = 'Sf', -- Find surrounding (to the right)
-                    find_left = 'SF', -- Find surrounding (to the left)
-                    highlight = 'Sh', -- Highlight surrounding
-                    replace = 'Sr', -- Replace surrounding
+                    add = 'Sa',            -- Add surrounding in Normal and Visual modes
+                    delete = 'Sd',         -- Delete surrounding
+                    find = 'Sf',           -- Find surrounding (to the right)
+                    find_left = 'SF',      -- Find surrounding (to the left)
+                    highlight = 'Sh',      -- Highlight surrounding
+                    replace = 'Sr',        -- Replace surrounding
                     update_n_lines = 'Sn', -- Update `n_lines`
-                    suffix_last = 'l', -- Suffix to search with "prev" method
-                    suffix_next = 'n', -- Suffix to search with "next" method
+                    suffix_last = 'l',     -- Suffix to search with "prev" method
+                    suffix_next = 'n',     -- Suffix to search with "next" method
                 },
             })
             require("mini.cursorword").setup({})
             require("mini.align").setup({})
             require("mini.pairs").setup({})
         end
-    }
+    },
 
-    use 'mjlbach/onedark.nvim' -- Theme inspired by Atom
-    use {
-        -- 'Iron-E/nvim-soluarized'
-        'stkr/nvim-soluarized'
-    }
+    { 'andrewferrier/debugprint.nvim', },
 
-    -- Fancier statusline
-    use {
-        'nvim-lualine/lualine.nvim',
-        opt = true,
-        event = { 'BufEnter' },
-        config = plugin_config
-    }
+    { "smjonas/inc-rename.nvim", },
 
-    -- Display a scrollbar that is dragable with the mouse.
-    use {
-        'dstein64/nvim-scrollview'
-    }
+    { "numToStr/Comment.nvim", },
 
-    -- Add indentation guides even on blank lines
-    use {
-        'lukas-reineke/indent-blankline.nvim'
-    }
-
-    -- Add git related info in the signs columns and popups
-    use { "airblade/vim-gitgutter" }
-
-    -- Highlight, edit, and navigate code using a fast incremental parsing library
-    use {
-        'nvim-treesitter/nvim-treesitter'
-    }
-
-    -- Additional textobjects for treesitter
-    -- it is broken currently for rust, therefore disabled
-    -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects/issues/316 
-    -- use {
-        -- 'nvim-treesitter/nvim-treesitter-textobjects'
-    -- }
-
-    use {
-        'andrewferrier/debugprint.nvim',
-        -- This is unfortunately not working at all if layzloaded :-(
-        -- module = { "debugprint" },
-        -- config = plugin_config,
-        config = function()
-            require("debugprint").setup()
-        end
-    }
-
-    use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
-    use 'ray-x/lsp_signature.nvim'
-    use 'nvim-lua/lsp-status.nvim'
-
-    -- Autocompletion plugin
-    -- Lazy loading of cmp is a bit of an issue (see also https://github.com/hrsh7th/nvim-cmp/issues/65)
-    -- Triggering on module "cmp" is not reliably working unfortunately, so we rely on a keybinding to
-    -- enable completion.
-    -- However, if we also load LuaSnip from the same keybinding, the cursor moves!? This is VERY
-    -- annoying, so we cannot lazy-load LuaSnip :-(
-    use {
-        "L3MON4D3/LuaSnip",
-        wants = { "friendly-snippets" },
-    }
-
-    use {
-        "rafamadriz/friendly-snippets",
-        module = { "cmp", "cmp_nvim_lsp" },
-    }
-
-    use {
-        "hrsh7th/nvim-cmp",
-        after = { "friendly-snippets" },
-        config = plugin_config,
-    }
-
-    use {
-        "saadparwaiz1/cmp_luasnip",
-        after = "nvim-cmp",
-    }
-
-    use {
-        "hrsh7th/cmp-nvim-lsp",
-        after = "nvim-cmp",
-    }
-
-    use {
-        "hrsh7th/cmp-buffer",
-        after = "nvim-cmp",
-    }
-
-    use {
-        "hrsh7th/cmp-path",
-        after = "nvim-cmp",
-    }
-
-    use {
-        "smjonas/inc-rename.nvim",
-        config = function()
-            require("inc_rename").setup()
-        end,
-        -- Note, as the mapping itself is staying in command mode, lazy loading based
-        -- on the command is not possible. We want the plugin to be in effect before
-        -- it is in effect (as we want to see the effects the command would have if
-        -- it were executed. It may be possible if it was combined with an "input
-        -- dialog" kind of plugin.
-        -- cmd = { "IncRename" }
-    }
-
-    use {
-        "vim-scripts/ReplaceWithRegister",
-    }
-    use {
-        "farmergreg/vim-lastplace",
-    }
-
-    use {
-        "numToStr/Comment.nvim",
-        config = function()
-            require('Comment').setup()
-        end,
-    }
-
-    use {
+    {
         "renerocksai/telekasten.nvim",
-        cmd = {
-            "Telekasten",
-        },
-        module = {
-            "telekasten",
-        },
-        config = plugin_config,
-    }
+        config = function() require("config.telekasten").config() end,
+    },
 
-    use {
+    {
         'sindrets/diffview.nvim',
-        requires = 'nvim-lua/plenary.nvim',
+        dependencies = { "nvim-lua/plenary.nvim", },
         cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose",
             "DiffviewToggleFiles", "DiffviewFocusFiles",
             "DiffviewRefresh", "DiffviewLog",
         },
-        config = plugin_config,
-    }
+        config = function() require("config.diffview").config() end,
+    },
 
-    use {
+    {
         'nvim-tree/nvim-tree.lua',
         requires = {
             'nvim-tree/nvim-web-devicons', -- optional, for file icons
         },
-        cmd = { "NvimTreeOpen", "NvimTreeClose", "NvimTreeToggle", "NvimTreeFocus", "NvimTreeRefresh", "NvimTreeFindFile",
+        cmd = { "NvimTreeOpen", "NvimTreeClose", "NvimTreeToggle", "NvimTreeFocus", "NvimTreeRefresh",
+            "NvimTreeFindFile",
             "NvimTreeFindFileToggle", "NvimTreeClipboard", "NvimTreeResize", "NvimTreeCollapse",
             "NvimTreeCollapseKeepBuffers", },
-        config = plugin_config,
+        config = function() require("config.nvim-tree").config() end,
     }
+})
 
-end)
+--
+-- end)
 
 --#endregion
 
-require("notify").setup({
-    stages = "static",
-    timeout = 2000,
-})
-vim.notify = require("notify")
 
 --Set highlight on search
 vim.o.hlsearch = false
@@ -393,7 +310,7 @@ vim.o.clipboard = "unnamedplus"
 -- order for that additional copy step to the client to happen, the -w argument
 -- to load-buffer is required. Now per design nvim does not enable that
 -- (https://github.com/neovim/neovim/issues/14545). Therefore, we need to
--- override the clipboard command ourselfves and add that -w option with the
+-- override the clipboard command ourselves and add that -w option with the
 -- following configuration.
 --
 -- Note, there would also be an alternative to this approach - an alias for
@@ -463,99 +380,6 @@ vim.keymap.set('n', "'", "`")
 -- Write a file as root
 vim.api.nvim_create_user_command("SudoWrite", function(opts) require('utils').sudo_write() end, {})
 -- vim.keymap.set('c', 'w!!<CR>', require('utils').sudo_write)
-
--- Configuration of the scollbar
-require('scrollview').setup({
-    excluded_filetypes = {},
-    current_only = true,
-    winblend = 0,
-    base = 'right',
-    column = 1,
-})
-
--- Load completion plugin on tab in insert mode.
--- Now, this is a bit of a hack...
--- We do lazy-load nvim-cmp. This means, that per default it's mappings are not
--- active, the tab in insert mode usually used to trigger completion does
--- nothing. However, in this case the tab in insert mode SHALL be used as
--- trigger to load nvim-cmp AND then to startup the completion as well.
--- So we bind it to a function that does that. Note that
--- loading nvim-cmp effectively replaces this mapping with the one that is
--- defined as config for nvim-cmp, however, in case nvim-cmp does not trigger
--- the completion menu, it will still fall back to the default <tab>
--- mapping - i.e. this function. To avoid executing this function over and
--- over again, after loading nvim-cmp, we remove the mapping again, making
--- this map a one-time thing.
-vim.keymap.set('i', "<tab>",
-    function()
-        if packer_plugins["nvim-cmp"] and packer_plugins["nvim-cmp"].loaded then
-            -- After loading the plugin, there is no need to keep this mapping
-            -- any longer.
-            vim.keymap.set("i", "<tab>", "<tab>")
-            -- We still need to input the <tab> that this callback consumes
-            vim.defer_fn(
-                function()
-                    vim.api.nvim_input("<tab>")
-                end, 0)
-        else
-            local utils = require("utils")
-            if utils.is_text_before_cursor() then
-                require("packer").loader("nvim-cmp")
-                -- Calling the config callback is not necessary.
-                -- Due to the deferred nvim_input the full plugin loading
-                -- (incl. config) seems to be done before.
-                -- local cmp_config = require("config.nvim-cmp")
-                -- cmp_config.config()
-
-                -- Unfortunately, any method of immediatly invoking the
-                -- completion menu was not successful. It really seems to
-                -- be necessary to exit insert mode and get back into it
-                -- (probably the plugin requires EnterInsert events or
-                -- something along those lines.).
-                -- Also, the exit and re-enter seems to have to be
-                -- scheduled for later - not sure why that is...
-                -- This is the best I could come up with. It results in
-                -- a very small difference in behaviour - as we are
-                -- exiting insert mode, in fact the completion results in
-                -- two changes instead of one. This is only happening on
-                -- the first completion that was triggered by tab in a
-                -- session that previously had not loaded the nvim-cmp
-                -- plugin, so is negligible.
-                --
-                -- For reference, these methods were also tried:
-                --
-                --   * invocation of cmp.complete directly: does nothing
-                -- local cmp = require("cmp")
-                -- cmp.complete()
-                --
-                --   * nvim_feedkeys: results in actually a tab being inserted, does
-                --     not trigger the completion
-                -- local esc = vim.api.nvim_replace_termcodes("<esc>", true, false, true)
-                -- local tab = vim.api.nvim_replace_termcodes("<tab>", true, false, true)
-                -- vim.api.nvim_feedkeys(esc, 'i', false)
-                -- vim.api.nvim_feedkeys('a', 'n', false)
-                -- vim.api.nvim_feedkeys(tab, 'n', false)
-                --
-                --   * nvim_input: results in very weird behaviour
-                -- vim.api.nvim_input("<esc>a<tab>")
-                --
-                --   * vim feedkeys: results in very weird behaviour
-                -- vim.cmd([[ call feedkeys("\<esc>a\<tab>") ]])
-                --
-                -- Also nvim_input and vim feedkeys were the only ones working from
-                -- within the deferred_fn callback.
-                vim.defer_fn(
-                    function()
-                        vim.api.nvim_input("<esc>a<tab>")
-                    end, 0)
-            else
-                -- There is no text before the cursor, we did not load the plugin, this
-                -- shall be a simple insertion of <tab>.
-                local tab = vim.api.nvim_replace_termcodes("<tab>", true, false, true)
-                vim.api.nvim_feedkeys(tab, 'nt', true)
-            end
-        end
-    end)
 
 --Remap comma as leader key
 vim.keymap.set({ 'n', 'v' }, ',', '<Nop>', { silent = true })
@@ -636,21 +460,9 @@ vim.api.nvim_create_autocmd({ "Filetype" }, { command = "set formatoptions-=o" }
 
 --#endregion
 
---#region alignment
-
--- Additional alignment rules (easy align)
-vim.cmd [[
-    let g:easy_align_delimiters = {
-    \ '^': { 'pattern': '\^' },
-    \ 'b': { 'pattern': '\\' },
-    \ }
-]]
-
---#endregion
-
 --Map blankline
 vim.g.indent_blankline_char = '┊'
-vim.g.indent_blankline_filetype_exclude = { 'help', 'packer' }
+vim.g.indent_blankline_filetype_exclude = { 'help' }
 vim.g.indent_blankline_buftype_exclude = { 'terminal', 'nofile' }
 vim.g.indent_blankline_show_trailing_blankline_indent = false
 
@@ -696,30 +508,30 @@ require('nvim-treesitter.configs').setup {
             lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
             keymaps = {
                 -- You can use the capture groups defined in textobjects.scm
-                ['af'] = '@function.outer',
-                ['if'] = '@function.inner',
-                ['ac'] = '@class.outer',
-                ['ic'] = '@class.inner',
+                    ['af'] = '@function.outer',
+                    ['if'] = '@function.inner',
+                    ['ac'] = '@class.outer',
+                    ['ic'] = '@class.inner',
             },
         },
         move = {
             enable = true,
             set_jumps = true, -- whether to set jumps in the jumplist
             goto_next_start = {
-                [']m'] = '@function.outer',
-                [']]'] = '@class.outer',
+                    [']m'] = '@function.outer',
+                    [']]'] = '@class.outer',
             },
             goto_next_end = {
-                [']M'] = '@function.outer',
-                [']['] = '@class.outer',
+                    [']M'] = '@function.outer',
+                    [']['] = '@class.outer',
             },
             goto_previous_start = {
-                ['[m'] = '@function.outer',
-                ['[['] = '@class.outer',
+                    ['[m'] = '@function.outer',
+                    ['[['] = '@class.outer',
             },
             goto_previous_end = {
-                ['[M'] = '@function.outer',
-                ['[]'] = '@class.outer',
+                    ['[M'] = '@function.outer',
+                    ['[]'] = '@class.outer',
             },
         },
     },
@@ -825,7 +637,7 @@ local runtime_path = vim.split(package.path, ';')
 table.insert(runtime_path, 'lua/?.lua')
 table.insert(runtime_path, 'lua/?/init.lua')
 
-lspconfig.sumneko_lua.setup {
+lspconfig.lua_ls.setup {
     on_attach = on_attach,
     capabilities = capabilities,
     settings = {
@@ -843,6 +655,7 @@ lspconfig.sumneko_lua.setup {
             workspace = {
                 -- Make the server aware of Neovim runtime files
                 library = vim.api.nvim_get_runtime_file('', true),
+                checkThirdParty = false,
             },
             -- Do not send telemetry data containing a randomized but unique identifier
             telemetry = {
