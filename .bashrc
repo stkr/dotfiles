@@ -177,6 +177,12 @@ function bin2hex() {
     echo "Hex dump written to $1.hex"
 }
 
+function binskip() {
+    let "offset = $2"
+    dd if="$1" of="$1.$2.bin" bs=1 skip=$offset
+    echo "Tailed binary written to $1.$2.bin"
+}
+
 # We keep the user's shell to be bash (to get all the benefits of .bashrc and .profile etc.), but in
 # case of an interactive shell we drop to fish. 
 # This aproach is inspired by ArchWiki:
