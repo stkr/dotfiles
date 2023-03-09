@@ -39,10 +39,10 @@ function callbacks.config()
                 ignore_patterns = {"*.git/*", "*/tmp/*"},
             },
         },
-
         pickers = {
             buffers = {
                 prompt_prefix = " ﬘ > ",
+                sort_lastused = true,
             },
             fd = {
                 prompt_prefix = "  > ",
