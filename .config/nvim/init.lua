@@ -121,7 +121,12 @@ require("lazy").setup({
 
     { "vim-scripts/ReplaceWithRegister", },
 
-    { "gbprod/stay-in-place.nvim", },
+    { 
+        "gbprod/stay-in-place.nvim", 
+        config = function()
+            require("stay-in-place").setup()
+        end
+    },
 
     { 'tpope/vim-abolish', },
     { 'tpope/vim-obsession', },
