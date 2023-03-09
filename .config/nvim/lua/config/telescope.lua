@@ -32,7 +32,12 @@ function callbacks.config()
         extensions = {
             ["ui-select"] = {
                 require("telescope.themes").get_dropdown {}
-            }
+            },
+            frecency = {
+                show_scores = true,
+                show_unindexed = false,
+                ignore_patterns = {"*.git/*", "*/tmp/*"},
+            },
         },
 
         pickers = {

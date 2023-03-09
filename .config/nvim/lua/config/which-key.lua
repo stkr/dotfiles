@@ -89,6 +89,7 @@ function callbacks.config()
             name = "find",
 
             b = { "<cmd>lua require('telescope.builtin').buffers({ previewer = false, sort_lastused = true, ignore_current_buffer = true })<cr>", "buffer" },
+            c = { "<cmd>Telescope resume<cr>", "continue" },
             f = { "<cmd>lua require('telescope.builtin').fd({ previewer = false })<cr>", "file" },
             g = { "<cmd>lua require('telescope.builtin').live_grep({ previewer = false })<cr>", "grep" },
             h = { function() require('telescope.builtin').oldfiles({ previewer = false }) end, "file history" },
@@ -107,7 +108,7 @@ function callbacks.config()
             t = { "<cmd>lua require('telescope.builtin').tags()<cr>", "tag" },
             [':'] = { "<cmd>lua require('telescope.builtin').command_history()<cr>", "command history" },
             ['*'] = { "<cmd>lua require('telescope.builtin').grep_string({ previewer = false })<cr>", "word in files" },
-            r = { "<cmd>Telescope resume<cr>", "resume" },
+            r = { function() require("telescope").extensions.frecency.frecency({ previewer = false }) end, "text"},
             s = { function() require('telescope.builtin').lsp_document_symbols() end, "symbols" },
             u = { "<cmd>lua require('telescope.builtin').lsp_references()<cr>", "usages" },
             ['/'] = { "<cmd>lua require('telescope.builtin').search_history<cr>", "search history" },
@@ -323,7 +324,7 @@ function callbacks.config()
 
     -------------  Misc
     wk.register({
-        ['.'] = { function() require("telescope").extensions.frecency.frecency({ workspace = 'CWD', previewer = false }) end, "text"},
+        ['.'] = { "<cmd>e#<cr>", "alternate file" },
         [','] = { "<cmd>w<cr>", "save" },
     }, leader_normal)
 end
