@@ -121,6 +121,13 @@ require("lazy").setup({
 
     { "vim-scripts/ReplaceWithRegister", },
 
+    {
+        'numToStr/Comment.nvim',
+        config = function()
+            require('Comment').setup()
+        end
+    },
+
     { 
         "gbprod/stay-in-place.nvim", 
         config = function()
@@ -276,15 +283,15 @@ require("lazy").setup({
             })
             require("mini.cursorword").setup({})
             require("mini.align").setup({})
-            -- require("mini.pairs").setup({})
         end
     },
 
     { 'andrewferrier/debugprint.nvim', },
 
-    { "smjonas/inc-rename.nvim", },
-
-    { "numToStr/Comment.nvim", },
+    { 
+        "smjonas/inc-rename.nvim", 
+        config = function() require("inc_rename").setup() end,
+    },
 
     {
         "renerocksai/telekasten.nvim",
