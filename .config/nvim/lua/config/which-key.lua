@@ -88,7 +88,7 @@ function callbacks.config()
         f = {
             name = "find",
 
-            b = { "<cmd>lua require('telescope.builtin').buffers({ previewer = false, sort_lastused = true, ignore_current_buffer = true })<cr>", "buffer" },
+            b = { "<cmd>lua require('telescope.builtin').buffers({ previewer = false, sort_mru = true, sort_lastused = true, ignore_current_buffer = true })<cr>", "buffer" },
             c = { "<cmd>Telescope resume<cr>", "continue" },
             f = { "<cmd>lua require('telescope.builtin').fd({ previewer = false })<cr>", "file" },
             g = { "<cmd>lua require('telescope.builtin').live_grep({ previewer = false })<cr>", "grep" },
