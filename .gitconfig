@@ -52,6 +52,7 @@
 	rebase = false
 [push]
 	default = simple
+	autoSetupRemote = true
 [user]
 	name = stefan
 	email = stefan
