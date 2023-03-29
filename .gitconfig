@@ -19,6 +19,7 @@
     ls = ls-files
     lsm = ls-files -m
     lso = ls-files -o --exclude-standard
+    lsu = diff --name-only --diff-filter=U --relative
     au = add -u
 
     la = "!git config -l | grep alias | cut -c 7-"
