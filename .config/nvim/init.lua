@@ -283,7 +283,16 @@ require("lazy").setup({
             })
             require("mini.cursorword").setup({})
             require("mini.align").setup({})
+            require("mini.ai").setup({search_method = "cover"})
+            require("mini.bracketed").setup({})
         end
+    },
+
+    {
+        "chrisgrieser/nvim-various-textobjs",
+        config = function () 
+            require("various-textobjs").setup({ useDefaultKeymaps = true })
+        end,
     },
 
     { 'andrewferrier/debugprint.nvim', },
