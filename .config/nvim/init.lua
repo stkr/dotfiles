@@ -12,6 +12,9 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- require important helper functions
+local utils = require("utils")
+
 --#region helper functions
 --#endregion
 
@@ -209,7 +212,20 @@ require("lazy").setup({
     {
         'neovim/nvim-lspconfig',
         dependencies = {
-            { 'nvim-lua/lsp-status.nvim', },
+            {
+                'nvim-lua/lsp-status.nvim',
+                config = function()
+                    local lsp_status = require("lsp-status")
+                    lsp_status.config({
+                        current_function = false,
+                        show_filename = false,
+                        diagnostics = false,
+                        update_interval = 100,
+                        status_symbol = nil,
+                    })
+                    lsp_status.register_progress()
+                end
+            },
             { 'ray-x/lsp_signature.nvim', },
         },
     },
@@ -578,94 +594,28 @@ vim.g.gitgutter_close_preview_on_escape = 1
 -- end)
 -- vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles)
 
--- LSP settings
-local lspconfig = require 'lspconfig'
-local on_attach = function(client, bufnr)
-    -- local opts = { buffer = bufnr }
-    -- vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-    -- vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-    -- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-    -- vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
-    -- vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
-    -- vim.keymap.set('n', '<leader>wl', function()
-    --     vim.inspect(vim.lsp.buf.list_workspace_folders())
-    -- end, opts)
-    -- vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
-    -- vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-    -- vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    -- vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-    -- vim.keymap.set('n', '<leader>so', require('telescope.builtin').lsp_document_symbols, opts)
-    -- vim.api.nvim_create_user_command("Format", vim.lsp.buf.formatting, {})
-
-    local lsp_status = require('lsp-status')
-    lsp_status.on_attach(client, bufnr)
-end
-
--- This is a copy from cmp_nvim_lsp/init.lua. The rationale here is that in order
--- to use cmp_nvim_lsp one would need to require nvim-cmp in addition. However, we
--- definitely want to lazy-load nvim-cmp as it is the biggest contributor to
--- startuptime. This function is actually required for lsp confiuration and
--- independent from nvim-cmp so it can be easily extracted.
-local if_nil = function(val, default)
-    if val == nil then return default end
-    return val
-end
-
-local function update_capabilities(capabilities, override)
-    override = override or {}
-    local completionItem = capabilities.textDocument.completion.completionItem
-    completionItem.snippetSupport = if_nil(override.snippetSupport, true)
-    completionItem.preselectSupport = if_nil(override.preselectSupport, true)
-    completionItem.insertReplaceSupport = if_nil(override.insertReplaceSupport, true)
-    completionItem.labelDetailsSupport = if_nil(override.labelDetailsSupport, true)
-    completionItem.deprecatedSupport = if_nil(override.deprecatedSupport, true)
-    completionItem.commitCharactersSupport = if_nil(override.commitCharactersSupport, true)
-    completionItem.tagSupport = if_nil(override.tagSupport, { valueSet = { 1 } })
-    completionItem.resolveSupport = if_nil(override.resolveSupport, {
-        properties = {
-            'documentation',
-            'detail',
-            'additionalTextEdits',
-        }
-    })
-    return capabilities
-end
-
--- nvim-cmp supports additional completion capabilities
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = update_capabilities(capabilities)
-
--- lsp-status.nvim supports additional capabilities
-local lsp_status = require('lsp-status')
-lsp_status.config({
-    current_function = false,
-    show_filename = false,
-    diagnostics = false,
-    update_interval = 100,
-    status_symbol = nil,
-})
-lsp_status.register_progress()
-capabilities = vim.tbl_extend('keep', capabilities or {}, lsp_status.capabilities)
 
 
 -- For pyright, try to adapt for venv
-lspconfig.pyright.setup({
-    before_init = function(_, config)
-        config.settings.python.pythonPath = utils.get_python_path(config.root_dir)
-    end,
-    on_attach = on_attach,
-    capabilities = capabilities,
-})
+local lspconfig = utils.safe_require("lspconfig")
+local lsp_utils = utils.safe_require("lsp_utils")
+if lspconfig ~= nil and lsp_utils ~= nil then
+    lspconfig.pyright.setup({
+        before_init = function(_, config)
+            config.settings.python.pythonPath = utils.get_python_path(config.root_dir)
+        end,
+        on_attach = lsp_utils.on_attach,
+        capabilities = lsp_utils.get_capabilities(),
+    })
 
--- Enable the following language servers
-local servers = { 'clangd', 'rust_analyzer', 'tsserver' }
-for _, lsp in ipairs(servers) do
-    lspconfig[lsp].setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-    }
+    -- Enable the following language servers
+    local servers = { 'clangd', 'tsserver' }
+    for _, lsp in ipairs(servers) do
+        lspconfig[lsp].setup {
+            on_attach = lsp_utils.on_attach,
+            capabilities = lsp_utils.get_capabilities(),
+        }
+    end
 end
 
 
@@ -704,6 +654,7 @@ lspconfig.lua_ls.setup {
         },
     },
 }
+
 
 
 
