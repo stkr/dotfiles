@@ -243,14 +243,10 @@ require("lazy").setup({
             {
                 'nvim-telescope/telescope-fzf-native.nvim',
                 build = function()
-                    local build_cmd = "make"
-                    if not vim.loop.os_uname().sysname:match 'Linux' then
-                        -- for windows, a simple make is not enough...
-                        build_cmd =
-                            "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && " ..
-                            "cmake --build build --config Release && " ..
-                            "cmake --install build --prefix build"
-                    end
+                    local build_cmd =
+                        "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && " ..
+                        "cmake --build build --config Release && " ..
+                        "cmake --install build --prefix build"
                     os.execute(build_cmd)
                 end,
             },
@@ -326,7 +322,7 @@ require("lazy").setup({
 
     {
         'nvim-tree/nvim-tree.lua',
-        requires = {
+        dependencies = {
             'nvim-tree/nvim-web-devicons', -- optional, for file icons
         },
         cmd = { "NvimTreeOpen", "NvimTreeClose", "NvimTreeToggle", "NvimTreeFocus", "NvimTreeRefresh",
