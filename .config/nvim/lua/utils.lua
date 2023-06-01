@@ -1,5 +1,13 @@
 local utils = {}
 
+function utils.safe_require(module_name)
+    local loaded, module = pcall(require, module_name)
+    if loaded then
+        return module
+    end
+    return nil
+end
+
 function utils.get_plugin_config_module(plugin_name)
     -- Deal with plugins that have weird characters in their name (often a '.').
     -- For these we only use the first letters
@@ -20,7 +28,7 @@ end
 
 -- Inspired by
 -- https://github.com/ibhagwan/nvim-lua/blob/main/lua/utils.lua
-local _, notify = pcall(require, "notify")
+local notify = utils.safe_require("notify")
 
 local function echo_multiline(msg)
     for _, s in ipairs(vim.fn.split(msg, "\n")) do
