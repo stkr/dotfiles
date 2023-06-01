@@ -573,7 +573,7 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHo
 })
 
 -- Save file when focus is lost
-require("autosave").enable()
+require("autosave").enable({ silent = true })
 
 -- Notification after file change
 -- https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
