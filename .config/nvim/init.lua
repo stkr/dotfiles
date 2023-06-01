@@ -379,14 +379,93 @@ require("lazy").setup({
                     on_attach = lsp_utils.on_attach,
                     capabilities = lsp_utils.get_capabilities(),
                 },
+                -- LLDB (for rust) prints (summary) representations for structs rather
+                -- clumsily as the type + the memory location. To get to the struct
+                -- fields, one would need to open the struct.
+                -- However, LLDB allows changing the representation / format of
+                -- variables (see https://lldb.llvm.org/use/variable.html).
+                -- This can be (persistently) achieved by including a .lldbinit
+                -- file containing statements to change that represenation.
+                -- Note that LLDB per default does NOT load the .lldbinit files in
+                -- the CWD due to security reasons. LLDB itself would have the
+                -- command line switch --local-lldbinit to allow loading local
+                -- .lldbinit files. However, since there is lldb-vscode in between
+                -- which seems not to be able to supply additional command line
+                -- options to LLDB, this approach does not work. However, since it
+                -- is LLDB under the hood which finally is running, LLDB
+                -- evaluates ~/.lldbinit. So as a workaround, it is possible
+                -- to copy the (project specific) LLDB type summaries to ~/.lldbinit.
+                -- dap = {
+                --     adapter = {
+                --         command = "lldb-vscode",
+                --         args = { "--local-lldbinit" },
+                --     },
+                -- },
             }
-            require("rust-tools").setup(opts)
+            local rust_tools = require("rust-tools")
+            rust_tools.setup(opts)
+            vim.keymap.set('n', '<F8>', rust_tools.runnables.runnables)
+            vim.keymap.set('n', '<F20>', rust_tools.debuggables.debuggables) -- <S-F8>
         end,
     },
 
     {
         "mfussenegger/nvim-dap",
-    }
+        lazy = true,
+        config = function()
+            utils.safe_require("dapui")
+        end
+    },
+
+    {
+        "rcarriga/nvim-dap-ui",
+        lazy = true,
+        dependencies = { "mfussenegger/nvim-dap" },
+        config = function()
+            local dap, dapui = require("dap"), require("dapui")
+
+            -- The default output for variables includes
+            -- the type name. For rust structs, this is including the canonical name
+            -- of the struct (incl. crate name, module names, etc.), leaving no
+            -- space in the window to display the actual value.
+            -- By using max_type_length = 0, we get rid of the type field
+            -- in the variables view entirely (is is of questionable use anyway).
+            -- Note that also the dap-virtual-text as well as evaluating a variable
+            -- in the repl do not show type information.
+            dapui.setup({ render = { max_type_length = 0, }, })
+
+            dap.listeners.after.event_initialized["dapui_config"] = function()
+                -- Some filetype specific plugins may have type overlays as virtual text themselves.
+                -- Remove those in favor of the virtual text for debugging.
+                if vim.bo.filetype == "rust" then
+                    local rust_tools = utils.safe_require("rust-tools")
+                    if rust_tools then
+                        rust_tools.inlay_hints.disable()
+                    end
+                end
+                utils.safe_require("nvim-dap-virtual-text")
+                dapui.open()
+            end
+            dap.listeners.before.event_terminated["dapui_config"] = function()
+                dapui.close()
+                local rust_tools = utils.safe_require("rust-tools")
+                if rust_tools then
+                    rust_tools.inlay_hints.unset()
+                end
+            end
+            dap.listeners.before.event_exited["dapui_config"] = function()
+                dapui.close()
+            end
+        end,
+    },
+
+    {
+        "theHamsta/nvim-dap-virtual-text",
+        lazy = true,
+        config = function()
+            require("nvim-dap-virtual-text").setup({ virt_text_win_col = 80 })
+        end,
+    },
 })
 
 --
@@ -697,7 +776,31 @@ lspconfig.lua_ls.setup {
 }
 
 
+-- DAP
 
+-- Note on the weird key-bindings for F17 and F29 below:
+-- To get the escape sequences that the terminal uses to represent key presses, use
+--     showkey -a
+-- For this particular situation (alacritty, linux), the keys S-F5 and C-F5 get
+-- reported as
+--     ^[[15;2~         27 0033 0x1b
+--     ^[[15;5~         27 0033 0x1b
+-- Now to find out what key nvim does map that terminal sequence to, execute
+-- nvim -V3/tmp/log
+-- In the resulting log file, the sequences are found as:
+--     key_f17                   kf17       = ^[[15;2~
+--     key_f29                   kf29       = ^[[15;5~
+-- So the <F17> mapping really is <S-F5> and <F29> is <C-F5>
+-- It might be different on other terminal emulators / operating systems,
+-- more evaluations needed.
+-- (see also https://github.com/neovim/neovim/issues/7384)
 
+vim.keymap.set('n', '<F5>', function() require("dap").continue() end)
+vim.keymap.set('n', '<F29>', function() require("dap").run_last() end)  -- <C-F5>
+vim.keymap.set('n', '<F17>', function() require("dap").terminate() end) -- <S-F5>
+vim.keymap.set('n', '<F9>', function() require("dap").toggle_breakpoint() end)
+vim.keymap.set('n', '<F10>', function() require("dap").step_over() end)
+vim.keymap.set('n', '<F11>', function() require("dap").step_into() end)
+vim.keymap.set('n', '<F23>', function() require("dap").step_out() end) --  <S-F11>
 
 -- vim: ts=4 sts=4 sw=4 et
