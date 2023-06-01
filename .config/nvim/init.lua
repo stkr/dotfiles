@@ -128,8 +128,8 @@ require("lazy").setup({
         end
     },
 
-    { 
-        "gbprod/stay-in-place.nvim", 
+    {
+        "gbprod/stay-in-place.nvim",
         config = function()
             require("stay-in-place").setup()
         end
@@ -175,30 +175,30 @@ require("lazy").setup({
                         lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
                         keymaps = {
                             -- You can use the capture groups defined in textobjects.scm
-                                ['af'] = '@function.outer',
-                                ['if'] = '@function.inner',
-                                ['ac'] = '@class.outer',
-                                ['ic'] = '@class.inner',
+                            ['af'] = '@function.outer',
+                            ['if'] = '@function.inner',
+                            ['ac'] = '@class.outer',
+                            ['ic'] = '@class.inner',
                         },
                     },
                     move = {
                         enable = true,
                         set_jumps = true, -- whether to set jumps in the jumplist
                         goto_next_start = {
-                                [']m'] = '@function.outer',
-                                [']]'] = '@class.outer',
+                            [']m'] = '@function.outer',
+                            [']]'] = '@class.outer',
                         },
                         goto_next_end = {
-                                [']M'] = '@function.outer',
-                                [']['] = '@class.outer',
+                            [']M'] = '@function.outer',
+                            [']['] = '@class.outer',
                         },
                         goto_previous_start = {
-                                ['[m'] = '@function.outer',
-                                ['[['] = '@class.outer',
+                            ['[m'] = '@function.outer',
+                            ['[['] = '@class.outer',
                         },
                         goto_previous_end = {
-                                ['[M'] = '@function.outer',
-                                ['[]'] = '@class.outer',
+                            ['[M'] = '@function.outer',
+                            ['[]'] = '@class.outer',
                         },
                     },
                 },
@@ -257,8 +257,7 @@ require("lazy").setup({
             {
                 'nvim-telescope/telescope-ui-select.nvim',
             },
-
-        }
+        },
     },
 
     {
@@ -279,27 +278,27 @@ require("lazy").setup({
             })
             require("mini.cursorword").setup({})
             require("mini.align").setup({})
-            require("mini.ai").setup({search_method = "cover"})
+            require("mini.ai").setup({ search_method = "cover" })
             require("mini.bracketed").setup({})
         end
     },
 
     {
         "chrisgrieser/nvim-various-textobjs",
-        config = function () 
+        config = function()
             require("various-textobjs").setup({ useDefaultKeymaps = true })
         end,
     },
 
-    { 
-        "chrisgrieser/nvim-spider", 
-        lazy = true 
+    {
+        "chrisgrieser/nvim-spider",
+        lazy = true
     },
 
     { 'andrewferrier/debugprint.nvim', },
 
-    { 
-        "smjonas/inc-rename.nvim", 
+    {
+        "smjonas/inc-rename.nvim",
         config = function() require("inc_rename").setup() end,
     },
 
@@ -498,10 +497,10 @@ vim.keymap.set({ "n", "x", "o" }, "s", "<cmd>Svart<cr>")
 --   plugin’s motions as Ex-command. Calling `function()
 --   require("spider").motion("w") end` as third argument of the keymap do _not_
 --   support dot-repeatability.
-vim.keymap.set({"n", "o", "x"}, "w", "<cmd>lua require('spider').motion('w')<CR>", { desc = "Spider-w" })
-vim.keymap.set({"n", "o", "x"}, "e", "<cmd>lua require('spider').motion('e')<CR>", { desc = "Spider-e" })
-vim.keymap.set({"n", "o", "x"}, "b", "<cmd>lua require('spider').motion('b')<CR>", { desc = "Spider-b" })
-vim.keymap.set({"n", "o", "x"}, "ge", "<cmd>lua require('spider').motion('ge')<CR>", { desc = "Spider-ge" })
+vim.keymap.set({ "n", "o", "x" }, "w", "<cmd>lua require('spider').motion('w')<CR>", { desc = "Spider-w" })
+vim.keymap.set({ "n", "o", "x" }, "e", "<cmd>lua require('spider').motion('e')<CR>", { desc = "Spider-e" })
+vim.keymap.set({ "n", "o", "x" }, "b", "<cmd>lua require('spider').motion('b')<CR>", { desc = "Spider-b" })
+vim.keymap.set({ "n", "o", "x" }, "ge", "<cmd>lua require('spider').motion('ge')<CR>", { desc = "Spider-ge" })
 
 --#region autocommands
 
