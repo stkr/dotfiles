@@ -345,6 +345,47 @@ require("lazy").setup({
             "NvimTreeFindFileToggle", "NvimTreeClipboard", "NvimTreeResize", "NvimTreeCollapse",
             "NvimTreeCollapseKeepBuffers", },
         config = function() require("config.nvim-tree").config() end,
+    },
+
+    -- Rust specifics
+    -- {
+    --     "rust-lang/rust.vim",
+    --     ft = "rust",
+    --     init = function()
+    --     end,
+    -- },
+    {
+        "MunifTanjim/rust-tools.nvim",
+        dependencies = "neovim/nvim-lspconfig",
+        ft = "rust",
+        config = function()
+            local lsp_utils = utils.safe_require("lsp_utils")
+            if lsp_utils == nil then
+                utils.err("Unable to load lsp_utils, lsp support is broken")
+                return {}
+            end
+            local opts = {
+                tools = {
+                    inlay_hints = {
+                        highlight = "InlayHint",
+                        max_len_align = true,
+                        max_len_align_padding = 4,
+                    },
+                    hover_actions = {
+                        auto_focus = true,
+                    },
+                },
+                server = {
+                    on_attach = lsp_utils.on_attach,
+                    capabilities = lsp_utils.get_capabilities(),
+                },
+            }
+            require("rust-tools").setup(opts)
+        end,
+    },
+
+    {
+        "mfussenegger/nvim-dap",
     }
 })
 
