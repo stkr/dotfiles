@@ -12,7 +12,7 @@ local function lsp_progress()
         local seen_clients = {}
         local msgs = {}
         for i = #buf_messages, 1, -1 do
-            msg = buf_messages[i]
+            local msg = buf_messages[i]
             -- We show only the last message per client, everyting else is discarded
             -- Also, only include progress messages, no status messages
             if seen_clients[msg.name] == nil and msg.progress then
