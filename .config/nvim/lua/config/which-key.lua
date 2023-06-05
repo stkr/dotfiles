@@ -148,6 +148,7 @@ function callbacks.config()
         r = {
             name = "refactor",
             f = { function() vim.lsp.buf.format() end, "format" },
+            m = { function() require('telescope'); vim.lsp.buf.code_action() end, "menu" },
         },
     }, leader_visual)
 
