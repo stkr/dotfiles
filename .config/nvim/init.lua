@@ -721,20 +721,9 @@ vim.g.gitgutter_close_preview_on_escape = 1
 -- end)
 -- vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles)
 
-
-
--- For pyright, try to adapt for venv
 local lspconfig = utils.safe_require("lspconfig")
 local lsp_utils = utils.safe_require("lsp_utils")
 if lspconfig ~= nil and lsp_utils ~= nil then
-    lspconfig.pyright.setup({
-        before_init = function(_, config)
-            config.settings.python.pythonPath = utils.get_python_path(config.root_dir)
-        end,
-        on_attach = lsp_utils.on_attach,
-        capabilities = lsp_utils.get_capabilities(),
-    })
-
     -- Enable the following language servers
     local servers = { 'clangd', 'tsserver' }
     for _, lsp in ipairs(servers) do
@@ -746,7 +735,38 @@ if lspconfig ~= nil and lsp_utils ~= nil then
 end
 
 
-
+-- The idea is to have the language server installed in the same virtual
+-- environment as the proect itself. The venv is activated before nvim
+-- is launched from that shell.
+-- This allows to access the language servers as well as to run python
+-- code from within nvim with the same environment.
+if lspconfig ~= nil and lsp_utils ~= nil then
+    lspconfig.pylsp.setup {
+        on_attach = lsp_utils.on_attach,
+        capabilities = lsp_utils.get_capabilities(),
+        settings = {
+            pylsp = {
+                configurationSources = { "black" },
+                plugins = {
+                    -- default code style linter disabled in favor of black.
+                    pycodestyle = {
+                        enabled = false,
+                    },
+                    -- code actions:
+                    rope_autoimport = {
+                        enabled = true,
+                    },
+                    -- reformatting:
+                    black = {
+                        enabled = true,
+                        line_length = 100,
+                        preview = true,
+                    }
+                }
+            }
+        }
+    }
+end
 
 -- Example custom server
 -- Make runtime files discoverable to the server
