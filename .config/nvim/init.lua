@@ -324,7 +324,10 @@ require("lazy").setup({
         lazy = true
     },
 
-    { 'andrewferrier/debugprint.nvim', },
+    {
+        'andrewferrier/debugprint.nvim',
+        config = function() require("debugprint").setup() end,
+    },
 
     {
         "smjonas/inc-rename.nvim",
