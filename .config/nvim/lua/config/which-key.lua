@@ -23,7 +23,16 @@ function callbacks.config()
         c = {
             name = "context",
             d = { "<cmd>lua vim.diagnostic.setqflist()<cr>", "diagnostic" },
-            p = { function() utils.info(vim.fn.expand("%:p")) end, "path to file" },
+            f = { name = "file",
+                -- directory name (/something/src)
+                d = { function() utils.info(vim.fn.expand("%:p:h")) end, "dir" },
+                -- filename       (foo.txt)
+                f = { function() utils.info(vim.fn.expand("%:t")) end, "filename" },
+                -- absolute path  (/something/src/foo.txt)
+                p = { function() utils.info(vim.fn.expand("%:p")) end, "path" },
+                -- relative path  (src/foo.txt)
+                r = { function() utils.info(vim.fn.fnamemodify(vim.fn.expand("%:p"), ":~:.")) end, "relative path" },
+            },
             i = { "<cmd>lua vim.lsp.buf.hover()<cr>", "info" },
             s = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "signature" },
         },
