@@ -2,10 +2,16 @@
 ;; This file needs to go to /etc/kmonad/config.kbd on linux
 
 (defcfg
-    fallthrough true
-    allow-cmd false
+	;; Linux:
     input (device-file "/dev/input/by-id/usb-USB_USB_Keykoard-event-kbd")
     output (uinput-sink "kmonad")
+	
+	;; Windows:
+    ;; input  (low-level-hook)
+    ;; output (send-event-sink)
+	
+    fallthrough true
+    allow-cmd false
 )
 
 
