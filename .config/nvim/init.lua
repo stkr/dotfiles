@@ -759,7 +759,10 @@ if lspconfig ~= nil and lsp_utils ~= nil then
                         enabled = true,
                         line_length = 100,
                         preview = true,
-                    }
+                    },
+                    flake8 = {
+                        enabled = true,
+                    },
                 }
             }
         }
