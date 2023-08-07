@@ -28,7 +28,9 @@ end
 
 -- Inspired by
 -- https://github.com/ibhagwan/nvim-lua/blob/main/lua/utils.lua
-local notify = utils.safe_require("notify")
+-- local notify = utils.safe_require("notify")
+-- Attention, loading plugins from here won't work. utils is required from init.lua 
+-- even BEFORE any plugins are loaded. 
 
 local function echo_multiline(msg)
     for _, s in ipairs(vim.fn.split(msg, "\n")) do
@@ -37,6 +39,7 @@ local function echo_multiline(msg)
 end
 
 function utils.trace(msg)
+    local notify = utils.safe_require("notify")
     if notify ~= nil then
         notify(msg, "TRACE", { render = "minimal" })
     else
@@ -45,6 +48,7 @@ function utils.trace(msg)
 end
 
 function utils.debug(msg)
+    local notify = utils.safe_require("notify")
     if notify ~= nil then
         notify(msg, "DEBUG", { render = "minimal" })
     else
@@ -53,6 +57,7 @@ function utils.debug(msg)
 end
 
 function utils.info(msg)
+    local notify = utils.safe_require("notify")
     if notify ~= nil then
         notify(msg, "INFO", { render = "minimal" })
     else
@@ -63,6 +68,7 @@ function utils.info(msg)
 end
 
 function utils.warn(msg)
+    local notify = utils.safe_require("notify")
     if notify ~= nil then
         notify(msg, "WARN", { render = "minimal" })
     else
@@ -73,6 +79,7 @@ function utils.warn(msg)
 end
 
 function utils.err(msg)
+    local notify = utils.safe_require("notify")
     if notify ~= nil then
         notify(msg, "ERROR", { render = "minimal" })
     else
@@ -132,7 +139,6 @@ function utils.current_line_subst_callback(func)
     local line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1]
     local s, e, replacement = func(line, col)
     if replacement ~= nil then
-        local str = line:sub(s, e)
         line = line:sub(1, s - 1) .. replacement .. line:sub(e + 1, line:len())
         vim.api.nvim_buf_set_lines(0, row - 1, row, false, { line })
     end
