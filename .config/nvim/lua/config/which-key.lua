@@ -149,7 +149,7 @@ function callbacks.config()
             name = "refactor",
             f = { function() vim.lsp.buf.format() end, "format" },
             m = { function() require('telescope'); vim.lsp.buf.code_action() end, "menu" },
-            r = { ":IncRename ", "rename" }, -- note, this is not a <cmd> mapping as is will stay in command mode.
+            r = { function() vim.lsp.buf.rename() end, "rename" },
         },
     }, leader_normal)
 
