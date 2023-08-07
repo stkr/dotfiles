@@ -330,11 +330,6 @@ require("lazy").setup({
     },
 
     {
-        "smjonas/inc-rename.nvim",
-        config = function() require("inc_rename").setup() end,
-    },
-
-    {
         "renerocksai/telekasten.nvim",
         cmd = { "Telekasten", },
         module = { "telekasten", },
