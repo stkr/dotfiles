@@ -29,8 +29,8 @@ end
 -- Inspired by
 -- https://github.com/ibhagwan/nvim-lua/blob/main/lua/utils.lua
 -- local notify = utils.safe_require("notify")
--- Attention, loading plugins from here won't work. utils is required from init.lua 
--- even BEFORE any plugins are loaded. 
+-- Attention, loading plugins from here won't work. utils is required from init.lua
+-- even BEFORE any plugins are loaded.
 
 local function echo_multiline(msg)
     for _, s in ipairs(vim.fn.split(msg, "\n")) do
@@ -232,6 +232,99 @@ function utils.get_python_path(workspace)
 
     utils.info("Detected python path [" .. python_path .. "]")
     return python_path
+end
+
+function utils.get_buffer_by_name(name)
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        local buffer_name = vim.api.nvim_buf_get_name(buf)
+        if string.find(buffer_name, name) then
+            vim.notify("found buffer: [" .. buffer_name .. "]")
+            return buf
+        end
+    end
+    return nil
+end
+
+utils.terminal_split_window_id = nil
+
+local function get_default_terminal_window()
+    -- We do keep a single window for terminal commands and reuse that. This is
+    -- to avoid cluttering the whole screen with terminal windows.
+    local target_win = 0
+
+    -- Attempt to retrieve the window.
+    if utils.terminal_split_window_id ~= nil then
+        -- The window is valid if it is visible (i.e. has a winnr) in the
+        -- current tab. Thic can be checked with win_id2win.
+        local valid_win = vim.fn.win_id2win(utils.terminal_split_window_id) ~= 0
+        if valid_win then
+            target_win = utils.terminal_split_window_id
+        end
+    end
+
+    -- Still no window found - it may have been closed meanwhile. Create a new
+    -- one instead.
+    if target_win == 0 then
+        vim.api.nvim_command('botright split')
+        target_win = vim.api.nvim_tabpage_get_win(0)
+        local window_id = vim.fn.win_getid()
+        utils.terminal_split_window_id = window_id
+        vim.api.nvim_win_set_height(0, 10)
+    end
+
+    return target_win
+end
+
+function utils.run_in_terminal_split(cmd, opts)
+    if opts == nil then
+        vim.notify("ops is nil")
+        opts = {}
+    end
+    if opts['height'] == nil then
+        opts['height'] = 10
+    end
+    if opts['cmdopts'] == nil then
+        opts['cmdopts'] = { on_exit = function(_, _, _) vim.notify("on_exit_callback executed") end }
+    end
+    if opts['name'] == nil then
+        opts['name'] = cmd
+    end
+
+    -- Save the handle of the currently active window in order to be able to
+    -- restore the focus to that window at the end.
+    local original_win = vim.api.nvim_get_current_win()
+    local target_win = get_default_terminal_window()
+
+    -- Create a new buffer for running the terminal command in.
+    local target_buf = vim.api.nvim_create_buf(true, false)
+
+    -- Display the buffer in the target window. The target_buf is displayed in
+    -- that window per default. It is of-course possible to manually display it
+    -- in a different window later. Note, this makes the new buffer the
+    -- "current" buffer. Some vim api functions rely on that and have no option
+    -- to pass a buffer.
+    vim.api.nvim_set_current_win(target_win)
+    vim.api.nvim_win_set_buf(target_win, target_buf)
+
+    -- Run cmd in the current buffer
+    vim.fn.termopen(cmd)
+
+    -- Move the cursor to the end of the buffer. This is required to enable the
+    -- "autoscrolling" behavior.
+    local target_line = vim.tbl_count(vim.api.nvim_buf_get_lines(0, 0, -1, true))
+    vim.api.nvim_win_set_cursor(target_win, { target_line, 0 })
+
+    -- Now, we may still have an old buffer from a previous run of the same
+    -- command around. To maintain the sanity of the user, delete that old one.
+    local full_name = "term: " .. opts['name']
+    local old_buffer = utils.get_buffer_by_name(full_name)
+    if old_buffer ~= nil then
+        vim.api.nvim_buf_delete(old_buffer, { force = true })
+    end
+    vim.api.nvim_buf_set_name(target_buf, full_name)
+
+    -- Move the cursor back to the original window.
+    vim.api.nvim_set_current_win(original_win)
 end
 
 return utils
