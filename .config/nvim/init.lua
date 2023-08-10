@@ -62,16 +62,18 @@ require("lazy").setup({
         end
     },
 
-    {
-        'dstein64/nvim-scrollview',
-        opts = {
-            excluded_filetypes = {},
-            current_only = true,
-            winblend = 0,
-            base = 'right',
-            column = 1,
-        }
-    },
+    -- Broken in NVIM 0.9.1:
+    -- https://github.com/dstein64/nvim-scrollview/issues/111
+    -- {
+    --     'dstein64/nvim-scrollview',
+    --     opts = {
+    --         excluded_filetypes = {},
+    --         current_only = true,
+    --         winblend = 0,
+    --         base = 'right',
+    --         column = 1,
+    --     }
+    -- },
 
     -- other evaluated colorschemes:
     --     2023-06: Iron-E/nvim-highlite: telescope background is nasty, searh and replace is not nice
