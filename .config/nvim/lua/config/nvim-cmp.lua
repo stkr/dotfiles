@@ -74,10 +74,13 @@ function callbacks.config()
             end, { 'i', 's' }),
         }),
         sources = {
-            { name = 'nvim_lsp', priority = 1, max_item_count = 10 },
-            { name = 'luasnip', priority = 1, max_item_count = 10 },
-            { name = 'buffer', priority = 2, max_item_count = 10 },
-            { name = 'path', priority = 3, max_item_count = 10 },
+            { name = 'nvim_lsp', priority = 1, },
+            { name = 'luasnip', priority = 1, },
+            { name = 'buffer', priority = 2, },
+            { name = 'path', priority = 3, },
+        },
+        performance = {
+            max_view_entries = 20,
         },
     }
 end
