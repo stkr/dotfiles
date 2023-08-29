@@ -8,6 +8,10 @@ function _M.on_attach(client, bufnr)
     if lsp_status ~= nil then
         lsp_status.on_attach(client)
     end
+    local lsp_signature = utils.safe_require("lsp_signature")
+    if lsp_signature ~= nil then
+        lsp_signature.on_attach({}, bufnr)
+    end
 end
 
 -- This is a copy from cmp_nvim_lsp/init.lua. The rationale here is that in order
