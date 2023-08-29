@@ -53,6 +53,10 @@ function callbacks.config()
             tags = {
                 prompt_prefix = " 笠> ",
             },
+            lsp_document_symbols = {
+                symbol_width = 60,
+            },
+
             quickfixhistory = {
                 mappings = {
                     -- In quickfixhistory use <CR> to reload that particular entry of
