@@ -3,7 +3,10 @@
 
 (defcfg
 	;; Linux:
-    input (device-file "/dev/input/by-id/usb-USB_USB_Keykoard-event-kbd")
+    ;; attached to stationary pc in graz:
+    ;; input (device-file "/dev/input/by-id/usb-USB_USB_Keykoard-event-kbd")
+    ;; Vivanco USB keyboard in Ardning:
+    input (device-file "/dev/input/by-id/usb-0518_USB-compliant_keyboard-event-kbd")
     output (uinput-sink "kmonad")
 	
 	;; Windows:
