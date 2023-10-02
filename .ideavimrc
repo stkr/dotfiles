@@ -10,6 +10,7 @@ set showmode
 set surround
 set ReplaceWithRegister
 set ideajoin
+set easymotion
 
 nnoremap <Leader>q :action CloseEditor<CR>
 
@@ -28,7 +29,8 @@ nnoremap <Leader>gd :action GotoDeclaration<CR>
 nnoremap <Leader>gi :action GotoImplementation<CR>
 nnoremap [q :action GotoPreviousError<CR>
 nnoremap ]q :action GotoNextError<CR>
-nnoremap <C-]> :action GotoDeclaration<CR>
+nnoremap [d :action GotoPreviousError<CR>
+nnoremap ]d :action GotoNextError<CR>
 
 " Refactoring stuff
 nnoremap <Leader>rr :action RenameElement<CR>
@@ -73,6 +75,16 @@ vnoremap p "_dP`]
 
 nnoremap gcc :action CommentByLineComment<CR>
 vnoremap gc :action CommentByLineComment<CR>
+
+" Easymotion
+" In order to increase the likelihood that single-character tags are assigned,
+" you can deselect the option Search whole file under Settings | Tools |
+" AceJump | Behavior.
+let g:EasyMotion_do_mapping = 0 
+nmap s         <Plug>(easymotion-sn)
+xmap s         <Plug>(easymotion-sn)
+omap s         <Plug>(easymotion-sn)
+
 
 set clipboard+=unnamed
 set idearefactormode=keep
