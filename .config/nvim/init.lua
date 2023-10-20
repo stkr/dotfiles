@@ -157,7 +157,17 @@ require("lazy").setup({
     { 'tpope/vim-abolish', },
     { 'tpope/vim-obsession', },
 
+    { 
+        'RaafatTurki/hex.nvim',
+        config = function()
+            require("hex").setup()
+        end,
+        cmd = { "HexDump", "HexToggle", "HexAssemble", },
+
+    },
+
     {
+
         'nvim-treesitter/nvim-treesitter',
         dependencies = {
             { 'nvim-treesitter/nvim-treesitter-textobjects' },
