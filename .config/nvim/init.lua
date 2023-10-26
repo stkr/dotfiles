@@ -856,4 +856,7 @@ vim.keymap.set('n', '<F10>', function() require("dap").step_over() end)
 vim.keymap.set('n', '<F11>', function() require("dap").step_into() end)
 vim.keymap.set('n', '<F23>', function() require("dap").step_out() end) --  <S-F11>
 
+-- To avoid that this config file gets even larger, some parts are in separate files and need to be included from here.
+require("qftf")
+
 -- vim: ts=4 sts=4 sw=4 et
