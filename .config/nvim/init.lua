@@ -157,7 +157,7 @@ require("lazy").setup({
     { 'tpope/vim-abolish', },
     { 'tpope/vim-obsession', },
 
-    { 
+    {
         'RaafatTurki/hex.nvim',
         config = function()
             require("hex").setup()
@@ -277,10 +277,10 @@ require("lazy").setup({
     },
 
     {
-      "ray-x/lsp_signature.nvim",
-      event = "VeryLazy",
-      opts = {},
-      config = function(_, opts) require'lsp_signature'.setup(opts) end
+        "ray-x/lsp_signature.nvim",
+        event = "VeryLazy",
+        opts = {},
+        config = function(_, opts) require 'lsp_signature'.setup(opts) end
     },
 
     {
