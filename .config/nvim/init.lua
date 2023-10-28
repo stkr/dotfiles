@@ -104,6 +104,16 @@ require("lazy").setup({
     { "airblade/vim-gitgutter", },
 
     {
+        "NeogitOrg/neogit",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-telescope/telescope.nvim",
+            "sindrets/diffview.nvim",
+        },
+        config = true
+    },
+
+    {
         'folke/which-key.nvim',
         config = function() require("config.which-key").config() end,
     },
