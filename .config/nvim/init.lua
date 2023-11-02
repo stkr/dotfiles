@@ -98,7 +98,25 @@ require("lazy").setup({
     },
 
     -- Add indentation guides even on blank lines
-    { 'lukas-reineke/indent-blankline.nvim', },
+    {
+        'lukas-reineke/indent-blankline.nvim',
+        main = "ibl",
+        version = "3.3.7",
+        config = function()
+            require("ibl").setup({
+                indent = {
+                    char = '┊',
+                },
+                scope = {
+                    char = '│',
+                    highlight = "IblIndent",
+                }
+                -- whitespace = {
+                --     remove_blankline_trail = false,
+                -- },
+            })
+        end,
+    },
 
     -- Add git related info in the signs columns and popups
     { "airblade/vim-gitgutter", },
@@ -730,11 +748,6 @@ vim.api.nvim_create_autocmd({ "Filetype" }, { command = "set formatoptions-=o" }
 
 --#endregion
 
---Map blankline
-vim.g.indent_blankline_char = '┊'
-vim.g.indent_blankline_filetype_exclude = { 'help' }
-vim.g.indent_blankline_buftype_exclude = { 'terminal', 'nofile' }
-vim.g.indent_blankline_show_trailing_blankline_indent = false
 
 -- Gitgutter settings
 vim.g.gitgutter_map_keys = 0
