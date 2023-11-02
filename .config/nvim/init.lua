@@ -280,7 +280,10 @@ require("lazy").setup({
                     lsp_status.register_progress()
                 end
             },
-            { 'ray-x/lsp_signature.nvim', },
+            { 
+                'ray-x/lsp_signature.nvim', 
+            },
+
         },
     },
 
@@ -307,7 +310,7 @@ require("lazy").setup({
     {
         "ray-x/lsp_signature.nvim",
         event = "VeryLazy",
-        opts = {},
+        opts = { hint_prefix = "", },
         config = function(_, opts) require 'lsp_signature'.setup(opts) end
     },
 
