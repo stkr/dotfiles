@@ -342,6 +342,7 @@ require("lazy").setup({
 
     {
         'echasnovski/mini.nvim',
+        version = "0.10.0",
         config = function()
             require("mini.surround").setup({
                 mappings = {
