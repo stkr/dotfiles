@@ -361,6 +361,10 @@ require("lazy").setup({
             require("mini.align").setup({})
             require("mini.ai").setup({ search_method = "cover" })
             require("mini.bracketed").setup({})
+            require("mini.sessions").setup({
+                autoread = true,
+                file = ".session.vim",
+            })
         end
     },
 
