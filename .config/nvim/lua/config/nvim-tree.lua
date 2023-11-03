@@ -17,7 +17,7 @@ local function on_attach_callback(bufnr)
     api.config.mappings.default_on_attach(bufnr)
 
     -- custom mappings
-    vim.keymap.set("n", "l", api.node.open.edit(),  opts("Edit Or Open"))
+    vim.keymap.set("n", "l", api.node.open.edit,    opts("Edit Or Open"))
     vim.keymap.set("n", "h", api.tree.close,        opts("Close"))
     vim.keymap.set("n", "H", api.tree.collapse_all, opts("Collapse All"))
 end
