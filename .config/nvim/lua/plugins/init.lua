@@ -8,15 +8,6 @@ return {
     { "nvim-lua/plenary.nvim", },
 
     {
-        'RaafatTurki/hex.nvim',
-        config = function()
-            require("hex").setup()
-        end,
-        cmd = { "HexDump", "HexToggle", "HexAssemble", },
-
-    },
-
-    {
 
         'nvim-treesitter/nvim-treesitter',
         dependencies = {
