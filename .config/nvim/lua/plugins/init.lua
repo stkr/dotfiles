@@ -10,13 +10,6 @@ return {
     { "vim-scripts/ReplaceWithRegister", },
 
     {
-        'numToStr/Comment.nvim',
-        config = function()
-            require('Comment').setup()
-        end
-    },
-
-    {
         "gbprod/stay-in-place.nvim",
         config = function()
             require("stay-in-place").setup()
