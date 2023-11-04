@@ -7,8 +7,6 @@ return {
 
     { "nvim-lua/plenary.nvim", },
 
-    { "vim-scripts/ReplaceWithRegister", },
-
     { 'tpope/vim-abolish', },
     { 'tpope/vim-obsession', },
 
