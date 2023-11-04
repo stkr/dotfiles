@@ -7,7 +7,6 @@ return {
 
     { "nvim-lua/plenary.nvim", },
 
-    { 'tpope/vim-abolish', },
     { 'tpope/vim-obsession', },
 
     {
