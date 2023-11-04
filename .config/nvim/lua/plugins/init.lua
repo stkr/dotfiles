@@ -7,8 +7,6 @@ return {
 
     { "nvim-lua/plenary.nvim", },
 
-    { 'tpope/vim-obsession', },
-
     {
         'RaafatTurki/hex.nvim',
         config = function()
