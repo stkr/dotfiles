@@ -7,7 +7,6 @@ return {
 
     { "nvim-lua/plenary.nvim", },
 
-
     -- other evaluated colorschemes:
     --     2023-06: Iron-E/nvim-highlite: telescope background is nasty, searh and replace is not nice
     --     2023-06: olimorris/onedarkpro.nvim: Diffview is not supported
@@ -23,10 +22,6 @@ return {
             vim.o.background = 'light'
             vim.api.nvim_command 'colorscheme soluarized'
         end,
-    },
-    {
-        'nvim-lualine/lualine.nvim',
-        config = function() require("config.lualine").config() end,
     },
 
     -- Add indentation guides even on blank lines

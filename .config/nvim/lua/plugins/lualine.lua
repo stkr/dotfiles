@@ -1,11 +1,3 @@
-local present, lualine = pcall(require, "lualine")
-if not present then
-    vim.notify("Failed to require module [lualine].")
-    return
-end
-
-local callbacks = {}
-
 local function lsp_progress()
     if #vim.lsp.buf_get_clients() > 0 then
         local buf_messages = require('lsp-status/messaging').messages()
@@ -37,8 +29,10 @@ local function lsp_progress()
     return ''
 end
 
-function callbacks.config()
-    lualine.setup {
+return
+{
+    'nvim-lualine/lualine.nvim',
+    opts = {
         options = {
             icons_enabled = true,
             theme = 'solarized',
@@ -83,7 +77,5 @@ function callbacks.config()
             lualine_z = { "location" }
         },
         tabline = {}
-    }
-end
-
-return callbacks
+    },
+}
