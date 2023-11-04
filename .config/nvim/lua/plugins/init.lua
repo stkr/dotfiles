@@ -1,20 +1,11 @@
 local utils = require("utils")
 
+-- In this file we keep all the essential/small plugins that require 
+-- no configuration whatsowver and are pretty much used always.
+
 return {
 
     { "nvim-lua/plenary.nvim", },
-
-    {
-        'rcarriga/nvim-notify',
-        config = function()
-            local notify = require("notify")
-            notify.setup({
-                stages = "static",
-                timeout = 2000,
-            })
-            vim.notify = notify
-        end
-    },
 
     -- Broken in NVIM 0.9.1:
     -- https://github.com/dstein64/nvim-scrollview/issues/111
