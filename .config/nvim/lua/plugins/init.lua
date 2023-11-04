@@ -7,26 +7,6 @@ return {
 
     { "nvim-lua/plenary.nvim", },
 
-    -- Add indentation guides even on blank lines
-    {
-        'lukas-reineke/indent-blankline.nvim',
-        main = "ibl",
-        version = "3.3.7",
-        config = function()
-            require("ibl").setup({
-                indent = {
-                    char = '┊',
-                },
-                scope = {
-                    char = '│',
-                    highlight = "IblIndent",
-                }
-                -- whitespace = {
-                --     remove_blankline_trail = false,
-                -- },
-            })
-        end,
-    },
 
     -- Add git related info in the signs columns and popups
     { "airblade/vim-gitgutter", },
