@@ -7,16 +7,6 @@ return {
 
     { "nvim-lua/plenary.nvim", },
 
-    {
-        "gbprod/cutlass.nvim",
-        config = function()
-            require("cutlass").setup({
-                exclude = { "ns", "nS" },
-                cut_key = "x",
-            })
-        end,
-    },
-
     { "vim-scripts/ReplaceWithRegister", },
 
     {
