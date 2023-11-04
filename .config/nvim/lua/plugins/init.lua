@@ -1,16 +1,12 @@
 local utils = require("utils")
 
--- In this file we keep all the essential/small plugins that require 
+-- In this file we keep all the essential/small plugins that require
 -- no configuration whatsoever and are pretty much used always.
 
 return {
 
     { "nvim-lua/plenary.nvim", },
 
-    {
-        'folke/which-key.nvim',
-        config = function() require("config.which-key").config() end,
-    },
     {
         "svart",
         url = 'https://gitlab.com/madyanov/svart.nvim',
