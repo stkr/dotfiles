@@ -7,31 +7,6 @@ return {
 
     { "nvim-lua/plenary.nvim", },
 
-    {
-        'neovim/nvim-lspconfig',
-        dependencies = {
-            {
-                'nvim-lua/lsp-status.nvim',
-                config = function()
-                    local lsp_status = require("lsp-status")
-                    lsp_status.config({
-                        current_function = false,
-                        show_filename = false,
-                        diagnostics = false,
-                        update_interval = 100,
-                        status_symbol = nil,
-                    })
-                    lsp_status.register_progress()
-                end
-            },
-            {
-                'ray-x/lsp_signature.nvim',
-            },
-
-        },
-    },
-
-
     -- autocompletion
     {
         "hrsh7th/nvim-cmp",
@@ -49,13 +24,6 @@ return {
             { "hrsh7th/cmp-path", },
         },
         config = function() require("config.nvim-cmp").config() end,
-    },
-
-    {
-        "ray-x/lsp_signature.nvim",
-        event = "VeryLazy",
-        opts = { hint_prefix = "", },
-        config = function(_, opts) require 'lsp_signature'.setup(opts) end
     },
 
     {
