@@ -34,13 +34,6 @@ return {
     },
 
     {
-        "renerocksai/telekasten.nvim",
-        cmd = { "Telekasten", },
-        module = { "telekasten", },
-        config = function() require("config.telekasten").config() end,
-    },
-
-    {
         'sindrets/diffview.nvim',
         dependencies = { "nvim-lua/plenary.nvim", },
         cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose",
