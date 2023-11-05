@@ -395,4 +395,6 @@ vim.keymap.set('n', '<F23>', function() require("dap").step_out() end) --  <S-F1
 -- To avoid that this config file gets even larger, some parts are in separate files and need to be included from here.
 require("qftf")
 
+require("config.keymaps")
+
 -- vim: ts=4 sts=4 sw=4 et
