@@ -33,18 +33,6 @@ return {
         },
     },
 
-    {
-        'nvim-tree/nvim-tree.lua',
-        dependencies = {
-            'nvim-tree/nvim-web-devicons', -- optional, for file icons
-        },
-        cmd = { "NvimTreeOpen", "NvimTreeClose", "NvimTreeToggle", "NvimTreeFocus", "NvimTreeRefresh",
-            "NvimTreeFindFile",
-            "NvimTreeFindFileToggle", "NvimTreeClipboard", "NvimTreeResize", "NvimTreeCollapse",
-            "NvimTreeCollapseKeepBuffers", },
-        config = function() require("config.nvim-tree").config() end,
-    },
-
     -- Rust specifics
     -- {
     --     "rust-lang/rust.vim",
