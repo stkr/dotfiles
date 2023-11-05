@@ -8,32 +8,6 @@ return {
     { "nvim-lua/plenary.nvim", },
 
     {
-        'nvim-telescope/telescope.nvim',
-        cmd = { "Telescope" },
-        module = 'telescope',
-        config = function() require("config.telescope").config() end,
-        dependencies = {
-            {
-                'nvim-telescope/telescope-fzf-native.nvim',
-                build = function()
-                    local build_cmd =
-                        "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && " ..
-                        "cmake --build build --config Release && " ..
-                        "cmake --install build --prefix build"
-                    os.execute(build_cmd)
-                end,
-            },
-            {
-                "nvim-telescope/telescope-frecency.nvim",
-                dependencies = { { "kkharji/sqlite.lua" }, }
-            },
-            {
-                'nvim-telescope/telescope-ui-select.nvim',
-            },
-        },
-    },
-
-    {
         "mfussenegger/nvim-dap",
         lazy = true,
         config = function()
