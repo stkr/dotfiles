@@ -209,16 +209,6 @@ vim.keymap.set('n', '*', ':set hlsearch <bar> :let @/=expand(\'<cword>\')<CR>')
 -- Quick jump
 vim.keymap.set({ "n", "x", "o" }, "s", "<cmd>Svart<cr>")
 
--- Improved word navigation
--- **Note** Note that for dot-repeat to work properly, you have to call this
---   plugin’s motions as Ex-command. Calling `function()
---   require("spider").motion("w") end` as third argument of the keymap do _not_
---   support dot-repeatability.
-vim.keymap.set({ "n", "o", "x" }, "w", "<cmd>lua require('spider').motion('w')<CR>", { desc = "Spider-w" })
-vim.keymap.set({ "n", "o", "x" }, "e", "<cmd>lua require('spider').motion('e')<CR>", { desc = "Spider-e" })
-vim.keymap.set({ "n", "o", "x" }, "b", "<cmd>lua require('spider').motion('b')<CR>", { desc = "Spider-b" })
-vim.keymap.set({ "n", "o", "x" }, "ge", "<cmd>lua require('spider').motion('ge')<CR>", { desc = "Spider-ge" })
-
 --#region autocommands
 
 -- Reload file after change
