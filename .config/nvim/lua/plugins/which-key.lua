@@ -16,6 +16,7 @@ end
 return
 {
     'folke/which-key.nvim',
+    keys = { "<leader>", nil, "n", desc = "Open which-key" },
     config =
         function()
             local wk = require("which-key")
