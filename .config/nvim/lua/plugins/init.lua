@@ -34,11 +34,6 @@ return {
     },
 
     {
-        'andrewferrier/debugprint.nvim',
-        config = function() require("debugprint").setup() end,
-    },
-
-    {
         "renerocksai/telekasten.nvim",
         cmd = { "Telekasten", },
         module = { "telekasten", },
