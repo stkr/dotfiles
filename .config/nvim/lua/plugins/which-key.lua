@@ -1,4 +1,22 @@
 
+-- There are several types of keymappins:
+--   - Plugins define the keymaps on there own: For lazy-loaded plugins, the lazy plugin 
+--     spec needs to have those as trigger for lazy-loading.
+--   - Manual mappings for plugin functionality: Regardless of lazy-loading, the plugin 
+--     spec seems to be the right place to define those as well. For mappings that use
+--     the <leader> we define them in the which-key config file. This has the advantage
+--     of having an overfiew of the leader mappings in central place.
+--
+-- Since leader mapping for plugins are defined in here, this file may "require" lots 
+-- of modules. In order not to have an invalid configuration once a plugin is 
+-- disabled/uninstalled, NEVER invoke the require of the module directly in a mapping.
+-- Encapsulate them in anonymous functions instead - then the require gets evaluated 
+-- at the invocation of a mapping opposed to the loading of which-key and faults have
+-- much less impact.
+
+
+-- helper functions:
+
 local function toggle_autocomplete()
     local cmp = require('cmp')
     if (cmp.get_config()['completion']['autocomplete'] == false) then
@@ -9,14 +27,11 @@ local function toggle_autocomplete()
     end
 end
 
--- The following attempt to define all keyboard mappings in a central place turned out to be 
--- not scalable. Better to define the mappings for each key-map when loading / specing the 
--- plugin instead. 
-
+-- key mappings:
 return
 {
     'folke/which-key.nvim',
-    keys = { "<leader>", nil, "n", desc = "Open which-key" },
+    keys = { "<leader>", nil, {"n", "v"}, desc = "Open which-key" },
     config =
         function()
             local wk = require("which-key")
@@ -29,25 +44,26 @@ return
                 ignore_missing = true
             }
 
+
             -------------  Context information
             wk.register({
                 c = {
                     name = "context",
-                    d = { "<cmd>lua vim.diagnostic.setqflist()<cr>", "diagnostic" },
+                    d = { "<cmd>lua vim.diagnostic.setqflist()<cr>", "Load diagnostics to quickfix window" },
                     f = {
                         name = "file",
                         -- directory name (/something/src)
-                        d = { function() utils.info(vim.fn.expand("%:p:h")) end, "dir" },
+                        d = { function() utils.info(vim.fn.expand("%:p:h")) end, "Print directory of opened file" },
                         -- filename       (foo.txt)
-                        f = { function() utils.info(vim.fn.expand("%:t")) end, "filename" },
+                        f = { function() utils.info(vim.fn.expand("%:t")) end, "Print filename of open file" },
                         -- absolute path  (/something/src/foo.txt)
-                        p = { function() utils.info(vim.fn.expand("%:p")) end, "path" },
+                        p = { function() utils.info(vim.fn.expand("%:p")) end, "Print full path of open file" },
                         -- relative path  (src/foo.txt)
                         r = { function() utils.info(vim.fn.fnamemodify(vim.fn.expand("%:p"), ":~:.")) end,
-                            "relative path" },
+                            "Print relative path of open file" },
                     },
-                    i = { "<cmd>lua vim.lsp.buf.hover()<cr>", "info" },
-                    s = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "signature" },
+                    i = { "<cmd>lua vim.lsp.buf.hover()<cr>", "Display lsp hover information" },
+                    s = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "Display lsp signature help" },
                 },
             }, leader_normal)
 
@@ -56,26 +72,23 @@ return
             wk.register({
                 d = {
                     name = "diff",
-                    d = { "<cmd>DiffviewOpen -uno<cr>", "diffview" },
-                    h = { "<cmd>DiffviewFileHistory<cr>", "history" },
-
-                    n = { utils.dotrepeat_create_func("GitGutterNextHunk"), "next" },
-                    N = { utils.dotrepeat_create_func("GitGutterPrevHunk"), "prev" },
-                    p = { utils.dotrepeat_create_func("GitGutterPreviewHunk"), "preview" },
-                    q = { utils.dotrepeat_create_func({ "GitGutterQuickFix", "copen" }), "quickfix" },
-                    r = { utils.dotrepeat_create_func("GitGutterUndoHunk"), "revert" },
-                    s = { utils.dotrepeat_create_func({ "GitGutterStageHunk", "GitGutterNextHunk" }), "stage" },
-                    S = { utils.dotrepeat_create_func("GitGutterUnstageHunk"), "unstage" },
+                    d = { "<cmd>DiffviewOpen -uno<cr>", "Open diffview" },
+                    h = { "<cmd>DiffviewFileHistory<cr>", "Open diffview of file history" },
+                    n = { utils.dotrepeat_create_func("GitGutterNextHunk"), "Go to next git diff hunk" },
+                    N = { utils.dotrepeat_create_func("GitGutterPrevHunk"), "Go to previous git diff hunk" },
+                    p = { utils.dotrepeat_create_func("GitGutterPreviewHunk"), "Show git diff hunk preview" },
+                    q = { utils.dotrepeat_create_func({ "GitGutterQuickFix", "copen" }), "Load git diff into quickfix window" },
+                    r = { utils.dotrepeat_create_func("GitGutterUndoHunk"), "Revert git diff hunk" },
+                    s = { utils.dotrepeat_create_func({ "GitGutterStageHunk", "GitGutterNextHunk" }), "Stage current hunk" },
+                    S = { utils.dotrepeat_create_func("GitGutterUnstageHunk"), "Unstage current hunk" },
                 },
             }, leader_normal)
 
             wk.register({
                 d = {
                     name = "diff",
-                    s = { "<cmd>GitGutterStageHunk<cr>", "stage" },
-                    S = { "<cmd>GitGutterUnstageHunk<cr>", "unstage" },
-                    n = { "<cmd>GitGutterNextHunk<cr>", "next" },
-                    N = { "<cmd>GitGutterPrevHunk<cr>", "prev" },
+                    n = { "<cmd>GitGutterNextHunk<cr>", "Go to next git diff hunk" },
+                    N = { "<cmd>GitGutterPrevHunk<cr>", "Go to previous git diff hunk" },
                 },
             }, leader_visual)
 
@@ -83,25 +96,25 @@ return
             wk.register({
                 e = {
                     name = "edit/open",
-                    b = { "<cmd>:e ~/.bashrc<cr>", "bashrc" },
-                    g = { "<cmd>:e ~/.gitconfig<cr>", "gitconfig" },
+                    b = { "<cmd>:e ~/.bashrc<cr>", "Edit ~/.bashrc" },
+                    g = { "<cmd>:e ~/.gitconfig<cr>", "Edit ~/.gitconfig" },
                     n = {
                         name = "notes",
                         n = {
                             name = "new",
-                            i = { function() require("telekasten").new_note() end, "info", },
-                            j = { function() require("telekasten").goto_today() end, "journal", },
+                            i = { function() require("telekasten").new_note() end, "Create new note in category: info", },
+                            j = { function() require("telekasten").goto_today() end, "Create new note in category: journal", },
                             p = {
                                 function()
                                     local tk = require("telekasten")
                                     tk.chdir(tk.vaults['persons'])
                                     tk.new_note()
-                                end, "persons",
+                                end, "Create new note in category: persons",
                             },
                         },
-                        f = { function() require("telekasten").find_notes() end, "find", },
+                        f = { function() require("telekasten").find_notes() end, "Find note", },
                     },
-                    v = { "<cmd>:e ~/.vim/vimrc<cr>", "vimrc" },
+                    v = { "<cmd>:e ~/.vim/vimrc<cr>", "Edit ~/.vim/vimrc" },
                 },
             }, leader_normal)
 
@@ -112,32 +125,32 @@ return
 
                     b = {
                         "<cmd>lua require('telescope.builtin').buffers({ previewer = false, sort_mru = true, sort_lastused = true, ignore_current_buffer = true })<cr>",
-                        "buffer" },
-                    c = { "<cmd>Telescope resume<cr>", "continue" },
-                    f = { "<cmd>lua require('telescope.builtin').fd({ previewer = false })<cr>", "file" },
-                    g = { "<cmd>lua require('telescope.builtin').live_grep({ previewer = false })<cr>", "grep" },
-                    h = { function() require('telescope.builtin').oldfiles({ previewer = false }) end, "file history" },
+                        "Find buffer" },
+                    c = { "<cmd>Telescope resume<cr>", "Continue last find/telescope operation" },
+                    f = { "<cmd>lua require('telescope.builtin').fd({ previewer = false })<cr>", "Find file" },
+                    g = { "<cmd>lua require('telescope.builtin').live_grep({ previewer = false })<cr>", "Find in files" },
+                    h = { function() require('telescope.builtin').oldfiles({ previewer = false }) end, "Find file history" },
                     n = {
                         name = "notes",
-                        i = { function() require("telekasten").find_notes() end, "info", },
+                        i = { function() require("telekasten").find_notes() end, "Find note in category: info", },
                         p = {
                             function()
                                 local tk = require("telekasten")
                                 tk.chdir(tk.vaults['persons'])
                                 tk.find_notes()
-                            end, "persons",
+                            end, "Find note in category: persons",
                         },
                     },
-                    q = { "<cmd>lua require('telescope.builtin').quickfixhistory()<cr>", "quickfix" },
-                    t = { "<cmd>lua require('telescope.builtin').tags()<cr>", "tag" },
-                    [':'] = { "<cmd>lua require('telescope.builtin').command_history()<cr>", "command history" },
+                    q = { "<cmd>lua require('telescope.builtin').quickfixhistory()<cr>", "Find quickfix history" },
+                    t = { "<cmd>lua require('telescope.builtin').tags()<cr>", "Find tag" },
+                    [':'] = { "<cmd>lua require('telescope.builtin').command_history()<cr>", "Find command history" },
                     ['*'] = { "<cmd>lua require('telescope.builtin').grep_string({ previewer = false })<cr>",
-                        "word in files" },
-                    r = { function() require("telescope").extensions.frecency.frecency({ previewer = false }) end, "text" },
+                        "Find word under cursor in files" },
+                    r = { function() require("telescope").extensions.frecency.frecency({ previewer = false }) end, "Find recent file" },
                     s = { function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end, "symbols" },
-                    u = { "<cmd>lua require('telescope.builtin').lsp_references()<cr>", "usages" },
-                    ['/'] = { "<cmd>lua require('telescope.builtin').search_history<cr>", "search history" },
-                    a = { "<cmd>Telescope<cr>", "anything" },
+                    u = { "<cmd>lua require('telescope.builtin').lsp_references()<cr>", "Find usage" },
+                    ['/'] = { "<cmd>lua require('telescope.builtin').search_history<cr>", "Find in search history" },
+                    a = { "<cmd>Telescope<cr>", "Find anything" },
                 },
             }, leader_normal)
 
@@ -146,8 +159,8 @@ return
             wk.register({
                 g = {
                     name = "goto",
-                    d = { "<cmd>lua vim.lsp.buf.definition()<cr>", "definition" },
-                    h = { "<cmd>ClangdSwitchSourceHeader<cr>", "header/src" },
+                    d = { "<cmd>lua vim.lsp.buf.definition()<cr>", "Goto definition" },
+                    h = { "<cmd>ClangdSwitchSourceHeader<cr>", "Goto header/src" },
                 },
             }, leader_normal)
 
@@ -155,7 +168,7 @@ return
             wk.register({
                 n = {
                     name = "navigate",
-                    c = { "<cmd>cd %:p:h<cr>", "current" },
+                    c = { "<cmd>cd %:p:h<cr>", "Change dir to current file" },
                 },
             }, leader_normal)
 
@@ -163,21 +176,21 @@ return
             wk.register({
                 r = {
                     name = "refactor",
-                    f = { function() vim.lsp.buf.format() end, "format" },
+                    f = { function() vim.lsp.buf.format() end, "Format current file" },
                     m = { function()
                         require('telescope'); vim.lsp.buf.code_action()
-                    end, "menu" },
-                    r = { function() vim.lsp.buf.rename() end, "rename" },
+                    end, "Display code actions menu" },
+                    r = { function() vim.lsp.buf.rename() end, "Rename identifier under cursor" },
                 },
             }, leader_normal)
 
             wk.register({
                 r = {
                     name = "refactor",
-                    f = { function() vim.lsp.buf.format() end, "format" },
+                    f = { function() vim.lsp.buf.format() end, "Format selection" },
                     m = { function()
                         require('telescope'); vim.lsp.buf.code_action()
-                    end, "menu" },
+                    end, "Display code actions menu" },
                 },
             }, leader_visual)
 
@@ -260,25 +273,25 @@ return
                     name = "subst",
                     s = {
                         name = "slashes",
-                        e = { [[<cmd>lua mh_substitute(":s/\\\\/\\\\\\\\/ge")<cr>]], "escape" },
-                        u = { [[<cmd>lua mh_substitute(":s/\\\\/\\//ge")<cr>]], "unix" },
-                        w = { [[<cmd>lua mh_substitute(":s/\\//\\\\/ge")<cr>]], "windows" },
+                        e = { [[<cmd>lua mh_substitute(":s/\\\\/\\\\\\\\/ge")<cr>]], "Escape slashes" },
+                        u = { [[<cmd>lua mh_substitute(":s/\\\\/\\//ge")<cr>]], "Convert slashes to unix format" },
+                        w = { [[<cmd>lua mh_substitute(":s/\\//\\\\/ge")<cr>]], "Convert slashes to windows format" },
                     },
                     h = {
                         name = "hex",
-                        c = { [[<cmd>lua mh_substitute(":s!\\([0-9a-fA-F][0-9a-fA-F]\\)!0x\\1, !ge")<cr>]], "c" },
-                        j = { [[<cmd>lua mh_substitute(":s!\\([0-9a-fA-F][0-9a-fA-F]\\)!(byte) 0x\\1, !ge")<cr>]], "java" },
-                        s = { [[<cmd>lua mh_substitute(":s!\\([0-9a-fA-F][0-9a-fA-F]\\)!\\1 !ge")<cr>]], "spaces" },
+                        c = { [[<cmd>lua mh_substitute(":s!\\([0-9a-fA-F][0-9a-fA-F]\\)!0x\\1, !ge")<cr>]], "Convert hex number to c-style array of bytes" },
+                        j = { [[<cmd>lua mh_substitute(":s!\\([0-9a-fA-F][0-9a-fA-F]\\)!(byte) 0x\\1, !ge")<cr>]], "Convert hex number to java array of bytes" },
+                        s = { [[<cmd>lua mh_substitute(":s!\\([0-9a-fA-F][0-9a-fA-F]\\)!\\1 !ge")<cr>]], "Convert hex number to space separated bytes" },
                         x = { [[<cmd>lua mh_extract_hex()<cr>]], "extract hex" },
-                        ['2'] = { hexstring_swap_2, "swap 2 bytes" },
-                        ['4'] = { hexstring_swap_4, "swap 4 bytes" },
-                        ['8'] = { hexstring_swap_8, "swap 8 bytes" },
+                        ['2'] = { hexstring_swap_2, "Swap 2 bytes" },
+                        ['4'] = { hexstring_swap_4, "Swap 4 bytes" },
+                        ['8'] = { hexstring_swap_8, "Swap 8 bytes" },
                     },
                     w = {
                         name = "whitespace",
-                        e = { [[<cmd>lua mh_substitute(":s!\\s\\+$!!")<cr>]], "delete whitespace before eol" },
-                        u = { "<cmd>set ff=unix<cr>", "unix" },
-                        w = { "<cmd>set ff=dos<cr>", "windows" },
+                        e = { [[<cmd>lua mh_substitute(":s!\\s\\+$!!")<cr>]], "Delete whitespace before eol" },
+                        u = { "<cmd>set ff=unix<cr>", "Set file format to unix (eol)" },
+                        w = { "<cmd>set ff=dos<cr>", "Set file format to dos/windows (eol)" },
                     },
                 },
             }, leader_normal)
@@ -288,25 +301,25 @@ return
                     name = "subst",
                     s = {
                         name = "slashes",
-                        u = { [[<cmd>lua mh_substitute(":\'<,\'>s/\\%V\\\\/\\//ge")<cr>]], "unix" },
-                        w = { [[<cmd>lua mh_substitute(":\'<,\'>s/\\%V\\//\\\\/ge")<cr>]], "windows" },
+                        u = { [[<cmd>lua mh_substitute(":\'<,\'>s/\\%V\\\\/\\//ge")<cr>]], "Convert slashes to unix format" },
+                        w = { [[<cmd>lua mh_substitute(":\'<,\'>s/\\%V\\//\\\\/ge")<cr>]], "Convert slashes to windows format" },
                     },
                     h = {
                         name = "hex",
                         c = {
                             [[<cmd>lua mh_substitute(":\'<,\'>s!\\(\\%V[0-9a-fA-F]\\%V[0-9a-fA-F]\\)!0x\\1, !ge")<cr>]],
-                            "c" },
+                            "Convert hex number to c-style array of bytes" },
                         j = {
                             [[<cmd>lua mh_substitute(":\'<,\'>s!\\(\\%V[0-9a-fA-F]\\%V[0-9a-fA-F]\\)!(byte) 0x\\1, !ge")<cr>]],
-                            "java" },
+                            "Convert hex number to java array of bytes" },
                         s = { [[<cmd>lua mh_substitute(":\'<,\'>s!\\(\\%V[0-9a-fA-F]\\%V[0-9a-fA-F]\\)!\\1 !ge")<cr>]],
-                            "spaces" },
+                            "Convert hex number to space separated bytes" },
                     },
                     w = {
                         name = "whitespace",
-                        e = { [[<cmd>lua mh_substitute(":\'<,\'>s!\\s\\+$!!")<cr>]], "delete whitespace before eol" },
+                        e = { [[<cmd>lua mh_substitute(":\'<,\'>s!\\s\\+$!!")<cr>]], "Delete whitespace before eol" },
                         n = { [[<cmd>lua mh_substitute(":\'<,\'>s/\\n\\{2,}/\\r\\r/g")<cr>]],
-                            "delete consecutive newlines" },
+                            "Delete consecutive newlines" },
                     },
                 },
             }, leader_visual)
@@ -316,15 +329,15 @@ return
             wk.register({
                 t = {
                     name = "toggle",
-                    c = { toggle_autocomplete(), "complete" },
-                    h = { "<cmd>set hlsearch!<cr>", "hlseach" },
-                    l = { "<cmd>set list!<cr>", "listchars" },
-                    p = { "<cmd>set paste!<cr>", "paste" },
-                    r = { "<cmd>set relativenumber!<cr>", "relativenumber" },
-                    s = { "<cmd>set spell!<cr>", "spell" },
-                    t = { "<cmd>NvimTreeFindFileToggle<cr>", "tree" },
-                    w = { "<cmd>set wrap!<cr>", "wrap" },
-                    q = { function() require("autosave").toggle() end, "autosave" },
+                    c = { toggle_autocomplete, "Toggle (auto-)completion" },
+                    h = { "<cmd>set hlsearch!<cr>", "Toggle search highlight (hlsearch)" },
+                    l = { "<cmd>set list!<cr>", "Toggle invisible characters (list(chars))" },
+                    p = { "<cmd>set paste!<cr>", "Toggle paste mode" },
+                    r = { "<cmd>set relativenumber!<cr>", "Toggle relativenumber" },
+                    s = { "<cmd>set spell!<cr>", "Toggle spell" },
+                    t = { "<cmd>NvimTreeFindFileToggle<cr>", "Toggle file tree" },
+                    w = { "<cmd>set wrap!<cr>", "Toggle word wrap" },
+                    q = { function() require("autosave").toggle() end, "Toggle autosave" },
                 },
             }, leader_normal)
 
@@ -336,21 +349,21 @@ return
                     f = {
                         name = "file",
                         -- directory name (/something/src)
-                        d = { ':let @*=expand("%:p:h")<cr>', "dir" },
+                        d = { ':let @*=expand("%:p:h")<cr>', "Yank/copy directory of opened file" },
                         -- filename       (foo.txt)
-                        f = { ':let @*=expand("%:t")<cr>', "filename" },
+                        f = { ':let @*=expand("%:t")<cr>', "Yank/copy filename of open file" },
                         -- absolute path  (/something/src/foo.txt)
-                        p = { ':let @*=expand("%:p")<cr>', "path" },
+                        p = { ':let @*=expand("%:p")<cr>', "Yank/copy full path of open file" },
                         -- relative path  (src/foo.txt)
-                        r = { ':let @*=fnamemodify(expand("%"), ":~:.")<cr>', "relative path" },
+                        r = { ':let @*=fnamemodify(expand("%"), ":~:.")<cr>', "Yank/copy relative path of open file" },
                     },
                 },
             }, leader_normal)
 
             -------------  Misc
             wk.register({
-                ['.'] = { "<cmd>e#<cr>", "alternate file" },
-                [','] = { "<cmd>w<cr>", "save" },
+                ['.'] = { "<cmd>e#<cr>", "Edit alternate/most recent file" },
+                [','] = { "<cmd>w<cr>", "Save file" },
             }, leader_normal)
         end,
 }

@@ -21,7 +21,7 @@ local version = vim.version()
 
 
 -- Remap comma as leader key (note, this has to be done before even
--- loading lazy as lazy uses <leader> for it's own mappings.
+-- loading lazy as lazy uses <leader> for it's own mappings).
 vim.keymap.set({ 'n', 'v' }, ',', '<Nop>', { silent = true })
 vim.g.mapleader = ','
 vim.g.maplocalleader = ','
