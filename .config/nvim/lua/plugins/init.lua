@@ -34,16 +34,6 @@ return {
     },
 
     {
-        'sindrets/diffview.nvim',
-        dependencies = { "nvim-lua/plenary.nvim", },
-        cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose",
-            "DiffviewToggleFiles", "DiffviewFocusFiles",
-            "DiffviewRefresh", "DiffviewLog",
-        },
-        config = function() require("config.diffview").config() end,
-    },
-
-    {
         'nvim-tree/nvim-tree.lua',
         dependencies = {
             'nvim-tree/nvim-web-devicons', -- optional, for file icons
