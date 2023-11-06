@@ -15,6 +15,7 @@ return
             ["<leader>f"] = { name = "find" },
             ["<leader>fn"] = { name = "notes" },
             ["<leader>g"] = { name = "goto" },
+            ["<leader>l"] = { name = "launch" },
             ["<leader>n"] = { name = "navigate" },
             ["<leader>r"] = { name = "refactor" },
             ["<leader>s"] = { name = "subst" },

@@ -218,6 +218,11 @@ vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition, { desc = "Goto definit
 vim.keymap.set('n', '<leader>gh', "<cmd>ClangdSwitchSourceHeader<cr>", { desc = "Goto header/src" })
 
 
+-------------  Launcing things
+
+vim.keymap.set('n', '<leader>lt', '<cmd>:PlenaryBustedFile %<cr>', { desc = "Launch tests in current file" })
+
+
 -------------  Navigation
 
 vim.keymap.set('n', '<leader>nc', "cmd>cd %:p:h<cr>", { desc = "Change dir to current file" })
