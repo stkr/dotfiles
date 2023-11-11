@@ -107,7 +107,7 @@ alias man="TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man"
 # By convention, for coding projects done with nvim, we keep the project settings
 # in a file called .project.vim. This allows us to use a nice shortcut to open
 # the code project.
-alias np="neovim -S .project.vim"
+alias np="neovim -S .session.vim"
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like

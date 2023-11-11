@@ -21,7 +21,7 @@ return
             require("mini.ai").setup({ search_method = "cover" })
             require("mini.bracketed").setup({})
             require("mini.sessions").setup({
-                autoread = true,
+                autoread = false,
                 file = ".session.vim",
             })
         end
