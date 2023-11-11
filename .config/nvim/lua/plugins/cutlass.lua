@@ -1,10 +1,13 @@
 return
 {
     "gbprod/cutlass.nvim",
-    enabled = false, -- this plugin breaks which-key in visual mode apparently, need to find out more...
+    version = "1.0.1",
     config = function()
         require("cutlass").setup({
-            exclude = { "ns", "nS" },
+            -- ns = jump/search
+            -- nS = surround
+            -- s, = which-key
+            exclude = { "ns", "nS", "s," },
             cut_key = "x",
         })
     end,

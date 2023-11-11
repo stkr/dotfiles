@@ -1,9 +1,8 @@
 return
 {
     'folke/which-key.nvim',
-    keys = { "<leader>", nil, { "n", "v" }, desc = "Open which-key" },
     opts = {
-        -- We define a bunc of groups/categories here which can/should be filled with keymaps.
+        -- We define a bunch of groups/categories here which can/should be filled with keymaps.
         groups = {
             mode = { "n", "v" },
             ["<leader>c"] = { name = "context" },
