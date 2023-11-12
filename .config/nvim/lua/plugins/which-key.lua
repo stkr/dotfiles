@@ -2,6 +2,9 @@ return
 {
     'folke/which-key.nvim',
     opts = {
+        presets = {
+            g = false,
+        },
         -- We define a bunch of groups/categories here which can/should be filled with keymaps.
         groups = {
             mode = { "n", "v" },
