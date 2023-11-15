@@ -315,3 +315,6 @@ vim.keymap.set('n', '<leader>yfr', ':let @*=fnamemodify(expand("%"), ":~:.")<cr>
 -------------  Misc
 vim.keymap.set('n', '<leader>.', "<cmd>e#<cr>", { desc = "Edit alternate/most recent file" })
 vim.keymap.set('n', '<leader>,', "<cmd>w<cr>", { desc = "Save file" })
+
+vim.keymap.set('t', "<esc><esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+
