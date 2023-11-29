@@ -128,6 +128,30 @@ function utils.sudo_write(tmpfile, filepath)
     vim.fn.delete(tmpfile)
 end
 
+function utils.callback_on_selection(func)
+    -- Exit visual mode. This is required to update the < and > marks.
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', false, true, true), 'nx', false)
+    local pos_start = vim.fn.getpos("'<")
+    local pos_end = vim.fn.getpos("'>")
+    local regtype = vim.fn.visualmode()
+    if regtype:byte() == 22 then
+        regtype = regtype .. math.abs(pos_end[3] - pos_start[3])
+    end
+    -- getpos is (1,1) indexed, from here on we continue (0,0) indexed.
+    local region = vim.region(0,
+        { pos_start[2] - 1, pos_start[3] - 1 },
+        { pos_end[2] - 1, pos_end[3] - 1 },
+        regtype, true)
+    for line_nr, colums in pairs(region) do
+        func(line_nr, colums)
+    end
+end
+
+function utils.callback_on_line(func)
+    local line_nr = vim.api.nvim_win_get_cursor(0)[1] - 1
+    func(line_nr, { 0, -1 })
+end
+
 function utils.current_line_subst_callback(func)
     local row, col = unpack(vim.api.nvim_win_get_cursor(0))
     -- get_cursor is "mark-like" indexed (1-based lines, 0-based columns).
@@ -190,6 +214,24 @@ function utils.dotrepeat_create_func(cmd)
                     end
                 end)
         end
+    end
+end
+
+function utils.dotrepeat_create_callback_on_line_func(func)
+    return function()
+        utils.dotrepeat_exec_and_set_func(
+            function()
+                utils.callback_on_line(func)
+            end)
+    end
+end
+
+function utils.dotrepeat_create_callback_on_selection_func(func)
+    return function()
+        utils.dotrepeat_exec_and_set_func(
+            function()
+                utils.callback_on_selection(func)
+            end)
     end
 end
 
