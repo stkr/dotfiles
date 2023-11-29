@@ -1,12 +1,11 @@
-
 -- Since leader mapping for plugins are defined in here, this file may "require" lots
--- of modules. All plugin requires shall be encapsulated in anonymous functions. This 
--- is for two reasons: 
+-- of modules. All plugin requires shall be encapsulated in anonymous functions. This
+-- is for two reasons:
 --   1.) Plugins may be lazy loaded. As a require will trigger loading of the plugin,
---       the require shall done only once the mapped key is pressed, not when this 
+--       the require shall done only once the mapped key is pressed, not when this
 --       file is executed.
---   2.) Parsing/execution of this file will not fail if a plugin is removed but its 
---       mapping is still present. It will only fail at the invocation of the 
+--   2.) Parsing/execution of this file will not fail if a plugin is removed but its
+--       mapping is still present. It will only fail at the invocation of the
 --       mapping.
 
 
