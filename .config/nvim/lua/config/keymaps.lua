@@ -22,37 +22,35 @@ local function toggle_autocomplete()
     end
 end
 
--------------  Useful common substitution commands
---
--- A little bit of background on why substitution mappings are that convoluted:
--- Normally one would define a command like
--- a = { "<cmd>s/a/b/<cr>", "subst b for a" },
--- however, that does update the pattern register and hlsearch.
--- Per design, vim does restore those, when exiting from a function. However, this only works when
--- the substitution is within a vimscript function - the following would still work, but also
--- change pattern register and hlsearch:
--- b = { "<cmd>lua vim.api.nvim_command('s/a/b/')<cr>", "subst b for a" },
--- So, what we need to do instead is, to define a vimscript function which contains the
--- substitution command, and call that function. We then can bind that function to a key.
---
--- In visual mode one would use the marks '< and '> to select the range of lines in which to
--- substitute.
--- However, the marks '< and '> are only set when you leave Visual mode.
--- When you're using Vim interactively, this happens naturally, as you use the : to start typing
--- a "substitute" command Vim will leave Visual mode and enter command-line mode. But that's not
--- the case when you're using normal! from a function.
--- You can add an <Esc> to leave Visual mode explicitely. You'll need :execute to encode
--- the <Esc> inside a string. Source:
--- https://vi.stackexchange.com/questions/25104/how-do-i-substitute-inside-the-visual-selection-in-a-vimscript-function
---
-function mh_substitute(command)
-    vim.api.nvim_exec(string.format([[
-          function s:mh_substitute_vimscript()
-              exe "normal! \<esc>"
-              %s
-          endfunction
-          call s:mh_substitute_vimscript()
-      ]], command), false)
+-------------  Helpers for substitution mappings
+
+local function subst(line_nr, columns, pat, repl)
+    local bufline = vim.api.nvim_buf_get_lines(0, line_nr, line_nr + 1, true)[1]
+    local line_length = string.len(bufline)
+    if columns[2] < 0 or columns[2] > line_length then
+        columns[2] = line_length
+    end
+
+    local prefix = string.sub(bufline, 1, columns[1])
+    local relevant = string.sub(bufline, columns[1] + 1, columns[2])
+    local suffix = string.sub(bufline, columns[2] + 1)
+    relevant = string.gsub(relevant, pat, repl)
+    bufline = prefix .. relevant .. suffix
+    vim.api.nvim_buf_set_lines(0, line_nr, line_nr + 1, true, { bufline })
+end
+
+local function nmap_subst(pat, repl)
+    local func = function(line_nr, columns)
+        subst(line_nr, columns, pat, repl)
+    end
+    return utils.dotrepeat_create_callback_on_line_func(func)
+end
+
+local function vmap_subst(pat, repl)
+    local func = function(line_nr, columns)
+        subst(line_nr, columns, pat, repl)
+    end
+    return utils.dotrepeat_create_callback_on_selection_func(func)
 end
 
 function mh_extract_hex()
@@ -183,7 +181,7 @@ vim.keymap.set('n', '<leader>fg', function() require('telescope.builtin').live_g
     { desc = "Find in files" })
 vim.keymap.set('n', '<leader>fh', function() require('telescope.builtin').oldfiles({ previewer = false }) end,
     { desc = "Find file history" })
-vim.keymap.set("n", "<leader>fm", function() require("telescope.builtin").keymaps() end, { desc = "Find key mapping"})
+vim.keymap.set("n", "<leader>fm", function() require("telescope.builtin").keymaps() end, { desc = "Find key mapping" })
 
 vim.keymap.set('n', '<leader>fni', function() require("telekasten").find_notes() end,
     { desc = "Find note in category: info" })
@@ -240,47 +238,35 @@ vim.keymap.set('v', '<leader>rm', function()
     require('telescope'); vim.lsp.buf.code_action()
 end, { desc = "Display code actions menu" })
 
-vim.keymap.set('n', '<leader>sse', [[<cmd>lua mh_substitute(":s/\\\\/\\\\\\\\/ge")<cr>]], { desc = "Escape slashes" })
-vim.keymap.set('n', '<leader>ssu', [[<cmd>lua mh_substitute(":s/\\\\/\\//ge")<cr>]],
-    { desc = "Convert slashes to unix format" })
-vim.keymap.set('n', '<leader>ssw', [[<cmd>lua mh_substitute(":s/\\//\\\\/ge")<cr>]],
-    { desc = "Convert slashes to windows format" })
+vim.keymap.set('n', '<leader>sse', nmap_subst('\\', '\\\\'), { desc = "Escape slashes" })
+vim.keymap.set('n', '<leader>ssu', nmap_subst('\\', '/'), { desc = "Convert slashes to unix format" })
+vim.keymap.set('n', '<leader>ssw', nmap_subst('/', '\\'), { desc = "Convert slashes to windows format" })
 
-vim.keymap.set('n', '<leader>shc', [[<cmd>lua mh_substitute(":s!\\([0-9a-fA-F][0-9a-fA-F]\\)!0x\\1, !ge")<cr>]],
+vim.keymap.set('n', '<leader>shc', nmap_subst('(%x%x)', '0x%1, '),
     { desc = "Convert hex number to c-style array of bytes" })
-vim.keymap.set('n', '<leader>shj', [[<cmd>lua mh_substitute(":s!\\([0-9a-fA-F][0-9a-fA-F]\\)!(byte) 0x\\1, !ge")<cr>]],
+vim.keymap.set('n', '<leader>shj', nmap_subst('(%x%x)', '(byte) 0x%1, '),
     { desc = "Convert hex number to java array of bytes" })
-vim.keymap.set('n', '<leader>shs', [[<cmd>lua mh_substitute(":s!\\([0-9a-fA-F][0-9a-fA-F]\\)!\\1 !ge")<cr>]],
+vim.keymap.set('n', '<leader>shs', nmap_subst('(%x%x)', '%1 '),
     { desc = "Convert hex number to space separated bytes" })
 vim.keymap.set('n', '<leader>shx', [[<cmd>lua mh_extract_hex()<cr>]], { desc = "extract hex" })
 vim.keymap.set('n', '<leader>sh2', hexstring_swap_2, { desc = "Swap 2 bytes" })
 vim.keymap.set('n', '<leader>sh4', hexstring_swap_4, { desc = "Swap 4 bytes" })
 vim.keymap.set('n', '<leader>sh8', hexstring_swap_8, { desc = "Swap 8 bytes" })
 
-vim.keymap.set('n', '<leader>swe', [[<cmd>lua mh_substitute(":s!\\s\\+$!!")<cr>]], {
-    desc =
-    "Delete whitespace before eol"
-})
+vim.keymap.set('n', '<leader>swe', nmap_subst('%s+$', ''), { desc = "Delete whitespace before eol" })
 vim.keymap.set('n', '<leader>swu', "<cmd>set ff=unix<cr>", { desc = "Set file format to unix (eol)" })
 vim.keymap.set('n', '<leader>sww', "<cmd>set ff=dos<cr>", { desc = "Set file format to dos/windows (eol)" })
 
-vim.keymap.set('n', '<leader>ssu', [[<cmd>lua mh_substitute(":\'<,\'>s/\\%V\\\\/\\//ge")<cr>]],
-    { desc = "Convert slashes to unix format" })
-vim.keymap.set('n', '<leader>ssw', [[<cmd>lua mh_substitute(":\'<,\'>s/\\%V\\//\\\\/ge")<cr>]],
-    { desc = "Convert slashes to windows format" })
-vim.keymap.set('n', '<leader>shc',
-    [[<cmd>lua mh_substitute(":\'<,\'>s!\\(\\%V[0-9a-fA-F]\\%V[0-9a-fA-F]\\)!0x\\1, !ge")<cr>]],
+vim.keymap.set('v', '<leader>ssu', vmap_subst('\\', '/'), { desc = "Convert slashes to unix format" })
+vim.keymap.set('v', '<leader>ssw', vmap_subst('/', '\\'), { desc = "Convert slashes to windows format" })
+vim.keymap.set('v', '<leader>shc', vmap_subst('(%x%x)', '0x%1, '),
     { desc = "Convert hex number to c-style array of bytes" })
-vim.keymap.set('n', '<leader>shj',
-    [[<cmd>lua mh_substitute(":\'<,\'>s!\\(\\%V[0-9a-fA-F]\\%V[0-9a-fA-F]\\)!(byte) 0x\\1, !ge")<cr>]],
+vim.keymap.set('v', '<leader>shj', vmap_subst('(%x%x)', '(byte) 0x%1, '),
     { desc = "Convert hex number to java array of bytes" })
-vim.keymap.set('n', '<leader>shs',
-    [[<cmd>lua mh_substitute(":\'<,\'>s!\\(\\%V[0-9a-fA-F]\\%V[0-9a-fA-F]\\)!\\1 !ge")<cr>]],
+vim.keymap.set('v', '<leader>shs', vmap_subst('(%x%x)', '%1 '),
     { desc = "Convert hex number to space separated bytes" })
-vim.keymap.set('n', '<leader>swe', [[<cmd>lua mh_substitute(":\'<,\'>s!\\s\\+$!!")<cr>]],
-    { desc = "Delete whitespace before eol" })
-vim.keymap.set('n', '<leader>swn', [[<cmd>lua mh_substitute(":\'<,\'>s/\\n\\{2,}/\\r\\r/g")<cr>]],
-    { desc = "Delete consecutive newlines" })
+
+vim.keymap.set('v', '<leader>swe', vmap_subst('%s+$', ''), { desc = "Delete whitespace before eol" })
 
 
 -------------  Toggle
