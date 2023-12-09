@@ -366,33 +366,6 @@ if lspconfig ~= nil and lsp_utils ~= nil then
 end
 
 
--- DAP
-
--- Note on the weird key-bindings for F17 and F29 below:
--- To get the escape sequences that the terminal uses to represent key presses, use
---     showkey -a
--- For this particular situation (alacritty, linux), the keys S-F5 and C-F5 get
--- reported as
---     ^[[15;2~         27 0033 0x1b
---     ^[[15;5~         27 0033 0x1b
--- Now to find out what key nvim does map that terminal sequence to, execute
--- nvim -V3/tmp/log
--- In the resulting log file, the sequences are found as:
---     key_f17                   kf17       = ^[[15;2~
---     key_f29                   kf29       = ^[[15;5~
--- So the <F17> mapping really is <S-F5> and <F29> is <C-F5>
--- It might be different on other terminal emulators / operating systems,
--- more evaluations needed.
--- (see also https://github.com/neovim/neovim/issues/7384)
-
-vim.keymap.set('n', '<F5>', function() require("dap").continue() end)
-vim.keymap.set('n', '<F29>', function() require("dap").run_last() end)  -- <C-F5>
-vim.keymap.set('n', '<F17>', function() require("dap").terminate() end) -- <S-F5>
-vim.keymap.set('n', '<F9>', function() require("dap").toggle_breakpoint() end)
-vim.keymap.set('n', '<F10>', function() require("dap").step_over() end)
-vim.keymap.set('n', '<F11>', function() require("dap").step_into() end)
-vim.keymap.set('n', '<F23>', function() require("dap").step_out() end) --  <S-F11>
-
 -- To avoid that this config file gets even larger, some parts are in separate files and need to be included from here.
 require("qftf")
 
