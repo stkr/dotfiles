@@ -8,10 +8,10 @@ repository.
 
 Summarizing, to bootstrap:
 
-	git clone --bare ssh://git@github.com/stkr/dotfiles.git $HOME/.dotfiles
-	alias dt="git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
-	dt checkout
-	dt config --local status.showUntrackedFiles no
+    git clone --bare ssh://git@github.com/stkr/dotfiles.git $HOME/.dotfiles
+    git config --global alias.df '!git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+    git df checkout
+    git df config --local status.showUntrackedFiles no
 
 In case files are existing, move them out of the way and redo the checkout.
 
