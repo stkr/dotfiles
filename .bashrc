@@ -89,10 +89,6 @@ alias ll='ls -lA'
 alias la='ls -A'
 #alias l='ls -CF'
 
-# the dotfile alias for git:
-alias dotfiles='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-alias dt='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-
 # This is a bit convoluted, the goal is to fix man pages - per default they use
 # some highlights which do clash with colorschemes that have a bright background.
 # In order to fix that, we make less use a terminfo that sets those highlights to
