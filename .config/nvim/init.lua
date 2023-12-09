@@ -337,8 +337,8 @@ table.insert(runtime_path, 'lua/?/init.lua')
 
 if lspconfig ~= nil and lsp_utils ~= nil then
     lspconfig.lua_ls.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
+        on_attach = lsp_utils.on_attach,
+        capabilities = lsp_utils.capabilities,
         settings = {
             Lua = {
                 runtime = {
