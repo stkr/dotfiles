@@ -289,7 +289,7 @@ end
 
 utils.terminal_split_window_id = nil
 
-local function get_default_terminal_window()
+function utils.get_default_terminal_window()
     -- We do keep a single window for terminal commands and reuse that. This is
     -- to avoid cluttering the whole screen with terminal windows.
     local target_win = 0
