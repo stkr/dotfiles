@@ -145,6 +145,14 @@ end
 vim.o.splitbelow = true
 vim.o.splitright = true
 
+local terminal_autocommands = vim.api.nvim_create_augroup("TerminalAutocommands", { clear = true })
+-- Enter insert mode immediately when opening a terminal.
+vim.api.nvim_create_autocmd({ "TermOpen", },
+    { command = "startinsert", group = terminal_autocommands })
+-- This could be used to prevent automatic closing of the terminal window when the process is done.
+-- vim.api.nvim_create_autocmd({ "TermClose", },
+-- { command = [[ call feedkeys("\<C-\>\<C-n>") ]], group = terminal_autocommands })
+
 -- Add a keybinding to zoom in on the current split. This copies the split and creates a new
 -- tab from it, so a simple close of the window is good enough to get back to the prev split
 -- layout.
