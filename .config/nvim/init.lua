@@ -66,6 +66,9 @@ vim.o.hlsearch = false
 --Make line numbers default
 vim.wo.number = true
 
+-- Use relative numbers per default
+vim.o.relativenumber = true
+
 -- Enable cursorline
 vim.o.cursorline = true
 
