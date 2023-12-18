@@ -20,9 +20,10 @@ return
             api.config.mappings.default_on_attach(bufnr)
 
             -- custom mappings
-            vim.keymap.set("n", "l", api.node.open.edit, opts("Edit Or Open"))
-            vim.keymap.set("n", "h", api.tree.close, opts("Close"))
-            vim.keymap.set("n", "H", api.tree.collapse_all, opts("Collapse All"))
+            vim.keymap.set("n", "l", api.node.open.edit, opts("Edit or Open"))
+            vim.keymap.set("n", "h", api.node.navigate.parent_close, opts("Close directory"))
+            vim.keymap.set("n", "dd", api.fs.remove, opts("Delete"))
+
         end
 
         local tree = require("nvim-tree")
