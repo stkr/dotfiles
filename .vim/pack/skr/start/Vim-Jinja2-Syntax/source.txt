@@ -1,1 +1,0 @@
-https://github.com/Glench/Vim-Jinja2-Syntax.git
