@@ -4,13 +4,7 @@ return
     dependencies = {
         {
             'nvim-telescope/telescope-fzf-native.nvim',
-            build = function()
-                local build_cmd =
-                    "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && " ..
-                    "cmake --build build --config Release && " ..
-                    "cmake --install build --prefix build"
-                os.execute(build_cmd)
-            end,
+            build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
         },
         {
             "nvim-telescope/telescope-frecency.nvim",
