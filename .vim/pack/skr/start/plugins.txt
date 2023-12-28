@@ -3,4 +3,5 @@ b88179d  https://github.com/prabirshrestha/asyncomplete-buffer.vim.git
 a7a6af2  https://github.com/prabirshrestha/asyncomplete-lsp.vim.git
 eef50f9  https://github.com/prabirshrestha/asyncomplete-tags.vim.git
 5713fa6  https://github.com/prabirshrestha/asyncomplete.vim.git
+fcce70f  https://github.com/tpope/vim-vinegar.git
 
