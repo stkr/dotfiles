@@ -411,6 +411,10 @@ endif
     noremap <C-h> b
     noremap <C-l> w
 
+    " Ctrl j, k for page down, up
+    nnoremap <C-j> <C-d>
+    nnoremap <C-k> <C-u>
+
     " Syntastic setting to always report errors in the location list.
     let g:syntastic_always_populate_loc_list = 1
     
