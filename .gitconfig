@@ -58,3 +58,5 @@
 [user]
 	name = stefan
 	email = stefan
+[init]
+	defaultBranch = main
