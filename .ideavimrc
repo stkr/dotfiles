@@ -1,10 +1,29 @@
-source ~/.vim/vimrc
+
+" Searching
+set ignorecase " case insensitive searching
+set smartcase " case-sensitive if expresson contains a capital letter
+set hlsearch " highlight search results
+set incsearch " set incremental search, like modern browsers
+set nolazyredraw " don't redraw while executing macros
 
 " In pure vim a timeout on the leader key results in a menu being displayed, hence we have a VERY
 " low timeout setting. Since that menu is not available in ideavim, the timeout has to be increased
 " in order to have a more realistic chance on hitting key combinations.
-
 set timeoutlen=1000
+
+" set a map leader for more key combos
+let mapleader = ','
+
+inoremap jk <esc>
+inoremap kj <esc>
+nnoremap <leader>, :w<cr>
+
+set listchars=eol:¬,tab:>\ ,trail:~,extends:>,precedes:<,space:.
+
+" Open new split panes to right and bottom, which feels more natural.
+set splitbelow
+set splitright
+
 
 set showmode
 set surround
