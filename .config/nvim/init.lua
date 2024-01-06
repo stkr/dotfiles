@@ -294,7 +294,7 @@ local lspconfig = utils.safe_require("lspconfig")
 local lsp_utils = utils.safe_require("lsp_utils")
 if lspconfig ~= nil and lsp_utils ~= nil then
     -- Enable the following language servers
-    local servers = { 'clangd', 'tsserver' }
+    local servers = { 'clangd', 'tsserver', 'gdscript' }
     for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup {
             on_attach = lsp_utils.on_attach,
