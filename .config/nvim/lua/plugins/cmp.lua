@@ -3,13 +3,6 @@ return
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
     dependencies = {
-
-        {
-            "L3MON4D3/LuaSnip",
-            dependencies = { { "rafamadriz/friendly-snippets", }, },
-        },
-
-        { "saadparwaiz1/cmp_luasnip", },
         { "hrsh7th/cmp-nvim-lsp", },
         { "hrsh7th/cmp-buffer", },
         { "hrsh7th/cmp-path", },
@@ -21,12 +14,6 @@ return
             return
         end
 
-        local luasnip_present, luasnip = pcall(require, "luasnip")
-        if not luasnip_present then
-            vim.notify("Failed to require module [luasnip].")
-            return
-        end
-
         local utils_present, utils = pcall(require, "utils")
         if not utils_present then
             vim.notify("Failed to require module [utils].")
@@ -34,17 +21,10 @@ return
         end
 
 
-        -- make luasnip aware of the friendly-snippets
-        require("luasnip.loaders.from_vscode").lazy_load()
         cmp.setup({
             completion = {
                 completeopt = 'menu,menuone,preview',
                 autocomplete = false, -- to enable, remove that line
-            },
-            snippet = {
-                expand = function(args)
-                    luasnip.lsp_expand(args.body)
-                end,
             },
             formatting = {
                 format = function(entry, vim_item)
@@ -70,8 +50,6 @@ return
                             behavior = cmp.ConfirmBehavior.Insert,
                             select = true,
                         })
-                    elseif luasnip.expand_or_locally_jumpable() then
-                        luasnip.expand_or_jump()
                     else
                         fallback()
                     end
@@ -90,7 +68,6 @@ return
             }),
             sources = {
                 { name = 'nvim_lsp', priority = 1, },
-                { name = 'luasnip',  priority = 1, },
                 { name = 'buffer',   priority = 2, },
                 { name = 'path',     priority = 3, },
             },
