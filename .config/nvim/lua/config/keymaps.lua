@@ -218,6 +218,7 @@ vim.keymap.set('n', '<leader>gh', "<cmd>ClangdSwitchSourceHeader<cr>", { desc = 
 -------------  Launcing things
 
 vim.keymap.set('n', '<leader>lt', '<cmd>:PlenaryBustedFile %<cr>', { desc = "Launch tests in current file" })
+vim.keymap.set('n', '<leader>lf', '<cmd>:OverseerRun run\\ script<cr>', { desc = "Launch current file" })
 
 
 -------------  Navigation
