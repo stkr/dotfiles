@@ -58,7 +58,15 @@
 	default = simple
 	autoSetupRemote = true
 [user]
-	name = stefan
-	email = stefan
+	name = Stefan Krug
+	email = stefan.krug@nxp.com
 [init]
 	defaultBranch = main
+
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+[credential]
+	helper = manager-core
