@@ -31,8 +31,12 @@ return
         private_config['new_note_filename'] = "title"
         private_config['template_new_note'] = templates .. '/person.md'
 
+        local rfinch_config   = utils.deep_copy(default_config);
+        rfinch_config['home'] = vim.fn.expand("c:/LocalData/data/rfinch/notes")
+
         default_config['vaults']            = {
-            private = private_config
+            private = private_config,
+            rfinch  = rfinch_config,
         }
 
         telekasten.setup(default_config)

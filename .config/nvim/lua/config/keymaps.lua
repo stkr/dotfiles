@@ -143,6 +143,12 @@ vim.keymap.set('n', '<leader>ennp', function()
     tk.new_note()
 end, { desc = "Create new note in category: private" })
 
+vim.keymap.set('n', '<leader>ennr', function()
+    local tk = require("telekasten")
+    tk.chdir(tk.vaults['rfinch'])
+    tk.new_note()
+end, { desc = "Create new note in category: rfinch" })
+
 vim.keymap.set('n', '<leader>enf', function() require("telekasten").find_notes() end, { desc = "Find note", })
 vim.keymap.set('n', '<leader>ev', "<cmd>:e ~/.vim/vimrc<cr>", { desc = "Edit ~/.vim/vimrc" })
 
@@ -168,6 +174,13 @@ vim.keymap.set('n', '<leader>fnp',
         tk.find_notes()
     end, { desc = "Find note in category: private" })
 
+vim.keymap.set('n', '<leader>fnr',
+    function()
+        local tk = require("telekasten")
+        tk.chdir(tk.vaults['rfinch'])
+        tk.find_notes()
+    end, { desc = "Find note in category: rfinch" })
+
 vim.keymap.set('n', '<leader>fr', "<cmd>GrugFar<cr>", { desc = "Find with ripgrep" })
 vim.keymap.set('n', '<leader>fq', '<cmd>FzfLua quickfix<cr>', { desc = "Find quickfix history" })
 vim.keymap.set('n', '<leader>ft', '<cmd>FzfLua tags<cr>', { desc = "Find tag" })
@@ -177,7 +190,6 @@ vim.keymap.set('n', '<leader>fs', '<cmd>FzfLua lsp_workspace_symbols<cr>', { des
 vim.keymap.set('n', '<leader>fu', '<cmd>FzfLua lsp_references<cr>', { desc = "Find usage" })
 vim.keymap.set('n', '<leader>f/', '<cmd>FzfLua search_history<cr>', { desc = "Find in search history" })
 vim.keymap.set('n', '<leader>fa', "<cmd>FzfLua<cr>", { desc = "Find anything" })
-
 
 -------------  Going to / jumping to
 
