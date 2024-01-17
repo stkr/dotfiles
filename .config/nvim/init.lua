@@ -204,7 +204,7 @@ vim.keymap.set('v', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set('v', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 --- Don't copy the replaced text after pasting in visual mode
-vim.keymap.set("v", "p", "p:let @+=@0<CR>")
+vim.keymap.set("x", "p", "p:let @+=@0<CR>")
 
 -- Make gp select the recently pasted text
 vim.keymap.set("n", "gp", "'[V']")
@@ -294,13 +294,27 @@ local lspconfig = utils.safe_require("lspconfig")
 local lsp_utils = utils.safe_require("lsp_utils")
 if lspconfig ~= nil and lsp_utils ~= nil then
     -- Enable the following language servers
-    local servers = { 'clangd', 'tsserver', 'gdscript' }
+    local servers = { 'tsserver', 'gdscript' }
     for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup {
             on_attach = lsp_utils.on_attach,
             capabilities = lsp_utils.get_capabilities(),
         }
     end
+
+    -- Clangd inserts a space or a dot in front of a completed item indicating wheter it 
+    -- would result in an included header or not. This messes up formatting and deduplication 
+    -- of the code completion. Therefore, we need to disable that behaviour via command-line 
+    -- option.
+    lspconfig["clangd"].setup {
+        on_attach = lsp_utils.on_attach,
+        capabilities = lsp_utils.get_capabilities(),
+        cmd = {
+            "clangd",
+            "--header-insertion-decorators=false",
+        }
+    }
+
 end
 
 

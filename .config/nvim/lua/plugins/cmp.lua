@@ -6,6 +6,7 @@ return
         { "hrsh7th/cmp-nvim-lsp", },
         { "hrsh7th/cmp-buffer", },
         { "hrsh7th/cmp-path", },
+        { "saadparwaiz1/cmp_luasnip", },
     },
     config = function()
         local present, cmp = pcall(require, "cmp")
@@ -17,6 +18,12 @@ return
         local utils_present, utils = pcall(require, "utils")
         if not utils_present then
             vim.notify("Failed to require module [utils].")
+            return
+        end
+
+        local luasnip_present, luasnip = pcall(require, "luasnip")
+        if not luasnip_present then
+            vim.notify("Failed to require module [luasnip].")
             return
         end
 
@@ -39,8 +46,6 @@ return
                 end,
             },
             mapping = cmp.mapping.preset.insert({
-                ['<C-j>'] = cmp.mapping.select_next_item(),
-                ['<C-k>'] = cmp.mapping.select_prev_item(),
                 ['<C-d>'] = cmp.mapping.scroll_docs(4),
                 ['<C-u>'] = cmp.mapping.scroll_docs(-4),
 
@@ -50,6 +55,8 @@ return
                             behavior = cmp.ConfirmBehavior.Insert,
                             select = true,
                         })
+                    elseif luasnip.expand_or_locally_jumpable() then
+                        luasnip.expand_or_jump()
                     else
                         fallback()
                     end
@@ -67,9 +74,15 @@ return
                 end, { 'i', 's' }),
             }),
             sources = {
-                { name = 'nvim_lsp', priority = 1, },
+                { name = 'nvim_lsp', priority = 4, },
+                { name = 'luasnip',  priority = 3, },
                 { name = 'buffer',   priority = 2, },
-                { name = 'path',     priority = 3, },
+                { name = 'path',     priority = 1, },
+            },
+            snippet = {
+                expand = function(args)
+                    require('luasnip').lsp_expand(args.body)
+                end,
             },
             performance = {
                 max_view_entries = 20,
