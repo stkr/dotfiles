@@ -1,3 +1,31 @@
+local kind_icons = {
+  Text = '  ',
+  Method = '  ',
+  Function = '  ',
+  Constructor = '  ',
+  Field = '  ',
+  Variable = '  ',
+  Class = '  ',
+  Interface = '  ',
+  Module = '  ',
+  Property = '  ',
+  Unit = '  ',
+  Value = '  ',
+  Enum = '  ',
+  Keyword = '  ',
+  Snippet = '  ',
+  Color = '  ',
+  File = '  ',
+  Reference = '  ',
+  Folder = '  ',
+  EnumMember = '  ',
+  Constant = '  ',
+  Struct = '  ',
+  Event = '  ',
+  Operator = '  ',
+  TypeParameter = '  ',
+}
+
 return
 {
     "hrsh7th/nvim-cmp",
@@ -27,16 +55,25 @@ return
             return
         end
 
+        -- This avoids jump marks being left over when (parts of) snippets 
+        -- are deleted. These manifest itself in that a <cr> in insert mode 
+        -- would jumpt to a remaining jump mark instead of inserting a newline.
+        -- https://github.com/L3MON4D3/LuaSnip/issues/116
+        luasnip.config.set_config({
+            region_check_events = "InsertEnter",
+            delete_check_events = "TextChanged,InsertLeave",
+        })
 
         cmp.setup({
             completion = {
                 completeopt = 'menu,menuone,preview',
                 autocomplete = false, -- to enable, remove that line
             },
+
             formatting = {
+                fields = { "kind", "abbr", "menu" },
                 format = function(entry, vim_item)
-                    -- local icons = require "plugins.configs.lspkind_icons"
-                    -- vim_item.kind = string.format("%s %s", icons[vim_item.kind], vim_item.kind)
+                    vim_item.kind = string.format("%s", kind_icons[vim_item.kind], vim_item.kind)
                     vim_item.menu = ({
                         nvim_lsp = "[LSP]",
                         nvim_lua = "[Lua]",
@@ -87,6 +124,10 @@ return
             performance = {
                 max_view_entries = 20,
             },
+            -- window = {
+            --     completion = cmp.config.window.bordered(),
+            --     documentation = cmp.config.window.bordered(),
+            -- },
         })
     end,
 }
