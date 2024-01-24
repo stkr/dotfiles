@@ -12,8 +12,10 @@ def find_iarbuild():
     if shutil.which("iarbuild") is not None:
         return "iarbuild"
 
-    paths = [pathlib.Path(os.environ["USERPROFILE"]).joinpath(
-        "AppData/Roaming/IAR Systems/Embedded Workbench 9.1/common/bin/iarbuild.exe")]
+    paths = [
+        pathlib.Path(os.environ["USERPROFILE"]).joinpath("AppData/Roaming/IAR Systems/Embedded Workbench 9.1/common/bin/iarbuild.exe"),
+        pathlib.Path(os.environ["USERPROFILE"]).joinpath("AppData/Roaming/IAR Systems/Embedded Workbench 9.2/common/bin/iarbuild.exe"),
+    ]
     for p in paths:
         if p.is_file():
             return p
