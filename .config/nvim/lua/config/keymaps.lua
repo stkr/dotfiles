@@ -183,8 +183,12 @@ vim.keymap.set('n', '<leader>fh', function() require('telescope.builtin').oldfil
     { desc = "Find file history" })
 vim.keymap.set("n", "<leader>fm", function() require("telescope.builtin").keymaps() end, { desc = "Find key mapping" })
 
-vim.keymap.set('n', '<leader>fni', function() require("telekasten").find_notes() end,
-    { desc = "Find note in category: info" })
+vim.keymap.set('n', '<leader>fni', 
+    function() require("telekasten").find_notes() 
+        local tk = require("telekasten")
+        tk.chdir(tk.vaults['default'])
+        tk.find_notes()
+    end, { desc = "Find note in category: info" })
 vim.keymap.set('n', '<leader>fnp',
     function()
         local tk = require("telekasten")
