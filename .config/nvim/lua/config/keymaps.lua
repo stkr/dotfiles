@@ -149,6 +149,12 @@ vim.keymap.set('n', '<leader>ennr', function()
     tk.new_note()
 end, { desc = "Create new note in category: rfinch" })
 
+vim.keymap.set('n', '<leader>enns', function()
+    local tk = require("telekasten")
+    tk.chdir(tk.vaults['s110'])
+    tk.new_note()
+end, { desc = "Create new note in category: s110" })
+
 vim.keymap.set('n', '<leader>enf', function() require("telekasten").find_notes() end, { desc = "Find note", })
 vim.keymap.set('n', '<leader>ev', "<cmd>:e ~/.vim/vimrc<cr>", { desc = "Edit ~/.vim/vimrc" })
 
@@ -193,6 +199,13 @@ vim.keymap.set('n', '<leader>fnr',
         tk.chdir(tk.vaults['rfinch'])
         tk.find_notes()
     end, { desc = "Find note in category: rfinch" })
+
+vim.keymap.set('n', '<leader>fns',
+    function()
+        local tk = require("telekasten")
+        tk.chdir(tk.vaults['s110'])
+        tk.find_notes()
+    end, { desc = "Find note in category: s110" })
 
 vim.keymap.set('n', '<leader>fq', function() require('telescope.builtin').quickfixhistory() end,
     { desc = "Find quickfix history" })
