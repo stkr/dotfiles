@@ -34,9 +34,13 @@ return
         local rfinch_config   = utils.deep_copy(default_config);
         rfinch_config['home'] = vim.fn.expand("c:/LocalData/data/rfinch/notes")
 
+        local s110_config   = utils.deep_copy(default_config);
+        s110_config['home'] = vim.fn.expand("c:/LocalData/data/s110/notes")
+
         default_config['vaults']            = {
             private = private_config,
             rfinch  = rfinch_config,
+            s110    = s110_config,
         }
 
         telekasten.setup(default_config)
