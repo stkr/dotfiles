@@ -279,6 +279,7 @@ vim.keymap.set('v', '<leader>swe', vmap_subst('%s+$', ''), { desc = "Delete whit
 vim.keymap.set('n', '<leader>tc', toggle_autocomplete, { desc = "Toggle (auto-)completion" })
 vim.keymap.set('n', '<leader>th', "<cmd>set hlsearch!<cr>", { desc = "Toggle search highlight (hlsearch)" })
 vim.keymap.set('n', '<leader>tl', "<cmd>set list!<cr>", { desc = "Toggle invisible characters (list(chars))" })
+vim.keymap.set('n', '<leader>to', "<cmd>Outline<cr>", { desc = "Toggle outline" })
 vim.keymap.set('n', '<leader>tp', "<cmd>set paste!<cr>", { desc = "Toggle paste mode" })
 vim.keymap.set('n', '<leader>tr', "<cmd>set relativenumber!<cr>", { desc = "Toggle relativenumber" })
 vim.keymap.set('n', '<leader>ts', "<cmd>set spell!<cr>", { desc = "Toggle spell" })
