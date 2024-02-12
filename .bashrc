@@ -155,6 +155,12 @@ set -o vi
 # fi
 #
 
+# This must be after set -o vi (https://github.com/junegunn/fzf/issues/39)!
+# For this reason it is not in ~/.bashrc.d
+if [ -f "$HOME/.local/bin/_fzf-completion.bash" ]; then
+    source "$HOME/.local/bin/_fzf-completion.bash"
+fi
+
 # Source the default cargo environment (only applies if rust is instlled on the machine).
 if [ -f  "$HOME/.cargo/env" ]; then
     source "$HOME/.cargo/env"
