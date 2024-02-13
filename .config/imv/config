@@ -1,0 +1,12 @@
+[options]
+background = 808080
+fullscreen = true
+initial_pan = '0 0'
+scaling_mode = none
+
+[binds]
+k = pan 0 400
+j = pan 0 -400
+n = next
+p = prev
+
