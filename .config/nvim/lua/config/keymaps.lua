@@ -122,23 +122,8 @@ vim.keymap.set('n', '<leader>cs', vim.lsp.buf.signature_help, { desc = "Display 
 
 
 -------------  Diffing files
-
-vim.keymap.set('n', '<leader>dd', "<cmd>DiffviewOpen -uno<cr>", { desc = "Open diffview" })
-vim.keymap.set('n', '<leader>dh', "<cmd>DiffviewFileHistory<cr>", { desc = "Open diffview of file history" })
-vim.keymap.set('n', '<leader>dn', utils.dotrepeat_create_func("GitGutterNextHunk"), { desc = "Go to next git diff hunk" })
-vim.keymap.set('n', '<leader>dN', utils.dotrepeat_create_func("GitGutterPrevHunk"),
-    { desc = "Go to previous git diff hunk" })
-vim.keymap.set('n', '<leader>dp', utils.dotrepeat_create_func("GitGutterPreviewHunk"),
-    { desc = "Show git diff hunk preview" })
-vim.keymap.set('n', '<leader>dq', utils.dotrepeat_create_func({ "GitGutterQuickFix", "copen" }),
-    { desc = "Load git diff into quickfix window" })
-vim.keymap.set('n', '<leader>dr', utils.dotrepeat_create_func("GitGutterUndoHunk"), { desc = "Revert git diff hunk" })
-vim.keymap.set('n', '<leader>ds', utils.dotrepeat_create_func({ "GitGutterStageHunk", "GitGutterNextHunk" }),
-    { desc = "Stage current hunk" })
-vim.keymap.set('n', '<leader>dS', utils.dotrepeat_create_func("GitGutterUnstageHunk"), { desc = "Unstage current hunk" })
-
-vim.keymap.set('v', '<leader>dn', "<cmd>GitGutterNextHunk<cr>", { desc = "Go to next git diff hunk" })
-vim.keymap.set('v', '<leader>dN', "<cmd>GitGutterPrevHunk<cr>", { desc = "Go to previous git diff hunk" })
+-- Note, some of them are set from within gitsigns on_attach() method. 
+-- Please see lua/plugins/gitsigns.lua
 
 
 -------------  Edit commonly used files
