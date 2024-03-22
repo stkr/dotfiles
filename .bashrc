@@ -189,6 +189,10 @@ function hl() {
     grep --color=always -e "$1\|\$"
 }
 
+function yt-dlp-music() {
+    yt-dlp --format=bestaudio -x "$1"
+}
+
 # We keep the user's shell to be bash (to get all the benefits of .bashrc and .profile etc.), but in
 # case of an interactive shell we drop to fish. 
 # This aproach is inspired by ArchWiki:
