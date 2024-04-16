@@ -19,7 +19,9 @@ return
             require("mini.cursorword").setup({})
             require("mini.align").setup({})
             require("mini.ai").setup({ search_method = "cover" })
-            require("mini.bracketed").setup({})
+            require("mini.bracketed").setup({
+                quickfix = { suffix = '' }, -- disable quickfix mappings, those are replaced with 'trouble' mappings
+            })
             require("mini.sessions").setup({
                 autoread = false,
                 file = ".session.vim",
