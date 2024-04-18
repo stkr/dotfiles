@@ -179,6 +179,19 @@ function bin2hex() {
     echo "Hex dump written to $1.hex"
 }
 
+function hex2bin() {
+    dst="${1%.*}"
+    if [[ -e "${dst}" ]]; then
+        read -p "[${dst}] exists. Overwrite? " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            return 1
+        fi
+    fi
+    xxd -r "$1" > "${dst}"
+    echo "Binary written to ${dst}"
+}
+
 function binskip() {
     let "offset = $2"
     dd if="$1" of="$1.$2.bin" bs=1 skip=$offset
