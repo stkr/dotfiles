@@ -181,7 +181,7 @@ vim.keymap.set('n', '<leader>fnp',
         tk.find_notes()
     end, { desc = "Find note in category: persons" })
 
-vim.keymap.set('n', '<leader>fq', function() require('telescope.builtin').quickfixhistory() end,
+vim.keymap.set('n', '<leader>fq', function() require('telescope.builtin').quickfixhistory({previewer = false}) end,
     { desc = "Find quickfix history" })
 vim.keymap.set('n', '<leader>ft', function() require('telescope.builtin').tags() end, { desc = "Find tag" })
 vim.keymap.set('n', '<leader>f:', function() require('telescope.builtin').command_history() end,
