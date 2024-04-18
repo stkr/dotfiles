@@ -2,7 +2,7 @@ return
 {
     "rcarriga/nvim-dap-ui",
     lazy = true,
-    dependencies = { "mfussenegger/nvim-dap" },
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
     config = function()
         local utils = require("utils")
         local dap, dapui = require("dap"), require("dapui")
@@ -40,4 +40,5 @@ return
             dapui.close()
         end
     end,
+    version = "*",
 }
