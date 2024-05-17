@@ -7,8 +7,8 @@ return
             build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
         },
         {
-            "nvim-telescope/telescope-frecency.nvim",
-            dependencies = { { "kkharji/sqlite.lua" }, }
+            "nvim-telescope/telescope-live-grep-args.nvim",
+            version = "^1.0.0",
         },
         {
             'nvim-telescope/telescope-ui-select.nvim',
@@ -36,6 +36,7 @@ return
                                 actions.send_to_qflist(prompt_bufnr)
                                 trouble.open('quickfix')
                             end,
+                        ['<C-f>'] = actions.to_fuzzy_refine,
                     },
                     n = {
                         ['<M-p>'] = action_layout.toggle_preview,
@@ -100,6 +101,6 @@ return
         telescope.load_extension('fzf')
         telescope.load_extension('ui-select')
         telescope.load_extension("notify")
-        telescope.load_extension("frecency")
+        telescope.load_extension("live_grep_args")
     end,
 }

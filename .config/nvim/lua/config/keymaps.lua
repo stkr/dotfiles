@@ -162,7 +162,7 @@ vim.keymap.set('n', '<leader>fc', function() require('telescope.builtin').resume
     { desc = "Continue last find/telescope operation" })
 vim.keymap.set('n', '<leader>ff', function() require('telescope.builtin').fd({ previewer = false }) end,
     { desc = "Find file" })
-vim.keymap.set('n', '<leader>fg', function() require('telescope.builtin').live_grep({ previewer = false }) end,
+vim.keymap.set('n', '<leader>fg', function() require('telescope').extensions.live_grep_args.live_grep_args({ previewer = false }) end,
     { desc = "Find in files" })
 vim.keymap.set('n', '<leader>fh', function() require('telescope.builtin').oldfiles({ previewer = false }) end,
     { desc = "Find file history" })
@@ -188,8 +188,6 @@ vim.keymap.set('n', '<leader>f:', function() require('telescope.builtin').comman
     { desc = "Find command history" })
 vim.keymap.set('n', '<leader>f*', function() require('telescope.builtin').grep_string({ previewer = false }) end,
     { desc = "Find word under cursor in files" })
-vim.keymap.set('n', '<leader>fr', function() require("telescope").extensions.frecency.frecency({ previewer = false }) end,
-    { desc = "Find recent file" })
 vim.keymap.set('n', '<leader>fs', function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end,
     { desc = "Find symbol in workspace" })
 vim.keymap.set('n', '<leader>fu', function() require('telescope.builtin').lsp_references() end, { desc = "Find usage" })
