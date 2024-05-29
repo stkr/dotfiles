@@ -18,11 +18,11 @@ return {
                     telekasten = true,
                     lsp_trouble = true,
                     which_key = true,
-                }
+                },
             })
             vim.o.termguicolors = true
-            vim.o.background = 'light'
             vim.api.nvim_command 'colorscheme catppuccin'
+            vim.o.background = 'light'
         end,
     },
 }

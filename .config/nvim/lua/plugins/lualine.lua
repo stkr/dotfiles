@@ -29,6 +29,8 @@ local function lsp_progress()
     return ''
 end
 
+local palette = require("catppuccin.palettes").get_palette("latte")
+
 return
 {
     'nvim-lualine/lualine.nvim',
@@ -38,14 +40,18 @@ return
             theme = 'catppuccin',
             component_separators = '|',
             section_separators = '',
+            always_divide_middle = false,
         },
 
         extensions = {},
         inactive_sections = {
+            -- If x, y, and z are empty and c has padding = 1, it will span to the 
+            -- end of the line.
             lualine_a = {},
             lualine_b = {},
-            lualine_c = { "filename" },
-            lualine_x = { "location" },
+            lualine_c = { { "filename", padding = 1, 
+                    color = { fg = palette['text'], bg = palette['surface1'], }, }, },
+            lualine_x = {},
             lualine_y = {},
             lualine_z = {}
         },
