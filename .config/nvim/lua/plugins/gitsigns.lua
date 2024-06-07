@@ -1,6 +1,6 @@
 return {
     "lewis6991/gitsigns.nvim",
-    enabled = true,
+    version = "0.8.1",
     config = function()
         local gs = require('gitsigns')
         local utils = require("utils")

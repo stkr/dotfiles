@@ -1,8 +1,9 @@
 return
 {
     'andrewferrier/debugprint.nvim',
-    opts = {},
+    version = "3.x",
     dependencies = {
         "nvim-treesitter/nvim-treesitter",
     },
+    opts = {},
 }

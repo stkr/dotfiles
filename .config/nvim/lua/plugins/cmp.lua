@@ -29,6 +29,7 @@ local kind_icons = {
 return
 {
     "hrsh7th/nvim-cmp",
+    revision = "5260e5e8ecadaf13e6b82cf867a909f54e15fd07",
     event = "InsertEnter",
     dependencies = {
         { "hrsh7th/cmp-nvim-lsp", },
