@@ -8,7 +8,8 @@ return
             -- L conflicts with end of buffer
             -- gc conflicts with toggling comment
             -- n conflicts with next search result
-            disabledKeymaps = { "L", "gc", "n", },
+            -- q, b conflicts with mini.ai
+            disabledKeymaps = { "L", "gc", "n", "iq", "ib", "aq", "ab", },
         })
     end,
 }
