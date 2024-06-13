@@ -1,6 +1,8 @@
 return
 {
     'nvim-treesitter/nvim-treesitter-textobjects',
+    lazy = true,
+    cond = function() return require('utils').is_plugin_registered('nvim-treesitter') end,
     config = function()
         require('nvim-treesitter.configs').setup({
             textobjects = {

@@ -8,6 +8,18 @@ function utils.safe_require(module_name)
     return nil
 end
 
+function utils.is_plugin_registered(plugin_name)
+    local plugins_collection = {}
+    local lazy_config = require("lazy.core.config")
+    local lazy_spec = lazy_config.spec
+    for _, plugin in pairs(lazy_spec.plugins) do
+        if plugin.name == plugin_name then
+            return true
+        end
+    end
+    return false
+end
+
 function utils.get_plugin_config_module(plugin_name)
     -- Deal with plugins that have weird characters in their name (often a '.').
     -- For these we only use the first letters
