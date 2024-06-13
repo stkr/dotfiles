@@ -5,7 +5,7 @@ return
     config = function()
         require("nvim-treesitter.install").prefer_git = true,
         require('nvim-treesitter.configs').setup {
-            ensure_installed = {"c", "python", "rust", "lua", "vim", "vimdoc", "query" },
+            ensure_installed = {"c", "python", "rust", "lua", "vim", "vimdoc", "query", "markdown", },
             auto_install = false,
             highlight = {
                 enable = true,
@@ -28,6 +28,10 @@ return
             },
             indent = {
                 enable = true,
+                disable = {
+                    -- https://www.reddit.com/r/neovim/comments/1agynre/how_to_make_markdown_list_items_indent_behind_the/
+                    "markdown",  -- indentation at bullet points is worse than native neovim indentation
+                },
             },
         }
     end,
