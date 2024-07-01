@@ -260,15 +260,21 @@ vim.keymap.set('v', '<leader>swe', vmap_subst('%s+$', ''), { desc = "Delete whit
 
 -------------  Toggle
 
+-- The following are set by mini.basic already:
+--- - `b` - |'background'|.
+--- - `c` - |'cursorline'|.
+--- - `C` - |'cursorcolumn'|.
+--- - `d` - diagnostic (via |vim.diagnostic| functions).
+--- - `h` - |'hlsearch'| (or |v:hlsearch| to be precise).
+--- - `i` - |'ignorecase'|.
+--- - `l` - |'list'|.
+--- - `n` - |'number'|.
+--- - `r` - |'relativenumber'|.
+--- - `s` - |'spell'|.
+--- - `w` - |'wrap'|.
 vim.keymap.set('n', '<leader>tc', toggle_autocomplete, { desc = "Toggle (auto-)completion" })
-vim.keymap.set('n', '<leader>th', "<cmd>set hlsearch!<cr>", { desc = "Toggle search highlight (hlsearch)" })
-vim.keymap.set('n', '<leader>tl', "<cmd>set list!<cr>", { desc = "Toggle invisible characters (list(chars))" })
 vim.keymap.set('n', '<leader>to', "<cmd>Outline<cr>", { desc = "Toggle outline" })
-vim.keymap.set('n', '<leader>tp', "<cmd>set paste!<cr>", { desc = "Toggle paste mode" })
-vim.keymap.set('n', '<leader>tr', "<cmd>set relativenumber!<cr>", { desc = "Toggle relativenumber" })
-vim.keymap.set('n', '<leader>ts', "<cmd>set spell!<cr>", { desc = "Toggle spell" })
 vim.keymap.set('n', '<leader>tt', "<cmd>NvimTreeFindFileToggle<cr>", { desc = "Toggle file tree" })
-vim.keymap.set('n', '<leader>tw', "<cmd>set wrap!<cr>", { desc = "Toggle word wrap" })
 vim.keymap.set('n', '<leader>tq', function() require("autosave").toggle() end, { desc = "Toggle autosave" })
 
 

@@ -1,8 +1,13 @@
 return
 {
         'echasnovski/mini.nvim',
-        version = "0.10.0",
+        version = "0.13.0",
         config = function()
+            require("mini.basics").setup({
+                mappings = {
+                    option_toggle_prefix = [[,t]]
+                },
+            })
             require("mini.surround").setup({
                 mappings = {
                     add = 'Sa',            -- Add surrounding in Normal and Visual modes

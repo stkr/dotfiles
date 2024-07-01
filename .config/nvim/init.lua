@@ -69,15 +69,6 @@ vim.wo.number = true
 -- Use relative numbers per default
 vim.o.relativenumber = true
 
--- Enable cursorline
-vim.o.cursorline = true
-
---Enable mouse mode
-vim.o.mouse = 'a'
-
---Enable break indent
-vim.o.breakindent = true
-
 -- Use 4 spaces for indentation
 -- show existing tab with 4 spaces width
 vim.o.tabstop = 4
@@ -89,16 +80,8 @@ vim.o.expandtab = true
 -- Reasonable listchars
 vim.o.listchars = "eol:¬,tab:>>,trail:~,extends:>,precedes:<,space:·"
 
---Save undo history
-vim.opt.undofile = true
-
---Case insensitive searching UNLESS /C or capital in search
-vim.o.ignorecase = true
-vim.o.smartcase = true
-
 --Decrease update time
 vim.o.updatetime = 250
-vim.o.signcolumn = 'yes'
 
 --Set clipboard to use system clipboard per default
 vim.o.clipboard = "unnamedplus"
@@ -144,20 +127,9 @@ let g:clipboard = {
     ]], false)
 end
 
--- New splits shall be below or to the right
-vim.o.splitbelow = true
-vim.o.splitright = true
-
-local terminal_autocommands = vim.api.nvim_create_augroup("TerminalAutocommands", { clear = true })
--- Enter insert mode immediately when opening a terminal.
-vim.api.nvim_create_autocmd({ "TermOpen", },
-    { command = "startinsert", group = terminal_autocommands })
--- This could be used to prevent automatic closing of the terminal window when the process is done.
--- vim.api.nvim_create_autocmd({ "TermClose", },
--- { command = [[ call feedkeys("\<C-\>\<C-n>") ]], group = terminal_autocommands })
 
 -- Add a keybinding to zoom in on the current split. This copies the split and creates a new
--- tab from it, so a simple close of the window is good enough to get back to the prev split
+-- tab from it, so a simple close of the tab is good enough to get back to the prev split
 -- layout.
 vim.keymap.set('n', '<C-W>z', ":tabnew %<CR>")
 
@@ -190,21 +162,12 @@ vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.o.foldenable = false
 
--- Line wrapping is off per default
-vim.o.wrap = false
-
 -- Make marks always go to the marked column
 vim.keymap.set('n', "'", "`")
 
 -- Write a file as root
 vim.api.nvim_create_user_command("SudoWrite", function(opts) require('utils').sudo_write() end, {})
 -- vim.keymap.set('c', 'w!!<CR>', require('utils').sudo_write)
-
---Remap for dealing with word wrap
-vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-vim.keymap.set('v', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set('v', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 --- Don't copy the replaced text after pasting in visual mode
 vim.keymap.set("x", "p", "p:let @+=@0<CR>")
@@ -250,16 +213,6 @@ vim.api.nvim_create_autocmd({ "FileChangedShellPost" }, {
 vim.api.nvim_create_autocmd({ "BufWinLeave" }, { command = "let b:winview = winsaveview()" })
 vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
     command = "if exists('b:winview') | call winrestview(b:winview) | unlet b:winview"
-})
-
--- Highlight on yank
-local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
-vim.api.nvim_create_autocmd('TextYankPost', {
-    callback = function()
-        vim.highlight.on_yank()
-    end,
-    group = highlight_group,
-    pattern = '*',
 })
 
 -- Do not prefix newlines with the comment char if they are inserted
