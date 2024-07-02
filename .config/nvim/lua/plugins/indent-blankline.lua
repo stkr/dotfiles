@@ -1,20 +1,17 @@
 return
 {
     'lukas-reineke/indent-blankline.nvim',
+    enabled = true,
     main = "ibl",
-    version = "3.3.7",
+    version = "3.7.1",
     config = function()
         require("ibl").setup({
             indent = {
                 char = '┊',
             },
             scope = {
-                char = '│',
-                highlight = "IblIndent",
+                enabled = false,
             }
-            -- whitespace = {
-            --     remove_blankline_trail = false,
-            -- },
         })
     end,
 }
