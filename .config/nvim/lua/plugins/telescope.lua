@@ -61,17 +61,17 @@ return
             },
             pickers = {
                 buffers = {
-                    prompt_prefix = " ﬘ > ",
+                    prompt_prefix = " 󱀲 ",
                     sort_lastused = true,
                 },
                 fd = {
-                    prompt_prefix = "  > ",
+                    prompt_prefix = " 󱏒 ",
                 },
                 live_grep = {
                     prompt_prefix = "  > ",
                 },
                 tags = {
-                    prompt_prefix = " 笠> ",
+                    prompt_prefix = "  ",
                 },
                 lsp_document_symbols = {
                     symbol_width = 60,
