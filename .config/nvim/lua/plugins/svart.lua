@@ -1,7 +1,6 @@
 return
 {
-    "svart",
-    url = 'https://gitlab.com/madyanov/svart.nvim',
+    "m6vrm/svart.nvim",
     config = function()
         require("svart").configure({
             label_atoms = "asdghklqwertyuiopzxcvbnmfj",
