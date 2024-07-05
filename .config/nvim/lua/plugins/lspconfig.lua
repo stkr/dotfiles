@@ -5,6 +5,8 @@ return
     dependencies = {
         'nvim-lua/lsp-status.nvim',
         'ray-x/lsp_signature.nvim',
+        'williamboman/mason.nvim',
+        'williamboman/mason-lspconfig.nvim',
     },
     config = function()
         local lspconfig = require("lspconfig")
