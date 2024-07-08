@@ -22,7 +22,6 @@ return
         local actions = require("telescope.actions")
         local action_layout = require("telescope.actions.layout")
         local action_state = require("telescope.actions.state")
-        local trouble = require("trouble")
 
         telescope.setup {
             defaults = {
@@ -32,19 +31,11 @@ return
                         ['<C-j>'] = actions.move_selection_next,
                         ['<C-l>'] = actions.cycle_history_next,
                         ['<C-h>'] = actions.cycle_history_prev,
-                        ['<M-p>'] = action_layout.toggle_preview,
-                        ['<C-q>'] = function(prompt_bufnr) 
-                                actions.send_to_qflist(prompt_bufnr)
-                                trouble.open('quickfix')
-                            end,
                         ['<C-f>'] = actions.to_fuzzy_refine,
+                        ['<M-p>'] = action_layout.toggle_preview
                     },
                     n = {
-                        ['<M-p>'] = action_layout.toggle_preview,
-                        ['<C-q>'] = function(prompt_bufnr) 
-                                actions.send_to_qflist(prompt_bufnr) 
-                                trouble.open('quickfix')
-                            end,
+                        ['<M-p>'] = action_layout.toggle_preview
                     },
                 },
                 path_display = { 'tail' },
@@ -88,8 +79,7 @@ return
                                 local entry = action_state.get_selected_entry()
                                 if entry then
                                     actions.close(prompt_buf)
-                                    vim.cmd(string.format("%schistory", entry.nr))
-                                    trouble.open('quickfix')
+                                    vim.cmd(string.format("%schistory | copen", entry.nr))
                                 end
                             end
                         }

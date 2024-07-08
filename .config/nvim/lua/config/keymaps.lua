@@ -325,8 +325,3 @@ vim.keymap.set('n', '<leader>.', "<cmd>e#<cr>", { desc = "Edit alternate/most re
 vim.keymap.set('n', '<leader>,', "<cmd>w<cr>", { desc = "Save file" })
 
 vim.keymap.set('t', "<esc><esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-
-vim.keymap.set('n', '[Q', function() require("trouble").first({skip_groups = true, jump = true}) end, {desc = "Jump to first trouble"})
-vim.keymap.set('n', '[q', function() require("trouble").previous({skip_groups = true, jump = true}) end, {desc = "Jump to previous trouble"})
-vim.keymap.set('n', ']q', function() require("trouble").next({skip_groups = true, jump = true}) end, {desc = "Jump to next trouble"})
-vim.keymap.set('n', ']Q', function() require("trouble").last({skip_groups = true, jump = true}) end, {desc = "Jump to last trouble"})
