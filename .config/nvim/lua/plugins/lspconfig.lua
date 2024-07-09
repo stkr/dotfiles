@@ -85,7 +85,7 @@ return
 
         lspconfig.lua_ls.setup({
             on_attach = lsp_utils.on_attach,
-            capabilities = lsp_utils.capabilities,
+            capabilities = lsp_utils.get_capabilities(),
             settings = {
                 Lua = {
                     runtime = {
