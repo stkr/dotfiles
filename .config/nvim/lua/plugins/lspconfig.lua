@@ -110,5 +110,24 @@ return
                 },
             },
         })
+
+        lspconfig.yamlls.setup({
+            on_attach = function(client, bufnr)
+                client.server_capabilities.documentFormattingProvider = true
+                lsp_utils.on_attach(client, bufnr)
+            end,
+
+            capabilities = lsp_utils.get_capabilities(),
+            settings = {
+                yaml = {
+                    format = {
+                        enable = true
+                    },
+                    schemaStore = {
+                        enable = true
+                    }
+                }
+            }
+        })
     end,
 }
