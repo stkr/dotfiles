@@ -208,15 +208,21 @@ into the stow tree. The nvim discussion forum has a solution at [11].
 
 ## Alacritty and the conpty disaster
 
-On windows, alacritty since some time uses the conpty. However, the version of conpty +
-conhost/OpenConsole shipped with windows is quite outdated and broken. There is no way in default
-alacritty to replace those components as they are taken from the windows installation. Howver a
-patch exists to have alacritty take conpty.dll and OpenConsole.exe from the same directory as the
-alacritty.exe [6]. A PR for that was declined [7], [8], so that will not make it into an alacritty
-release, however, compiling alacritty from scratch is quite straightforward. Source and compilation
-instructions for conpty.dll and OpenConsole can be found at [8]. After opening the .sln file in
-visual studio it prompts to install one million of things (20 GB!). However, the only thing really
-needed is the Windows SDK.
+On windows, alacritty since some time uses the conpty. However, the version of
+conpty + conhost/OpenConsole shipped with windows is quite outdated and broken. 
+
+alacritty to replace those components Per default, they are taken from the
+windows installation. However since version 0.13.0 (Dec 2023), alacritty takes
+conpty.dll and OpenConsole.exe from the same directory as the alacritty.exe if
+they are present [12]. 
+
+Source and compilation -instructions for conpty.dll and
+OpenConsole can be found at [8]. After opening the .sln file in -visual studio
+it prompts to install one million of things (20 GB!). However, the only thing
+really -needed is the Windows SDK.
+
+Alternatively, WezTerm comes with pre-built binaries of conpty.dll and
+OpenConsole.exe. They can be obtained from the WezTerm github at [13].
 
 
 ## Hostname specific colorization of the tmux status line
@@ -248,3 +254,5 @@ black      | white      | others
 [9]: https://github.com/microsoft/terminal
 [10]: https://www.gnu.org/software/stow/manual/stow.html#Compile_002dtime-vs-Install_002dtime
 [11]: https://neovim.discourse.group/t/building-and-installing-neovim-to-location-different-from-cmake-install-prefix/1859/2
+[12]: https://github.com/alacritty/alacritty/pull/4501
+[13]: https://github.com/wez/wezterm/tree/main/assets/windows/conhost
