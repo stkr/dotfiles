@@ -45,38 +45,22 @@ return
 
         extensions = {},
         inactive_sections = {
-            -- If x, y, and z are empty and c has padding = 1, it will span to the 
+            -- If x, y, and z are empty and c has padding = 1, it will span to the
             -- end of the line.
             lualine_a = {},
             lualine_b = {},
-            lualine_c = { { "filename", padding = 1, 
-                    color = { fg = palette['text'], bg = palette['surface1'], }, }, },
+            lualine_c = { {
+                "filename",
+                padding = 1,
+                color = { fg = palette['text'], bg = palette['surface1'], },
+            }, },
             lualine_x = {},
             lualine_y = {},
             lualine_z = {}
         },
         sections = {
             lualine_a = { "mode", "vim.o.paste and 'PASTE' or ''" },
-            lualine_b = {
-                "branch",
-                {
-                    "diff",
-                    diff_color = {
-                        added = { fg = '#aec800' },
-                        removed = { fg = '#ff6f6c' },
-                        modified = { fg = '#f3bf21' },
-                    },
-                },
-                {
-                    "diagnostics",
-                    diagnostics_color = {
-                        error = { fg = '#ff6f6c' },
-                        warn = { fg = '#f3bf21' },
-                        hint = { fg = '#6fc3fe' },
-                        info = { fg = '#aec800' },
-                    }
-                },
-            },
+            lualine_b = { "branch", "diff", "diagnostics", },
             lualine_c = { "filename", lsp_progress },
             lualine_x = { "encoding", "fileformat", "filetype" },
             lualine_y = { "progress" },
