@@ -1,3 +1,16 @@
+local yank_selection_value = function(prompt_bufnr)
+    local actions = require("telescope.actions")
+    local action_state = require("telescope.actions.state")
+    local utils = require("telescope.utils")
+    local selection = action_state.get_selected_entry()
+    if selection == nil then
+        utils.__warn_no_selection "actions.yank_selection"
+        return
+    end
+    actions.close(prompt_bufnr)
+    vim.fn.setreg("*", selection.value)
+end
+
 return
 {
     'nvim-telescope/telescope.nvim',
@@ -68,6 +81,28 @@ return
                     symbol_width = 60,
                 },
 
+                -- For git_commits and git_bcommits upon <CR> we yank the commit
+                -- hash instead of ckecking out the commit.
+                git_bcommits = {
+                    mappings = {
+                        n = {
+                            ["<CR>"] = yank_selection_value
+                        },
+                        i = {
+                            ["<CR>"] = yank_selection_value
+                        },
+                    },
+                },
+                git_commits = {
+                    mappings = {
+                        n = {
+                            ["<CR>"] = yank_selection_value
+                        },
+                        i = {
+                            ["<CR>"] = yank_selection_value
+                        },
+                    },
+                },
                 quickfixhistory = {
                     mappings = {
                         -- In quickfixhistory use <CR> to reload that particular entry of
