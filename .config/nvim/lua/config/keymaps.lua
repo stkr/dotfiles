@@ -149,24 +149,11 @@ vim.keymap.set('n', '<leader>ev', "<cmd>:e ~/.vim/vimrc<cr>", { desc = "Edit ~/.
 
 -------------  Finding stuff
 
-vim.keymap.set('n', '<leader>fb',
-    function()
-        require('telescope.builtin').buffers({
-            previewer = false,
-            sort_mru = true,
-            sort_lastused = true,
-            ignore_current_buffer = true
-        })
-    end, { desc = "Find buffer" })
-vim.keymap.set('n', '<leader>fc', function() require('telescope.builtin').resume() end,
-    { desc = "Continue last find/telescope operation" })
-vim.keymap.set('n', '<leader>ff', function() require('telescope.builtin').fd({ previewer = false }) end,
-    { desc = "Find file" })
-vim.keymap.set('n', '<leader>fg', function() require('telescope').extensions.live_grep_args.live_grep_args({ previewer = false }) end,
-    { desc = "Find in files" })
-vim.keymap.set('n', '<leader>fh', function() require('telescope.builtin').oldfiles({ previewer = false }) end,
-    { desc = "Find file history" })
-vim.keymap.set("n", "<leader>fm", function() require("telescope.builtin").keymaps() end, { desc = "Find key mapping" })
+vim.keymap.set('n', '<leader>fb', '<cmd>FzfLua buffers<cr>', { desc = "Find buffer" })
+vim.keymap.set('n', '<leader>fc', '<cmd>FzfLua resume<cr>', { desc = "Continue last find operation" })
+vim.keymap.set('n', '<leader>ff', '<cmd>FzfLua files<cr>', { desc = "Find file" })
+vim.keymap.set('n', '<leader>fg', '<cmd>FzfLua live_grep<cr>', { desc = "Find in files" })
+vim.keymap.set('n', '<leader>fh', '<cmd>FzfLua oldfiles<cr>', { desc = "Find file history" })
 
 vim.keymap.set('n', '<leader>fni', 
     function() require("telekasten").find_notes() 
@@ -181,20 +168,15 @@ vim.keymap.set('n', '<leader>fnp',
         tk.find_notes()
     end, { desc = "Find note in category: persons" })
 
-vim.keymap.set('n', '<leader>fr', "<cmd>:GrugFar<cr>", { desc = "Find with ripgrep" })
-vim.keymap.set('n', '<leader>fq', function() require('telescope.builtin').quickfixhistory({previewer = false}) end,
-    { desc = "Find quickfix history" })
-vim.keymap.set('n', '<leader>ft', function() require('telescope.builtin').tags() end, { desc = "Find tag" })
-vim.keymap.set('n', '<leader>f:', function() require('telescope.builtin').command_history() end,
-    { desc = "Find command history" })
-vim.keymap.set('n', '<leader>f*', function() require('telescope.builtin').grep_string({ previewer = false }) end,
-    { desc = "Find word under cursor in files" })
-vim.keymap.set('n', '<leader>fs', function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end,
-    { desc = "Find symbol in workspace" })
-vim.keymap.set('n', '<leader>fu', function() require('telescope.builtin').lsp_references() end, { desc = "Find usage" })
-vim.keymap.set('n', '<leader>f/', function() require('telescope.builtin').search_history() end,
-    { desc = "Find in search history" })
-vim.keymap.set('n', '<leader>fa', "<cmd>Telescope<cr>", { desc = "Find anything" })
+vim.keymap.set('n', '<leader>fr', "<cmd>GrugFar<cr>", { desc = "Find with ripgrep" })
+vim.keymap.set('n', '<leader>fq', '<cmd>FzfLua quickfix<cr>', { desc = "Find quickfix history" })
+vim.keymap.set('n', '<leader>ft', '<cmd>FzfLua tags<cr>', { desc = "Find tag" })
+vim.keymap.set('n', '<leader>f:', '<cmd>FzfLua command_history<cr>', { desc = "Find in command history" })
+vim.keymap.set('n', '<leader>f*', '<cmd>FzfLua grep_cword<cr>', { desc = "Find word under cursor in files" })
+vim.keymap.set('n', '<leader>fs', '<cmd>FzfLua lsp_workspace_symbols<cr>', { desc = "Find symbol in workspace" })
+vim.keymap.set('n', '<leader>fu', '<cmd>FzfLua lsp_references<cr>', { desc = "Find usage" })
+vim.keymap.set('n', '<leader>f/', '<cmd>FzfLua search_history<cr>', { desc = "Find in search history" })
+vim.keymap.set('n', '<leader>fa', "<cmd>FzfLua<cr>", { desc = "Find anything" })
 
 
 -------------  Going to / jumping to
@@ -217,15 +199,11 @@ vim.keymap.set('n', '<leader>nc', "cmd>cd %:p:h<cr>", { desc = "Change dir to cu
 -------------  Refactoring
 
 vim.keymap.set('n', '<leader>rf', function() vim.lsp.buf.format() end, { desc = "Format current file" })
-vim.keymap.set('n', '<leader>rm', function()
-    require('telescope'); vim.lsp.buf.code_action()
-end, { desc = "Display code actions menu" })
+vim.keymap.set('n', '<leader>rm', '<cmd>FzfLua lsp_code_actions<cr>', { desc = "Display code actions menu" })
 vim.keymap.set('n', '<leader>rr', function() vim.lsp.buf.rename() end, { desc = "Rename identifier under cursor" })
 
 vim.keymap.set('v', '<leader>rf', function() vim.lsp.buf.format() end, { desc = "Format selection" })
-vim.keymap.set('v', '<leader>rm', function()
-    require('telescope'); vim.lsp.buf.code_action()
-end, { desc = "Display code actions menu" })
+vim.keymap.set('v', '<leader>rm', '<cmd>FzfLua lsp_code_actions<cr>', { desc = "Display code actions menu" })
 
 vim.keymap.set('n', '<leader>sse', nmap_subst('\\', '\\\\'), { desc = "Escape slashes" })
 vim.keymap.set('n', '<leader>ssu', nmap_subst('\\', '/'), { desc = "Convert slashes to unix format" })
