@@ -1,10 +1,15 @@
 return
 {
     "ibhagwan/fzf-lua",
+    version = "5565f4bfe304df30c35962a982f14d8de1043336",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     cmd = "FzfLua",
     opts = {
-        grep    = {
+        defaults = {
+            file_icons = true,
+            git_icons = false, -- This is VERY slow on large repos in windows. Disabled for now.
+        },
+        grep     = {
             rg_glob = true,
             -- first returned string is the new search query
             -- second returned string are (optional) additional rg flags
@@ -16,14 +21,14 @@ return
             end
 
         },
-        keymap  = {
+        keymap   = {
             fzf = {
                 ["ctrl-d"] = "half-page-down",
                 ["ctrl-u"] = "half-page-up",
                 ["ctrl-q"] = "select-all+accept",
             },
         },
-        winopts = {
+        winopts  = {
             preview = {
                 default = false,
             },
