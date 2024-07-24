@@ -57,14 +57,18 @@ function _G.qftf(info)
         end
     end
 
-    local fmt = '%' .. fname_limit .. 's |%' .. line_limit .. 'd:%-' .. col_limit .. 'd|%s %s'
+    local fmt = '%s |%' .. line_limit .. 'd:%-' .. col_limit .. 'd|%s %s'
 
     for i = info.start_idx, info.end_idx do
         local e = items[i]
         local str
         if e.valid == 1 then
             local qtype = e.type == '' and '' or ' ' .. e.type:sub(1, 1):upper()
-            str = fmt:format(e.fname, e.lnum, e.col, qtype, e.text)
+            -- string.format limits the length of a %s string to 99 characters which is 
+            -- not always enough (%100s is invalid!). So instead, we pad the fname 
+            -- manually here
+            local fname_padded = e.fname .. string.rep(" ", fname_limit - #e.fname)
+            str = fmt:format(fname_padded, e.lnum, e.col, qtype, e.text)
         else
             str = e.text
         end
