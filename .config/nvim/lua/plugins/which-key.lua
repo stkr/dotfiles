@@ -1,38 +1,35 @@
 return
 {
     'folke/which-key.nvim',
-    version = "2.x",
+    version = "3.x",
     opts = {
         presets = {
             g = false,
         },
         -- We define a bunch of groups/categories here which can/should be filled with keymaps.
-        groups = {
-            mode = { "n", "v" },
-            ["<leader>c"] = { name = "context" },
-            ["<leader>cf"] = { name = "file" },
-            ["<leader>d"] = { name = "diff" },
-            ["<leader>e"] = { name = "edit/open" },
-            ["<leader>en"] = { name = "notes" },
-            ["<leader>enn"] = { name = "new" },
-            ["<leader>f"] = { name = "find" },
-            ["<leader>fn"] = { name = "notes" },
-            ["<leader>g"] = { name = "goto" },
-            ["<leader>l"] = { name = "launch" },
-            ["<leader>n"] = { name = "navigate" },
-            ["<leader>r"] = { name = "refactor" },
-            ["<leader>s"] = { name = "subst" },
-            ["<leader>ss"] = { name = "slashes" },
-            ["<leader>sh"] = { name = "hex" },
-            ["<leader>sw"] = { name = "whitespace" },
-            ["<leader>t"] = { name = "toggle" },
-            ["<leader>y"] = { name = "yank" },
-            ["<leader>yf"] = { name = "file" },
+        spec = {
+            {
+                mode = { "n", "v" },
+                { "<leader>c",   group = "context", },
+                { "<leader>cf",  group = "file" },
+                { "<leader>d",   group = "diff" },
+                { "<leader>e",   group = "edit/open" },
+                { "<leader>en",  group = "notes" },
+                { "<leader>enn", group = "new" },
+                { "<leader>f",   group = "find" },
+                { "<leader>fn",  group = "notes" },
+                { "<leader>g",   group = "goto" },
+                { "<leader>l",   group = "launch" },
+                { "<leader>n",   group = "navigate" },
+                { "<leader>r",   group = "refactor" },
+                { "<leader>s",   group = "subst" },
+                { "<leader>sh",  group = "hex" },
+                { "<leader>ss",  group = "slashes" },
+                { "<leader>sw",  group = "whitespace" },
+                { "<leader>t",   group = "toggle" },
+                { "<leader>y",   group = "yank" },
+                { "<leader>yf",  group = "file" },
+            },
         },
     },
-    config = function(_, opts)
-        local wk = require("which-key")
-        wk.setup(opts)
-        wk.register(opts.groups)
-    end,
 }
