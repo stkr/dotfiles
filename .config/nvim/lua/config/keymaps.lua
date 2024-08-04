@@ -139,9 +139,9 @@ vim.keymap.set('n', '<leader>ennj', function() require("telekasten").goto_today(
 
 vim.keymap.set('n', '<leader>ennp', function()
     local tk = require("telekasten")
-    tk.chdir(tk.vaults['persons'])
+    tk.chdir(tk.vaults['private'])
     tk.new_note()
-end, { desc = "Create new note in category: persons" })
+end, { desc = "Create new note in category: private" })
 
 vim.keymap.set('n', '<leader>enf', function() require("telekasten").find_notes() end, { desc = "Find note", })
 vim.keymap.set('n', '<leader>ev', "<cmd>:e ~/.vim/vimrc<cr>", { desc = "Edit ~/.vim/vimrc" })
@@ -164,9 +164,9 @@ vim.keymap.set('n', '<leader>fni',
 vim.keymap.set('n', '<leader>fnp',
     function()
         local tk = require("telekasten")
-        tk.chdir(tk.vaults['persons'])
+        tk.chdir(tk.vaults['private'])
         tk.find_notes()
-    end, { desc = "Find note in category: persons" })
+    end, { desc = "Find note in category: private" })
 
 vim.keymap.set('n', '<leader>fr', "<cmd>GrugFar<cr>", { desc = "Find with ripgrep" })
 vim.keymap.set('n', '<leader>fq', '<cmd>FzfLua quickfix<cr>', { desc = "Find quickfix history" })

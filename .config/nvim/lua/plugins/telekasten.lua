@@ -26,13 +26,13 @@ return
             weeklies_create_nonexisting = false,
         }
 
-        local persons_config                = utils.deep_copy(default_config);
-        persons_config['home']              = notes .. "/persons"
-        persons_config['new_note_filename'] = "title"
-        persons_config['template_new_note'] = templates .. '/person.md'
+        local private_config                = utils.deep_copy(default_config);
+        private_config['home']              = notes .. "/private/persons"
+        private_config['new_note_filename'] = "title"
+        private_config['template_new_note'] = templates .. '/person.md'
 
         default_config['vaults']            = {
-            persons = persons_config
+            private = private_config
         }
 
         telekasten.setup(default_config)
