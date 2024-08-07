@@ -89,6 +89,14 @@ alias ll='ls -lA'
 alias la='ls -A'
 #alias l='ls -CF'
 
+# nxdi specific Tools Repoistory (TR) setup
+export EDA_ENV=TR
+unset CADENV_HOME
+export PATH="/pkg/fs-foundation-/dynamic/bin:$PATH:/proj/rfinch0/wa/usr/local"
+if [ -f /home/$USER/.trpolicy ]; then
+    export TRPOLICYFILE="/home/$USER/.trpolicy:${TRPOLICYFILE}"
+fi
+
 # This is a bit convoluted, the goal is to fix man pages - per default they use
 # some highlights which do clash with colorschemes that have a bright background.
 # In order to fix that, we make less use a terminfo that sets those highlights to
@@ -228,3 +236,4 @@ fi
 # Now we only do reach this point in case we did not exec to fish, so this applies ONLY in case of
 # remaining in bash!
 
+. "$HOME/.cargo/env"
