@@ -1,7 +1,8 @@
 if status is-interactive
     # Commands to run in interactive sessions can go here
     alias np='nvim -S .session.vim'
-    alias thumbs='feh --thumbnails --thumb-width=200 --thumb-height=200 --limit-width=1900'
+    alias feh='feh --theme default'
+    alias thumbs='feh --theme thumbnails'
 
     # Load the fzf keybindings. Note, this relies on key-bindings.fish being
     # installed in ~/.config/fish/functions!

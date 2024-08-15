@@ -1,7 +1,31 @@
-feh                  \
+# to make those themes have effect, they need to be specified at the feh
+# commandline with --theme $theme. The suggested way in the feh manual to do
+# this is to create shell aliases like for example:
+#     alias feh='feh --theme default'
+#     alias thumbs='feh --theme thumbnails'
+
+default              \
 --image-bg black     \
 --draw-tinted        \
 --draw-filename      \
 --draw-actions       \
 --geometry 1900x1000 \
+--zoom 100           \
+--scale-down         \
+--auto-zoom          \
+
+
+thumbnails           \
+--thumbnails         \
+--thumb-width=200    \
+--thumb-height=200   \
+--limit-width=1900   \
+--cache-thumbnails   \
+--image-bg black     \
+--draw-tinted        \
+--draw-filename      \
+--draw-actions       \
+--geometry 1900x1000 \
+--zoom 100           \
+--scale-down         \
 --auto-zoom          \
