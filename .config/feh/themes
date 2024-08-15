@@ -9,6 +9,7 @@ default              \
 --draw-tinted        \
 --draw-filename      \
 --draw-actions       \
+--scroll-step 80     \
 --geometry 1900x1000 \
 --zoom 100           \
 --scale-down         \
@@ -25,6 +26,7 @@ thumbnails           \
 --draw-tinted        \
 --draw-filename      \
 --draw-actions       \
+--scroll-step 80     \
 --geometry 1900x1000 \
 --zoom 100           \
 --scale-down         \
