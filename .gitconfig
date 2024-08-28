@@ -29,6 +29,8 @@
     mt = mergetool
 
     su = submodule update --recursive
+    sst = submodule status --recursive
+
     po = push -u origin HEAD
 
     df = !git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME
