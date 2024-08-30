@@ -168,9 +168,18 @@ fi
 # Start an ssh agent if not already running or forwarded
 [ -n "$SSH_AUTH_SOCK" ] || eval "$(ssh-agent -s)"
 
+# Some distributions (ubuntu) deliver fd as fdfind to avoid conflicts. 
+# For those alias fd to fdfind.
+if command -v fdfind &> /dev/null ; then 
+    alias fd fdfind
+fi
+
 # if fd is available, use it per default for fzf finds
 if command -v fd &> /dev/null ; then 
     export FZF_DEFAULT_COMMAND='fd --type f'
+fi
+if command -v fdfind &> /dev/null ; then 
+    export FZF_DEFAULT_COMMAND='fdfind --type f'
 fi
 
 function bin2hex() {
