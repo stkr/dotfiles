@@ -47,6 +47,7 @@ elif [ -f /mingw64/share/git/completion/git-completion.bash ]; then
 fi
 
 if [ -d ~/.bashrc.d/ ]; then
+    for f in ~/.bashrc.d/*.sh; do source "$f"; done
     for f in ~/.bashrc.d/*.bash; do source "$f"; done
 fi
 
