@@ -85,6 +85,10 @@ inoremap <C-j> <Down>
 inoremap <C-l> <Right>
 inoremap <C-h> <Left>
 
+" Support "cutting" (= deleting and yanking) of text.
+nnoremap xx dd
+nnoremap X D
+vnoremap x d
 
 " When pasting text over a selection, do keep the original text in the clipboard. Note, we have a
 " similar thing in .vimrc, however the vimrc variant is not supported by ideavim and hence we fall
