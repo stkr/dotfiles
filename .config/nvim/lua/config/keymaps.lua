@@ -198,11 +198,11 @@ vim.keymap.set('n', '<leader>nc', "cmd>cd %:p:h<cr>", { desc = "Change dir to cu
 
 -------------  Refactoring
 
-vim.keymap.set('n', '<leader>rf', function() vim.lsp.buf.format() end, { desc = "Format current file" })
+vim.keymap.set('n', '<leader>rf', function() require("conform").format() end, { desc = "Format current file" })
 vim.keymap.set('n', '<leader>rm', '<cmd>FzfLua lsp_code_actions<cr>', { desc = "Display code actions menu" })
 vim.keymap.set('n', '<leader>rr', function() vim.lsp.buf.rename() end, { desc = "Rename identifier under cursor" })
 
-vim.keymap.set('v', '<leader>rf', function() vim.lsp.buf.format() end, { desc = "Format selection" })
+vim.keymap.set('v', '<leader>rf', function() require("conform").format() end, { desc = "Format selection" })
 vim.keymap.set('v', '<leader>rm', '<cmd>FzfLua lsp_code_actions<cr>', { desc = "Display code actions menu" })
 
 vim.keymap.set('n', '<leader>sse', nmap_subst('\\', '\\\\'), { desc = "Escape slashes" })
