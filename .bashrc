@@ -172,7 +172,7 @@ fi
 # Some distributions (ubuntu) deliver fd as fdfind to avoid conflicts. 
 # For those alias fd to fdfind.
 if command -v fdfind &> /dev/null ; then 
-    alias fd fdfind
+    alias fd=fdfind
 fi
 
 # if fd is available, use it per default for fzf finds
