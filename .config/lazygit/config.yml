@@ -1,0 +1,9 @@
+customCommands:
+  - key: 'x'
+    context: 'files'
+    command: "rm {{.SelectedFile.Name | quote}}"
+    prompts: 
+    - type: 'confirm'
+      title: "Delete file"
+      body: 'Are you sure you want to delete {{.SelectedFile.Name | quote}}?'
+    
