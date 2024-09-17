@@ -6,4 +6,18 @@ customCommands:
     - type: 'confirm'
       title: "Delete file"
       body: 'Are you sure you want to delete {{.SelectedFile.Name | quote}}?'
+
+git:
+  commit:
+    signOff: true
+#   paging:
+#     colorArg: always
+#     pager: delta --dark --paging=never
+#     # externalDiffCommand: git diff --color=always
+keybinding:
+  universal:
+    return: h
+    goInto: l
+    prevBlock-alt: ""
+    nextBlock-alt: ""
     
