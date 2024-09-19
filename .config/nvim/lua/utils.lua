@@ -330,24 +330,11 @@ function utils.get_default_terminal_window()
 end
 
 function utils.run_in_terminal_split(cmd, opts)
-    if opts == nil then
-        vim.notify("ops is nil")
-        opts = {}
-    end
-    if opts['height'] == nil then
-        opts['height'] = 10
-    end
-    if opts['cmdopts'] == nil then
-        opts['cmdopts'] = { on_exit = function(_, _, _) vim.notify("on_exit_callback executed") end }
-    end
-    if opts['name'] == nil then
-        opts['name'] = cmd
-    end
 
     -- Save the handle of the currently active window in order to be able to
     -- restore the focus to that window at the end.
     local original_win = vim.api.nvim_get_current_win()
-    local target_win = get_default_terminal_window()
+    local target_win = utils.get_default_terminal_window()
 
     -- Create a new buffer for running the terminal command in.
     local target_buf = vim.api.nvim_create_buf(true, false)
@@ -360,8 +347,28 @@ function utils.run_in_terminal_split(cmd, opts)
     vim.api.nvim_set_current_win(target_win)
     vim.api.nvim_win_set_buf(target_win, target_buf)
 
+
+    if opts == nil then
+        vim.notify("ops is nil")
+        opts = {}
+    end
+    if opts['height'] == nil then
+        opts['height'] = 10
+    end
+    if opts['on_exit'] == nil then
+        opts['on_exit'] = function(_, _, _)
+            vim.notify("on_exit_callback executed")
+            vim.cmd("copen")
+            vim.cmd("cgetbuffer " .. target_buf)
+        end
+    end
+    if opts['name'] == nil then
+        opts['name'] = cmd
+    end
+
+
     -- Run cmd in the current buffer
-    vim.fn.termopen(cmd)
+    vim.fn.termopen(cmd, opts)
 
     -- Move the cursor to the end of the buffer. This is required to enable the
     -- "autoscrolling" behavior.
