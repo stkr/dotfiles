@@ -16,8 +16,9 @@ git:
 #     # externalDiffCommand: git diff --color=always
 keybinding:
   universal:
-    return: h
-    goInto: l
     prevBlock-alt: ""
     nextBlock-alt: ""
+  files:
+    commitChanges: C
+    commitChangesWithEditor: c
     
