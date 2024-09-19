@@ -254,6 +254,20 @@ vim.keymap.set('n', '<leader>tc', toggle_autocomplete, { desc = "Toggle (auto-)c
 vim.keymap.set('n', '<leader>to', "<cmd>Outline<cr>", { desc = "Toggle outline" })
 vim.keymap.set('n', '<leader>tt', "<cmd>NvimTreeFindFileToggle<cr>", { desc = "Toggle file tree" })
 vim.keymap.set('n', '<leader>tq', function() require("autosave").toggle() end, { desc = "Toggle autosave" })
+-- We also toggle terminals with toggleterm. For some of them we reserve a mapping 
+-- of terminal number to function, for others / most of them, we leave the definition 
+-- up to project configurations.
+vim.keymap.set('n', '<leader>t0', "<cmd>0ToggleTerm<cr>",            { desc = "Terminal 0" })
+vim.keymap.set('n', '<leader>t1', "<cmd>1ToggleTerm name=shell<cr>", { desc = "Terminal 1 shell" })
+vim.keymap.set('n', '<leader>t2', "<cmd>2ToggleTerm<cr>",            { desc = "Terminal 2" })
+vim.keymap.set('n', '<leader>t3', "<cmd>3ToggleTerm<cr>",            { desc = "Terminal 3" })
+vim.keymap.set('n', '<leader>t4', "<cmd>4ToggleTerm<cr>",            { desc = "Terminal 4" })
+vim.keymap.set('n', '<leader>t5', "<cmd>5ToggleTerm name=build<cr>", { desc = "Terminal 5 build" })
+vim.keymap.set('n', '<leader>t6', "<cmd>6ToggleTerm<cr>",            { desc = "Terminal 6" })
+vim.keymap.set('n', '<leader>t7', "<cmd>7ToggleTerm<cr>",            { desc = "Terminal 7" })
+vim.keymap.set('n', '<leader>t8', "<cmd>8ToggleTerm<cr>",            { desc = "Terminal 8" })
+vim.keymap.set('n', '<leader>t9', "<cmd>9ToggleTerm<cr>",            { desc = "Terminal 9" })
+
 
 
 -------------  Yanking
