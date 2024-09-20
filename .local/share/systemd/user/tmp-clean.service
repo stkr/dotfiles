@@ -1,0 +1,9 @@
+[Unit]
+Description=Cleanup of temporary directories
+[Service]
+Type=oneshot
+RemainAfterExit=true
+StandardOutput=journal
+ExecStart=/home/stefan/.local/bin/tmp-clean.sh
+[Install]
+WantedBy=default.target
