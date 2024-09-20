@@ -158,7 +158,12 @@ set -o vi
 
 # This must be after set -o vi (https://github.com/junegunn/fzf/issues/39)!
 if command -v fzf &> /dev/null ; then 
-    eval "$( fzf --bash )"
+    fzf_version=$( fzf --version )
+    major=$( echo $version | cut -d. -f1 )
+    minor=$( echo $version | cut -d. -f2 )
+    if [[ $major -gt 0 || $minor -gt 48 ]]; then
+        eval "$( fzf --bash )"
+    fi
 fi
 
 # Source the default cargo environment (only applies if rust is instlled on the machine).
