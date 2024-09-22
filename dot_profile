@@ -46,9 +46,9 @@ if [ -d "${home}/.local/info" ]; then
   infopath="${home}/.local/info:${infopath}"
 fi 
 
-#  make vim the default editor if it exists
-if command -v vim >/dev/null 2>&1; then
-    export VISUAL=vim
+#  make nvim the default editor if it exists
+if command -v nvim >/dev/null 2>&1; then
+    export VISUAL=nvim
     export EDITOR=$VISUAL
 fi
 
