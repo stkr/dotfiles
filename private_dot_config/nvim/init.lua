@@ -100,6 +100,11 @@ end
 -- Do not save and restore terminal windows/buffers
 vim.o.sessionoptions = "buffers,curdir,folds,tabpages"
 
+-- some useful abbreviations to insert generated values into the text while
+-- typing
+vim.cmd("iabbrev today() <c-r>=strftime(\"%Y-%m-%d\")<cr>")
+vim.cmd("iabbrev now() <c-r>=strftime(\"%Y-%m-%d %H:%M\")<cr>")
+
 -- If run from within tmux, nvim per default on yank does copy also to a tmux
 -- buffer. This a kind of shared clipboard between tmux panes. In addition,
 -- tmux has the feature that it can copy this buffer to the client. This would
