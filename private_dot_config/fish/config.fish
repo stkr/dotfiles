@@ -3,6 +3,7 @@ if status is-interactive
     alias np='nvim -S .session.vim'
     alias feh='feh --theme default'
     alias thumbs='feh --theme thumbnails'
+    alias cm='chezmoi'
 
     # Load the fzf keybindings. Note, this relies on key-bindings.fish being
     # installed in ~/.config/fish/functions!

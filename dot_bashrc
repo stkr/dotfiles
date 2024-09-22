@@ -188,6 +188,9 @@ if command -v fdfind &> /dev/null ; then
     export FZF_DEFAULT_COMMAND='fdfind --type f'
 fi
 
+# chezmoi alias
+alias cm=chezmoi
+
 function bin2hex() {
     xxd -g 1 "$1" > "$1.hex"
     echo "Hex dump written to $1.hex"
