@@ -39,8 +39,22 @@ bind-key -T copy-mode-vi 'y'               send -X copy-selection               
 bind-key -T copy-mode-vi C-c               send-keys -X cancel
 bind-key -T copy-mode-vi Escape            send-keys -X cancel
 
-set -g status-bg cyan
+{{ if eq .chezmoi.hostname "graz-pi3" }}
+set -g status-bg blue
 set -g status-fg colour255
+{{ else if eq .chezmoi.hostname "ardning-pi3" }}
+set -g status-bg green
+set -g status-fg colour255
+{{ else if eq .chezmoi.hostname "atlanta" }}
+set -g status-bg yellow
+set -g status-fg colour255
+{{ else if eq .chezmoi.hostname "asrock" }}
+set -g status-bg yellow
+set -g status-fg colour255
+{{ else }}
+set -g status-bg black
+set -g status-fg white
+{{ end }}
 
 # Display hostname in the statusline on the right
 set -g status-right '#[fg=white]#(hostname)'
