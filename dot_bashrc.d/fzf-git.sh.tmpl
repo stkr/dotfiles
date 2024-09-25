@@ -1,3 +1,4 @@
+{{- if not (lower .chezmoi.hostname | hasPrefix "vsv") }}
 # The MIT License (MIT)
 #
 # Copyright (c) 2024 Junegunn Choi
@@ -327,3 +328,4 @@ __fzf_git_init files branches tags remotes hashes stashes lreflogs each_ref work
 
 # -----------------------------------------------------------------------------
 fi
+{{- end }}
