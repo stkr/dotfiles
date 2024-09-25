@@ -57,8 +57,14 @@
 [push]
 	default = simple
 	autoSetupRemote = true
+{{ if lower .chezmoi.hostname | hasPrefix "nxl" }}
+[user]
+	name = Stefan Krug
+	email = stefan.krug@nxp.com
+{{ else }}
 [user]
 	name = stefan
 	email = stefan
+{{ end }} 
 [init]
 	defaultBranch = main
