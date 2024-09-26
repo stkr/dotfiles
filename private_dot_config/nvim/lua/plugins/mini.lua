@@ -1,7 +1,7 @@
 return
 {
         'echasnovski/mini.nvim',
-        version = "0.13.0",
+        version = "0.14.0",
         config = function()
             require("mini.basics").setup({
                 mappings = {
@@ -29,5 +29,6 @@ return
                 autoread = false,
                 file = ".session.vim",
             })
+            require("mini.icons").setup({})
         end
     }
