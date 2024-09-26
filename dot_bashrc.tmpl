@@ -156,6 +156,16 @@ set -o vi
 # fi
 #
 
+{{- if contains "nxdi.us-aus" .chezmoi.fqdnHostname }}
+# nxdi specific Tools Repoistory (TR) setup for Austin
+unset CADENV_HOME
+export EDA_ENV=TR
+export PATH="/pkg/fs-foundation-/dynamic/bin:${PATH}"
+if [ -f /home/$USER/.trpolicy ]; then
+    export TRPOLICYFILE="${HOME}/.trpolicy:${TRPOLICYFILE}"
+fi
+{{- end }}
+
 # This must be after set -o vi (https://github.com/junegunn/fzf/issues/39)!
 if command -v fzf &> /dev/null ; then 
     fzf_version=$( fzf --version )
