@@ -49,7 +49,7 @@ function s110 -d "Functions specific to s110 project"
         echo "    * init: Initialize the environment (incl. python venv)."
         echo "    * cd: Iniialize the environment and change to the      "
         echo "      source directory.                                    "
-        echo "    * edit: Initialize the environment and launch nvim in. "
+        echo "    * edit: Initialize the environment and launch nvim in  "
         echo "      the source directory.                                "
         echo "    * branch: Create a branch from the currently checked   "
         echo "      out commit. Takes an artifact number and a short     "
@@ -72,4 +72,9 @@ function s110 -d "Functions specific to s110 project"
     end
 end
 
-
+set -l s110_commands init cd edit branch
+complete -c s110 -f -s h -l help
+complete -c s110 -f -n "not __fish_seen_subcommand_from $s110_commands" -a "init" -d "Initialize the environment (incl. python venv)."
+complete -c s110 -f -n "not __fish_seen_subcommand_from $s110_commands" -a "cd" -d "Iniialize the environment and change to the source directory."
+complete -c s110 -f -n "not __fish_seen_subcommand_from $s110_commands" -a "edit" -d "Initialize the environment and launch nvim in the source directory."
+complete -c s110 -f -n "not __fish_seen_subcommand_from $s110_commands" -a "branch" -d "Create a branch from the currently checked out commit."
