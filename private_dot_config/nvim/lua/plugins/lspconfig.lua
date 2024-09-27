@@ -14,7 +14,7 @@ return
 
         -- ##################### generic server configuration ################
         --
-        local servers = { 'tsserver', 'gdscript' }
+        local servers = { 'gdscript' }
         for _, lsp in ipairs(servers) do
             lspconfig[lsp].setup {
                 on_attach = lsp_utils.on_attach,
