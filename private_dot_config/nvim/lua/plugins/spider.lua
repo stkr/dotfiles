@@ -7,9 +7,13 @@ return
         --   plugin’s motions as Ex-command. Calling `function()
         --   require("spider").motion("w") end` as third argument of the keymap do _not_
         --   support dot-repeatability.
-        { "w",  "<cmd>lua require('spider').motion('w')<CR>",  mode = { "n", "o", "x" }, desc = "Spider-w" },
-        { "e",  "<cmd>lua require('spider').motion('e')<CR>",  mode = { "n", "o", "x" }, desc = "Spider-e" },
-        { "b",  "<cmd>lua require('spider').motion('b')<CR>",  mode = { "n", "o", "x" }, desc = "Spider-b" },
-        { "ge", "<cmd>lua require('spider').motion('ge')<CR>", mode = { "n", "o", "x" }, desc = "Spider-ge" },
+        { "w",  "<cmd>lua require('spider').motion('w')<CR>",  mode = { "n", "o", "x" },
+                desc = "Next word (spider)" },
+        { "e",  "<cmd>lua require('spider').motion('e')<CR>",  mode = { "n", "o", "x" },
+                desc = "Next end of word (spider)" },
+        { "b",  "<cmd>lua require('spider').motion('b')<CR>",  mode = { "n", "o", "x" },
+                desc = "Prev word (spider)" },
+        { "ge", "<cmd>lua require('spider').motion('ge')<CR>", mode = { "n", "o", "x" },
+                desc = "Prev end of word (spider)" },
     },
 }
