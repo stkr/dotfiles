@@ -1,5 +1,5 @@
 function _s110_init
-    set -g -x JIRA_PROJECT "ELE"
+    set -g -x JIRA_PROJECT "ESE"
     set -g -x BASE_PATH "/home/$USER/projects/s110"
     source "$BASE_PATH/.venv/bin/activate.fish"
 end
