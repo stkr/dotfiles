@@ -56,15 +56,6 @@ return
             return
         end
 
-        -- This avoids jump marks being left over when (parts of) snippets 
-        -- are deleted. These manifest itself in that a <cr> in insert mode 
-        -- would jumpt to a remaining jump mark instead of inserting a newline.
-        -- https://github.com/L3MON4D3/LuaSnip/issues/116
-        luasnip.config.set_config({
-            region_check_events = "InsertEnter",
-            delete_check_events = "TextChanged,InsertLeave",
-        })
-
         cmp.setup({
             completion = {
                 completeopt = 'menu,menuone,preview',
@@ -119,7 +110,7 @@ return
             },
             snippet = {
                 expand = function(args)
-                    require('luasnip').lsp_expand(args.body)
+                    luasnip.lsp_expand(args.body)
                 end,
             },
             performance = {
@@ -129,6 +120,21 @@ return
             --     completion = cmp.config.window.bordered(),
             --     documentation = cmp.config.window.bordered(),
             -- },
+        })
+
+        -- Expand a snippet, go to normal mode without jumping into the snippet replacements, going back to insert and
+        -- pressing tab is causing it to jump to the previous snippet. This can be avoided.
+        -- Source: https://github.com/L3MON4D3/LuaSnip/issues/258
+        vim.api.nvim_create_autocmd('ModeChanged', {
+            pattern = '*',
+            callback = function()
+                if ((vim.v.event.old_mode == 's' and vim.v.event.new_mode == 'n') or vim.v.event.old_mode == 'i')
+                    and luasnip.session.current_nodes[vim.api.nvim_get_current_buf()]
+                    and not luasnip.session.jump_active
+                then
+                    luasnip.unlink_current()
+                end
+            end
         })
     end,
 }
