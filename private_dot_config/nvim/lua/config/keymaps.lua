@@ -195,7 +195,7 @@ vim.keymap.set('n', '<leader>fns',
     end, { desc = "Find note in category: s110" })
 
 vim.keymap.set('n', '<leader>fr', "<cmd>GrugFar<cr>", { desc = "Find with ripgrep" })
-vim.keymap.set('n', '<leader>fq', '<cmd>FzfLua quickfix<cr>', { desc = "Find quickfix history" })
+vim.keymap.set('n', '<leader>fq', '<cmd>FzfLua quickfix_stack<cr>', { desc = "Find quickfix history" })
 vim.keymap.set('n', '<leader>ft', '<cmd>FzfLua tags<cr>', { desc = "Find tag" })
 vim.keymap.set('n', '<leader>f:', '<cmd>FzfLua command_history<cr>', { desc = "Find in command history" })
 vim.keymap.set('n', '<leader>f*', '<cmd>FzfLua grep_cword<cr>', { desc = "Find word under cursor in files" })
