@@ -276,8 +276,6 @@ vim.keymap.set('v', '<leader>swe', vmap_subst('%s+$', ''), { desc = "Delete whit
 --- - `s` - |'spell'|.
 --- - `w` - |'wrap'|.
 vim.keymap.set('n', '<leader>tc', toggle_autocomplete, { desc = "Toggle (auto-)completion" })
-vim.keymap.set('n', '<leader>to', "<cmd>Outline<cr>", { desc = "Toggle outline" })
-vim.keymap.set('n', '<leader>tt', "<cmd>NvimTreeFindFileToggle<cr>", { desc = "Toggle file tree" })
 vim.keymap.set('n', '<leader>tq', function() require("autosave").toggle() end, { desc = "Toggle autosave" })
 -- We also toggle terminals with toggleterm. For some of them we reserve a mapping 
 -- of terminal number to function, for others / most of them, we leave the definition 
@@ -293,6 +291,11 @@ vim.keymap.set('n', '<leader>t7', "<cmd>7ToggleTerm<cr>",            { desc = "T
 vim.keymap.set('n', '<leader>t8', "<cmd>8ToggleTerm<cr>",            { desc = "Terminal 8" })
 vim.keymap.set('n', '<leader>t9', "<cmd>9ToggleTerm<cr>",            { desc = "Terminal 9" })
 
+-------------  Yanking
+
+vim.keymap.set('n', '<leader>wo', "<cmd>Outline<cr>", { desc = "Window toggle outline" })
+vim.keymap.set('n', '<leader>wt', "<cmd>NvimTreeFindFileToggle<cr>", { desc = "Window toggle file tree" })
+vim.keymap.set('n', '<leader>wl', "<cmd>OverseerToggle<cr>", { desc = "Window toggle overseer" })
 
 
 -------------  Yanking

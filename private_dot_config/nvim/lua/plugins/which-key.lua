@@ -27,6 +27,7 @@ return
                 { "<leader>ss",  group = "slashes" },
                 { "<leader>sw",  group = "whitespace" },
                 { "<leader>t",   group = "toggle" },
+                { "<leader>w",   group = "windows" },
                 { "<leader>y",   group = "yank" },
                 { "<leader>yf",  group = "file" },
             },
