@@ -3,7 +3,20 @@ function _s110_init
     set -g -x BASE_PATH "/home/$USER/projects/s110"
     set -g -x LLVM_BIN_PATH $BASE_PATH/src/riscv32-nxp-elf_0.7.2_cssi/bin
 
-    source "$BASE_PATH/.venv/bin/activate.fish"
+{{ if contains "nxdi.us-aus" .chezmoi.fqdnHostname }}
+    # from /home/mcu_zebu_scr1/stec.seco/setup_nxdi/setup.bash
+    set -g -x TRPOLICYFILE "/home/mcu_zebu_scr1/stec.seco/setup_nxdi/tr_policy"
+    set -g -x PATH "/home/mcu_zebu_scr1/stec.seco/setup_nxdi/bin:$PATH"
+
+    set -g -x LD_LIBRARY_PATH "/pkg/TWW-python-/3.9.13/x86_64-linux3.10-glibc2.17/lib"
+    set -g -x LD_LIBRARY_PATH "$LD_LIBRARY_PATH:/pkg/TWW-python-/3.9.13/x86_64-linux3.10-glibc2.17/lib"
+    set -g -x LD_LIBRARY_PATH "$LD_LIBRARY_PATH:/home/nxf51249/stec/external/lib64"
+    set -g -x LD_LIBRARY_PATH "$LD_LIBRARY_PATH:/pkg/OSS-openssl-/3.1.0/x86_64-linux/lib64"
+{{ end }}
+
+    if test -e "$BASE_PATH/.venv/bin/activate.fish"
+        source "$BASE_PATH/.venv/bin/activate.fish"
+    end
 end
 
 function _s110_cd

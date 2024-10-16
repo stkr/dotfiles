@@ -165,8 +165,10 @@ set -o vi
 unset CADENV_HOME
 export EDA_ENV=TR
 export PATH="/pkg/fs-foundation-/dynamic/bin:${PATH}"
-if [ -f /home/$USER/.trpolicy ]; then
-    export TRPOLICYFILE="${HOME}/.trpolicy:${TRPOLICYFILE}"
+if [ -z "$TRPOLICYFILE" ]; then
+    if [ -f ${HOME}/.trpolicy ]; then
+        export TRPOLICYFILE="${HOME}/.trpolicy"
+    fi
 fi
 {{- end }}
 
