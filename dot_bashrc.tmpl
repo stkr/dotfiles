@@ -233,6 +233,7 @@ function yt-dlp-music() {
     yt-dlp --format=bestaudio -x "$1"
 }
 
+{{- if not (eq (env "USER") "root") }}
 # We keep the user's shell to be bash (to get all the benefits of .bashrc and .profile etc.), but in
 # case of an interactive shell we drop to fish. 
 # This aproach is inspired by ArchWiki:
@@ -246,4 +247,5 @@ fi
 
 # Now we only do reach this point in case we did not exec to fish, so this applies ONLY in case of
 # remaining in bash!
+{{- end }}
 
