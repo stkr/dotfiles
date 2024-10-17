@@ -1,4 +1,4 @@
-function _s110_init
+function _s1xy_init
     set -g -x JIRA_PROJECT "ESE"
     set -g -x BASE_PATH "/home/$USER/projects/s1xy"
     set -g -x LLVM_BIN_PATH $BASE_PATH/src/riscv32-nxp-elf_0.7.2_cssi/bin
@@ -18,22 +18,22 @@ function _s110_init
     end
 end
 
-function _s110_cd
+function _s1xy_cd
     if test -z "$JIRA_PROJECT"
-        _s110_init
+        _s1xy_init
     end
 
     cd "$BASE_PATH/src/s1xy"
 end
 
-function _s110_edit
-    _s110_cd
+function _s1xy_edit
+    _s1xy_cd
     nvim -S .session.vim
 end
 
-function _s110_branch -a nr -a text
+function _s1xy_branch -a nr -a text
     if test -z "$JIRA_PROJECT"
-        _s110_init
+        _s1xy_init
     end
 
     if test (count $argv) -lt 2
@@ -48,9 +48,9 @@ function _s110_branch -a nr -a text
     git push --set-upstream origin "$branch"; or return
 end
 
-function _s110_bininfo -a objectfile
+function _s1xy_bininfo -a objectfile
     if test -z "$JIRA_PROJECT"
-        _s110_init
+        _s1xy_init
     end
 
     if test (count $argv) -lt 1
@@ -70,7 +70,7 @@ function _s110_bininfo -a objectfile
     echo "symbol table written to [$argv[1].sym]"
 end
 
-function s110 -d "Functions specific to s110 project"
+function s1xy -d "Functions specific to s1xy project"
     # We tell argparse about -h/--help and others -these are short and long
     # forms of the same option. The "--" here is mandatory, it tells it from
     # where to read the arguments.
@@ -79,7 +79,7 @@ function s110 -d "Functions specific to s110 project"
     # If -h or --help is given, we print a little help text and return
     if set -ql _flag_help || test (count $argv) -lt 1
         echo "Usage:                                                     "
-        echo "    s110 command                                           "
+        echo "    s1xy command                                           "
         echo "                                                           "
         echo "Valid commands:                                            "
         echo "    * init: Initialize the environment (incl. python venv)."
@@ -97,25 +97,25 @@ function s110 -d "Functions specific to s110 project"
 
     switch $argv[1]
         case init
-            _s110_init
+            _s1xy_init
         case cd
-            _s110_cd
+            _s1xy_cd
         case edit
-            _s110_edit
+            _s1xy_edit
         case branch
-            _s110_branch $argv[2..-1]
+            _s1xy_branch $argv[2..-1]
         case bininfo
-            _s110_bininfo $argv[2..-1]
+            _s1xy_bininfo $argv[2..-1]
         case '*'
             echo Unsupported command \"$argv[1]\"
             return 1
     end
 end
 
-set -l s110_commands init cd edit branch bininfo
-complete -c s110 -f -s h -l help
-complete -c s110 -f -n "not __fish_seen_subcommand_from $s110_commands" -a "init" -d "Initialize the environment (incl. python venv)."
-complete -c s110 -f -n "not __fish_seen_subcommand_from $s110_commands" -a "cd" -d "Iniialize the environment and change to the source directory."
-complete -c s110 -f -n "not __fish_seen_subcommand_from $s110_commands" -a "edit" -d "Initialize the environment and launch nvim in the source directory."
-complete -c s110 -f -n "not __fish_seen_subcommand_from $s110_commands" -a "branch" -d "Create a branch from the currently checked out commit."
-complete -c s110 -n "not __fish_seen_subcommand_from $s110_commands" -a "bininfo" --force-files -d "Extract disassembly and symbol file from binary."
+set -l s1xy_commands init cd edit branch bininfo
+complete -c s1xy -f -s h -l help
+complete -c s1xy -f -n "not __fish_seen_subcommand_from $s1xy_commands" -a "init" -d "Initialize the environment (incl. python venv)."
+complete -c s1xy -f -n "not __fish_seen_subcommand_from $s1xy_commands" -a "cd" -d "Iniialize the environment and change to the source directory."
+complete -c s1xy -f -n "not __fish_seen_subcommand_from $s1xy_commands" -a "edit" -d "Initialize the environment and launch nvim in the source directory."
+complete -c s1xy -f -n "not __fish_seen_subcommand_from $s1xy_commands" -a "branch" -d "Create a branch from the currently checked out commit."
+complete -c s1xy -n "not __fish_seen_subcommand_from $s1xy_commands" -a "bininfo" --force-files -d "Extract disassembly and symbol file from binary."
