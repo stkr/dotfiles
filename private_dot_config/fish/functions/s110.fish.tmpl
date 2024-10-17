@@ -1,6 +1,6 @@
 function _s110_init
     set -g -x JIRA_PROJECT "ESE"
-    set -g -x BASE_PATH "/home/$USER/projects/s110"
+    set -g -x BASE_PATH "/home/$USER/projects/s1xy"
     set -g -x LLVM_BIN_PATH $BASE_PATH/src/riscv32-nxp-elf_0.7.2_cssi/bin
 
 {{ if contains "nxdi.us-aus" .chezmoi.fqdnHostname }}
@@ -8,7 +8,6 @@ function _s110_init
     set -g -x TRPOLICYFILE "/home/mcu_zebu_scr1/stec.seco/setup_nxdi/tr_policy"
     set -g -x PATH "/home/mcu_zebu_scr1/stec.seco/setup_nxdi/bin:$PATH"
 
-    set -g -x LD_LIBRARY_PATH "/pkg/TWW-python-/3.9.13/x86_64-linux3.10-glibc2.17/lib"
     set -g -x LD_LIBRARY_PATH "$LD_LIBRARY_PATH:/pkg/TWW-python-/3.9.13/x86_64-linux3.10-glibc2.17/lib"
     set -g -x LD_LIBRARY_PATH "$LD_LIBRARY_PATH:/home/nxf51249/stec/external/lib64"
     set -g -x LD_LIBRARY_PATH "$LD_LIBRARY_PATH:/pkg/OSS-openssl-/3.1.0/x86_64-linux/lib64"
@@ -24,7 +23,7 @@ function _s110_cd
         _s110_init
     end
 
-    cd "$BASE_PATH/src/s400"
+    cd "$BASE_PATH/src/s1xy"
 end
 
 function _s110_edit
