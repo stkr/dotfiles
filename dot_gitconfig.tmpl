@@ -75,5 +75,12 @@
        required = true
        clean = git-lfs clean -- %f
 
+{{ if eq (lower .chezmoi.hostname) "nxl38689" }}
+[url "ssh://git@bitbucket.sw.nxp.com/mcucore/bifrost.git"]
+       insteadOf = https://github.com/nxp-zephyr/bifrost
+[includeif "gitdir:C:/LocalData/data/sdk-next/"]
+       path = C:/LocalData/data/sdk-next/bifrost/.gitconfig
+{{ end }}
+
 [credential]
        helper = manager-core
