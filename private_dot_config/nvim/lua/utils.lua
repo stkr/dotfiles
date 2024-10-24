@@ -330,7 +330,6 @@ function utils.get_default_terminal_window()
 end
 
 function utils.run_in_terminal_split(cmd, opts)
-
     -- Save the handle of the currently active window in order to be able to
     -- restore the focus to that window at the end.
     local original_win = vim.api.nvim_get_current_win()

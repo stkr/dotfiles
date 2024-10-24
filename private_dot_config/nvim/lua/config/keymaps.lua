@@ -122,7 +122,7 @@ vim.keymap.set('n', '<leader>cs', vim.lsp.buf.signature_help, { desc = "Display 
 
 
 -------------  Diffing files
--- Note, some of them are set from within gitsigns on_attach() method. 
+-- Note, some of them are set from within gitsigns on_attach() method.
 -- Please see lua/plugins/gitsigns.lua
 
 
@@ -167,8 +167,9 @@ vim.keymap.set('n', '<leader>ff', '<cmd>FzfLua files<cr>', { desc = "Find file" 
 vim.keymap.set('n', '<leader>fg', '<cmd>FzfLua live_grep<cr>', { desc = "Find in files" })
 vim.keymap.set('n', '<leader>fh', '<cmd>FzfLua oldfiles<cr>', { desc = "Find file history" })
 
-vim.keymap.set('n', '<leader>fni', 
-    function() require("telekasten").find_notes() 
+vim.keymap.set('n', '<leader>fni',
+    function()
+        require("telekasten").find_notes()
         local tk = require("telekasten")
         tk.chdir(tk.vaults['default'])
         tk.find_notes()
@@ -277,19 +278,19 @@ vim.keymap.set('v', '<leader>swe', vmap_subst('%s+$', ''), { desc = "Delete whit
 --- - `w` - |'wrap'|.
 vim.keymap.set('n', '<leader>tc', toggle_autocomplete, { desc = "Toggle (auto-)completion" })
 vim.keymap.set('n', '<leader>tq', function() require("autosave").toggle() end, { desc = "Toggle autosave" })
--- We also toggle terminals with toggleterm. For some of them we reserve a mapping 
--- of terminal number to function, for others / most of them, we leave the definition 
+-- We also toggle terminals with toggleterm. For some of them we reserve a mapping
+-- of terminal number to function, for others / most of them, we leave the definition
 -- up to project configurations.
-vim.keymap.set('n', '<leader>t0', "<cmd>0ToggleTerm<cr>",            { desc = "Terminal 0" })
+vim.keymap.set('n', '<leader>t0', "<cmd>0ToggleTerm<cr>", { desc = "Terminal 0" })
 vim.keymap.set('n', '<leader>t1', "<cmd>1ToggleTerm name=shell<cr>", { desc = "Terminal 1 shell" })
-vim.keymap.set('n', '<leader>t2', "<cmd>2ToggleTerm<cr>",            { desc = "Terminal 2" })
-vim.keymap.set('n', '<leader>t3', "<cmd>3ToggleTerm<cr>",            { desc = "Terminal 3" })
-vim.keymap.set('n', '<leader>t4', "<cmd>4ToggleTerm<cr>",            { desc = "Terminal 4" })
+vim.keymap.set('n', '<leader>t2', "<cmd>2ToggleTerm<cr>", { desc = "Terminal 2" })
+vim.keymap.set('n', '<leader>t3', "<cmd>3ToggleTerm<cr>", { desc = "Terminal 3" })
+vim.keymap.set('n', '<leader>t4', "<cmd>4ToggleTerm<cr>", { desc = "Terminal 4" })
 vim.keymap.set('n', '<leader>t5', "<cmd>5ToggleTerm name=build<cr>", { desc = "Terminal 5 build" })
-vim.keymap.set('n', '<leader>t6', "<cmd>6ToggleTerm<cr>",            { desc = "Terminal 6" })
-vim.keymap.set('n', '<leader>t7', "<cmd>7ToggleTerm<cr>",            { desc = "Terminal 7" })
-vim.keymap.set('n', '<leader>t8', "<cmd>8ToggleTerm<cr>",            { desc = "Terminal 8" })
-vim.keymap.set('n', '<leader>t9', "<cmd>9ToggleTerm<cr>",            { desc = "Terminal 9" })
+vim.keymap.set('n', '<leader>t6', "<cmd>6ToggleTerm<cr>", { desc = "Terminal 6" })
+vim.keymap.set('n', '<leader>t7', "<cmd>7ToggleTerm<cr>", { desc = "Terminal 7" })
+vim.keymap.set('n', '<leader>t8', "<cmd>8ToggleTerm<cr>", { desc = "Terminal 8" })
+vim.keymap.set('n', '<leader>t9', "<cmd>9ToggleTerm<cr>", { desc = "Terminal 9" })
 
 -------------  Yanking
 
