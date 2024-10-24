@@ -247,6 +247,17 @@ function utils.dotrepeat_create_callback_on_selection_func(func)
     end
 end
 
+function utils.concat(table_a, table_b)
+    local result = {}
+    for _, v in ipairs(table_a) do
+        table.insert(result, v)
+    end
+    for _, v in ipairs(table_b) do
+        table.insert(result, v)
+    end
+    return result
+end
+
 function utils.deep_copy(original)
     local copy = {}
     for k, v in pairs(original) do
