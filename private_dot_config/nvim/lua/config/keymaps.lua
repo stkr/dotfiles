@@ -271,13 +271,13 @@ end
 vim.keymap.set('n', 'co', function() _choose_and_move_on({ "ours" }) end,
     { desc = "Resolve conflict using ours" })
 
-vim.keymap.set('n', 'ct', function() _choose_and_move_on({"theirs"}) end, 
+vim.keymap.set('n', 'ct', function() _choose_and_move_on({ "theirs" }) end,
     { desc = "Resolve conflict using theirs" })
 
-vim.keymap.set('n', 'cb', function() _choose_and_move_on({"theirs", "ours"}) end,
+vim.keymap.set('n', 'cb', function() _choose_and_move_on({ "theirs", "ours" }) end,
     { desc = "Resolve conflict using both (theirs first)" })
 
-vim.keymap.set('n', 'c0', function() _choose_and_move_on({"none"}) end,
+vim.keymap.set('n', 'c0', function() _choose_and_move_on({ "none" }) end,
     { desc = "Resolve conflict using none" })
 
 -------------  Toggle
