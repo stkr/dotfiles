@@ -11,25 +11,12 @@ return {
         end
         return {
             cmd = cmd,
+            name = string.match(file, "[^/]*$"),
             components = {
-                "default",
+                "on_output_summarize",
+                "on_exit_set_status",
                 "unique",
-                -- { "on_output_quickfix", open = true },
-                -- "on_result_diagnostics",
-                -- "default",
             },
-            -- strategy = {
-            --     "toggleterm",
-            --     direction = "horizontal",
-            --     open_on_start = true,
-            --     close_on_exit = false,
-            --     quit_on_exit = "never",
-            --     hidden = false,
-            --     on_create = function()
-            --         vim.notify("toggleterm opened")
-            --     end,
-            -- },
-
         }
     end,
     condition = {

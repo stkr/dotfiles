@@ -214,8 +214,15 @@ vim.keymap.set('n', '<leader>gh', "<cmd>ClangdSwitchSourceHeader<cr>", { desc = 
 -------------  Launcing things
 
 vim.keymap.set('n', '<leader>lt', '<cmd>:PlenaryBustedFile %<cr>', { desc = "Launch tests in current file" })
-vim.keymap.set('n', '<leader>lf', '<cmd>:OverseerRun run\\ script<cr>', { desc = "Launch current file" })
-
+vim.keymap.set('n', '<leader>lf', '<cmd>:w<cr><bar>:OverseerOpen<cr><bar>:OverseerRun run\\ script<cr>',
+    { desc = "Launch current file" })
+vim.keymap.set('n', '<leader>lf', function()
+        local overseer = require("overseer")
+        vim.api.nvim_cmd({cmd = "write"}, {})
+        overseer.run_template({name = "run script"})
+        overseer.open({enter = false})
+    end,
+    { desc = "Launch current file" })
 
 -------------  Navigation
 
