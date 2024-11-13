@@ -218,9 +218,9 @@ vim.keymap.set('n', '<leader>lf', '<cmd>:w<cr><bar>:OverseerOpen<cr><bar>:Overse
     { desc = "Launch current file" })
 vim.keymap.set('n', '<leader>lf', function()
         local overseer = require("overseer")
-        vim.api.nvim_cmd({cmd = "write"}, {})
-        overseer.run_template({name = "run script"})
-        overseer.open({enter = false})
+        vim.api.nvim_cmd({ cmd = "write" }, {})
+        overseer.run_template({ name = "run script" })
+        overseer.open({ enter = false })
     end,
     { desc = "Launch current file" })
 
