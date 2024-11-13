@@ -1,6 +1,37 @@
 local hexstr = {}
 local utils = require("utils")
 
+function hexstr.extract(str)
+    local result = ""
+    local i = nil
+    i = 1
+    while true do
+        i = string.find(str, "%x%x", i) -- find next byte
+        if i == nil then break end
+        result = result .. string.sub(str, i, i + 1)
+        i = i + 2
+    end
+    return result
+end
+
+-- function hexstr.extract_tests()
+--     local testdata = {
+--         { "test",                    "" },
+--         { "01020304",                "01020304" },
+--         { "0x01020304",              "01020304" },
+--         { "word 0x01020304, asxfrs", "01020304" },
+--     }
+--
+--     for _, t in ipairs(testdata) do
+--         local str, ex_str = table.unpack(t)
+--         io.write("### testing for [" .. str .. "]\n")
+--         local found_str = hexstr.extract(str)
+--         if ex_str ~= found_str then
+--             io.write("fail for [" .. str .. "]: str: [" .. found_str .. "], [" .. ex_str .. "]\n")
+--         end
+--     end
+-- end
+
 local function last_hexchar_pos(str, pos)
     local i_end = str:find("[^%x]", pos)
     if i_end == nil then
@@ -69,24 +100,32 @@ end
 --     end
 -- end
 
-function hexstr.swap(str, width)
-    if width ~= 2 and width ~= 4 and width ~= 8 then
-        utils.warn("Invalid width " .. width .. ".")
+function hexstr.swap(str, byte_width)
+    if byte_width ~= 2 and byte_width ~= 4 and byte_width ~= 8 then
+        utils.warn("Invalid width " .. byte_width .. ".")
         return str
     end
-    if (str:len() % width) ~= 0 then
-        utils.warn("Hexstr [" .. str .. "] has length " .. str:len() .. ", which is no multiple of " .. width .. ".")
+    if string.len(str) % 2 ~= 0 then
+        utils.warn("Hexstr [" .. str .. "] has odd length.")
         return str
     end
-
+    local byte_len = string.len(str) / 2
+    if byte_len < byte_width then
+        utils.warn("Hexstr [" .. str .. "] has " .. byte_len .. " bytes, which smaller than " .. byte_width .. " bytes.")
+        return str
+    end
+    if (byte_len % byte_width) ~= 0 then
+        utils.warn("Hexstr [" .. str .. "] has " .. byte_len .. ", which is no multiple of " .. byte_width .. " bytes.")
+        return str
+    end
     local result = ""
     local pos = 1
-    while pos < str:len() do
-        for byte_nr = 1, width do
-            local byte_idx = pos + 2 * (width - byte_nr)
-            result = result .. str:sub(byte_idx, byte_idx + 1)
+    while pos < string.len(str) do
+        for byte_nr = 1, byte_width do
+            local byte_idx = pos + 2 * (byte_width - byte_nr)
+            result = result .. string.sub(str, byte_idx, byte_idx + 1)
         end
-        pos = pos + 2 * width
+        pos = pos + 2 * byte_width
     end
     return result
 end
@@ -110,5 +149,61 @@ end
 --         end
 --     end
 -- end
+
+function hexstr.split(str, byte_width)
+    local str_width = byte_width * 2
+    if string.len(str) % 2 ~= 0 then
+        utils.warn("Hexstr [" .. str .. "] has odd length.")
+        return str
+    end
+    local byte_len = string.len(str) / 2
+    if byte_len < byte_width then
+        utils.warn("Hexstr [" .. str .. "] has " .. byte_len .. " bytes, which smaller than " .. byte_width .. " bytes.")
+        return str
+    end
+    if (byte_len % byte_width) ~= 0 then
+        utils.warn("Hexstr [" .. str .. "] has " .. byte_len .. ", which is no multiple of " .. byte_width .. " bytes.")
+        return str
+    end
+    local result = ""
+    local pos = 1
+    while pos <= string.len(str) do
+        result = result .. string.sub(str, pos, pos + str_width - 1) .. " "
+        pos = pos + str_width
+    end
+    result = string.sub(result, 1, string.len(result) - 1)
+    return result
+end
+
+-- function hexstr.split_tests()
+--     local testdata = {
+--         { "0102", 1, "01 02" },
+--         { "01020304", 2, "0102 0304" },
+--         { "01020304", 4, "01020304" },
+--         { "0102030411121314", 1, "01 02 03 04 11 12 13 14" },
+--         { "0102030411121314", 4, "01020304 11121314" },
+--     }
+--
+--     for _, t in ipairs(testdata) do
+--         local str, width, ex_split = table.unpack(t)
+--         io.write("### testing for [" .. str .. "]" .. "(" .. width .. ")\n")
+--         local split = hexstr.split(str, width)
+--         if ex_split ~= split then
+--             io.write("fail for [" .. str .. "]" .. "(" .. width .. "): split: " ..
+--                 split .. ", but expected: " .. ex_split .. "\n")
+--         end
+--     end
+-- end
+
+
+function hexstr.find_and_modify(line, col, callback)
+    local s, e = hexstr.find_around(line, col)
+    if (s < 1) then
+        return 0, 0, nil
+    end
+    local str = string.sub(line, s, e)
+    local modified = callback(str)
+    return s, e, modified
+end
 
 return hexstr

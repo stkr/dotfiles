@@ -173,9 +173,13 @@ function utils.current_line_subst_callback(func)
     -- nvim_buf_get_lines uses 0-based indexing. We need to
     -- compensate for that difference.
     local line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1]
-    local s, e, replacement = func(line, col)
+    local s, e, replacement, whole_line = func(line, col)
     if replacement ~= nil then
-        line = line:sub(1, s - 1) .. replacement .. line:sub(e + 1, line:len())
+        if whole_line ~= nil then
+            line = replacement
+        else
+            line = line:sub(1, s - 1) .. replacement .. line:sub(e + 1, line:len())
+        end
         vim.api.nvim_buf_set_lines(0, row - 1, row, false, { line })
     end
 end

@@ -53,29 +53,28 @@ local function vmap_subst(pat, repl)
     return utils.dotrepeat_create_callback_on_selection_func(func)
 end
 
-function mh_extract_hex()
-    vim.api.nvim_exec([[
-          function s:mh_extract_hex_vimscript()
-              let @a=""
-              s/[0-9a-fA-F][0-9a-fA-F]/\=setreg('A', submatch(0), 'c')/g
-              normal d$
-              normal "ap
-          endfunction
-          call s:mh_extract_hex_vimscript()
-      ]], false)
+local function hexstring_extract()
+    local hexstr = require("hexstr")
+    utils.current_line_subst_callback(
+        function(line, _)
+            return 1, 1, hexstr.extract(line), true
+        end)
+    utils.dotrepeat_set_func(hexstring_extract)
 end
 
 local function hexstring_swap(width)
+    local hexstr = require("hexstr")
     utils.current_line_subst_callback(
         function(line, col)
-            local hexstr = require("hexstr")
-            local s, e = hexstr.find_around(line, col)
-            if (s < 1) then
-                return 0, 0, nil
-            end
-            local str = line:sub(s, e)
-            local swapped = hexstr.swap(str, width)
-            return s, e, swapped
+            return hexstr.find_and_modify(line, col, function(str) return hexstr.swap(str, width) end)
+        end)
+end
+
+local function hexstring_split(width)
+    local hexstr = require("hexstr")
+    utils.current_line_subst_callback(
+        function(line, col)
+            return hexstr.find_and_modify(line, col, function(str) return hexstr.split(str, width) end)
         end)
 end
 
@@ -92,6 +91,26 @@ end
 local function hexstring_swap_8()
     hexstring_swap(8)
     utils.dotrepeat_set_func(hexstring_swap_8)
+end
+
+local function hexstring_split_1()
+    hexstring_split(1)
+    utils.dotrepeat_set_func(hexstring_split_1)
+end
+
+local function hexstring_split_2()
+    hexstring_split(2)
+    utils.dotrepeat_set_func(hexstring_split_2)
+end
+
+local function hexstring_split_4()
+    hexstring_split(4)
+    utils.dotrepeat_set_func(hexstring_split_4)
+end
+
+local function hexstring_split_8()
+    hexstring_split(8)
+    utils.dotrepeat_set_func(hexstring_split_8)
 end
 
 
@@ -246,12 +265,16 @@ vim.keymap.set('n', '<leader>shc', nmap_subst('(%x%x)', '0x%1, '),
     { desc = "Convert hex number to c-style array of bytes" })
 vim.keymap.set('n', '<leader>shj', nmap_subst('(%x%x)', '(byte) 0x%1, '),
     { desc = "Convert hex number to java array of bytes" })
-vim.keymap.set('n', '<leader>shs', nmap_subst('(%x%x)', '%1 '),
-    { desc = "Convert hex number to space separated bytes" })
-vim.keymap.set('n', '<leader>shx', [[<cmd>lua mh_extract_hex()<cr>]], { desc = "extract hex" })
+
+vim.keymap.set('n', '<leader>shx', hexstring_extract, { desc = "extract hex" })
 vim.keymap.set('n', '<leader>sh2', hexstring_swap_2, { desc = "Swap 2 bytes" })
 vim.keymap.set('n', '<leader>sh4', hexstring_swap_4, { desc = "Swap 4 bytes" })
 vim.keymap.set('n', '<leader>sh8', hexstring_swap_8, { desc = "Swap 8 bytes" })
+
+vim.keymap.set('n', '<leader>shs1', hexstring_split_1, { desc = "Split after every 1 byte" })
+vim.keymap.set('n', '<leader>shs2', hexstring_split_2, { desc = "Split after every 2 bytes" })
+vim.keymap.set('n', '<leader>shs4', hexstring_split_4, { desc = "Split after every 4 bytes" })
+vim.keymap.set('n', '<leader>shs8', hexstring_split_8, { desc = "Split after every 8 bytes" })
 
 vim.keymap.set('n', '<leader>swe', nmap_subst('%s+$', ''), { desc = "Delete whitespace before eol" })
 vim.keymap.set('n', '<leader>swu', "<cmd>set ff=unix<cr>", { desc = "Set file format to unix (eol)" })
@@ -358,3 +381,5 @@ vim.keymap.set('n', '<leader>.', "<cmd>e#<cr>", { desc = "Edit alternate/most re
 vim.keymap.set('n', '<leader>,', "<cmd>w<cr>", { desc = "Save file" })
 
 vim.keymap.set('t', "<esc><esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+
+
