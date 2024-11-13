@@ -165,7 +165,7 @@ function utils.callback_on_line(func)
 end
 
 function utils.current_line_subst_callback(func)
-    local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+    local row, col = table.unpack(vim.api.nvim_win_get_cursor(0))
     -- get_cursor is "mark-like" indexed (1-based lines, 0-based columns).
     -- lua in general is using 1-based indexing, so we keep row & col
     -- consistent to use 1-based indexing.

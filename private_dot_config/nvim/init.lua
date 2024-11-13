@@ -19,6 +19,11 @@ end
 local utils = require("utils")
 local version = vim.version()
 
+-- unpack() is deprecated in favor of table.unpack()
+-- https://github.com/neovim/neovim/issues/30928
+-- https://github.com/hrsh7th/nvim-cmp/issues/1017
+table.unpack = table.unpack or unpack -- 5.1 compatibility
+
 --#region helper functions
 --#endregion
 
