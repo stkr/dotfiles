@@ -170,9 +170,9 @@ end, { desc = "Create new note in category: rfinch" })
 
 vim.keymap.set('n', '<leader>enns', function()
     local tk = require("telekasten")
-    tk.chdir(tk.vaults['s110'])
+    tk.chdir(tk.vaults['s1xy'])
     tk.new_note()
-end, { desc = "Create new note in category: s110" })
+end, { desc = "Create new note in category: s1xz" })
 
 vim.keymap.set('n', '<leader>enf', function() require("telekasten").find_notes() end, { desc = "Find note", })
 vim.keymap.set('n', '<leader>ev', "<cmd>:e ~/.vim/vimrc<cr>", { desc = "Edit ~/.vim/vimrc" })
@@ -210,9 +210,9 @@ vim.keymap.set('n', '<leader>fnr',
 vim.keymap.set('n', '<leader>fns',
     function()
         local tk = require("telekasten")
-        tk.chdir(tk.vaults['s110'])
+        tk.chdir(tk.vaults['s1xy'])
         tk.find_notes()
-    end, { desc = "Find note in category: s110" })
+    end, { desc = "Find note in category: s1xy" })
 
 vim.keymap.set('n', '<leader>fr', "<cmd>GrugFar<cr>", { desc = "Find with ripgrep" })
 vim.keymap.set('n', '<leader>fq', '<cmd>FzfLua quickfix_stack<cr>', { desc = "Find quickfix history" })
