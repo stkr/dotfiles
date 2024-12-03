@@ -162,6 +162,7 @@ vim.keymap.set('n', '<leader>ennp', function()
     tk.new_note()
 end, { desc = "Create new note in category: private" })
 
+{{ if lower .chezmoi.hostname | hasPrefix "nxl" }}
 vim.keymap.set('n', '<leader>ennr', function()
     local tk = require("telekasten")
     tk.chdir(tk.vaults['rfinch'])
@@ -173,6 +174,7 @@ vim.keymap.set('n', '<leader>enns', function()
     tk.chdir(tk.vaults['s1xy'])
     tk.new_note()
 end, { desc = "Create new note in category: s1xz" })
+{{ endif }}
 
 vim.keymap.set('n', '<leader>enf', function() require("telekasten").find_notes() end, { desc = "Find note", })
 vim.keymap.set('n', '<leader>ev', "<cmd>:e ~/.vim/vimrc<cr>", { desc = "Edit ~/.vim/vimrc" })
@@ -200,6 +202,7 @@ vim.keymap.set('n', '<leader>fnp',
         tk.find_notes()
     end, { desc = "Find note in category: private" })
 
+{{ if lower .chezmoi.hostname | hasPrefix "nxl" }}
 vim.keymap.set('n', '<leader>fnr',
     function()
         local tk = require("telekasten")
@@ -213,6 +216,7 @@ vim.keymap.set('n', '<leader>fns',
         tk.chdir(tk.vaults['s1xy'])
         tk.find_notes()
     end, { desc = "Find note in category: s1xy" })
+{{ endif }}
 
 vim.keymap.set('n', '<leader>fr', "<cmd>GrugFar<cr>", { desc = "Find with ripgrep" })
 vim.keymap.set('n', '<leader>fq', '<cmd>FzfLua quickfix_stack<cr>', { desc = "Find quickfix history" })
