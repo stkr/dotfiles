@@ -34,6 +34,7 @@ local palette = require("catppuccin.palettes").get_palette("latte")
 return
 {
     'nvim-lualine/lualine.nvim',
+    commit = "2a5bae925481f999263d6f5ed8361baef8df4f83",
     opts = {
         options = {
             icons_enabled = true,

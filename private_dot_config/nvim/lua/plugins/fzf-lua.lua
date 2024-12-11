@@ -1,8 +1,8 @@
 return
 {
     "ibhagwan/fzf-lua",
-    version = "5565f4bfe304df30c35962a982f14d8de1043336",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    commit = "b7e4d478d0ba4cb8495a7b249fe53cf4613072cf",
+    dependencies = { "echasnovski/mini.nvim" },
     cmd = "FzfLua",
     opts = {
         defaults   = {

@@ -1,6 +1,7 @@
 return
 {
     "stevearc/overseer.nvim",
+    version = "1.x",
     config = function()
         require('overseer').setup({
             -- strategy = {

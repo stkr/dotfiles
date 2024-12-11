@@ -2,6 +2,7 @@ return
 {
     -- Improved word navigation
     "chrisgrieser/nvim-spider",
+    commit = "8b9dc30",
     keys = {
         -- **Note** Note that for dot-repeat to work properly, you have to call this
         --   plugin’s motions as Ex-command. Calling `function()
