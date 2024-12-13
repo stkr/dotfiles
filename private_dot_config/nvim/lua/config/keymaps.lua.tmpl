@@ -330,7 +330,10 @@ vim.keymap.set('n', 'c0', function() _choose_and_move_on({ "none" }) end,
 --- - `w` - |'wrap'|.
 vim.keymap.set('n', '<leader>tc', toggle_autocomplete, { desc = "Toggle (auto-)completion" })
 vim.keymap.set('n', '<leader>tq', function() require("autosave").toggle() end, { desc = "Toggle autosave" })
-vim.keymap.set('n', '<leader>ty', function() require("copyright-updater").toggle() end, { desc = "Toggle auto update of copyright year" })
+vim.keymap.set('n', '<leader>ty', function() require("copyright-updater").toggle() end,
+    { desc = "Toggle auto update of copyright year" })
+
+
 
 -------------  Yanking
 
@@ -386,5 +389,3 @@ vim.keymap.set('n', '<leader>.', "<cmd>e#<cr>", { desc = "Edit alternate/most re
 vim.keymap.set('n', '<leader>,', "<cmd>w<cr>", { desc = "Save file" })
 
 vim.keymap.set('t', "<esc><esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-
-
