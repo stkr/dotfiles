@@ -64,7 +64,7 @@ function _ele_bininfo -a objectfile
         return 1
     end
 
-    $objdump --disassemble $argv[1] > "$argv[1].dis"; or return
+    $objdump --disassemble --line-numbers --source $argv[1] > "$argv[1].dis"; or return
     echo "disassembly written to [$argv[1].dis]"
     $objdump --syms "$argv[1]" | sort > "$argv[1].sym"; or return
     echo "symbol table written to [$argv[1].sym]"
