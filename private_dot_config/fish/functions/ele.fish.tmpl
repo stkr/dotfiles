@@ -64,7 +64,19 @@ function _ele_bininfo -a objectfile
         return 1
     end
 
-    $objdump --disassemble --line-numbers --source $argv[1] > "$argv[1].dis"; or return
+    # To check whether this is a bamboo build, we do try to disassemble main and capture warnings.
+    set -l prefix_arg ""
+    set -l bamboo_warning ($objdump --disassemble-symbols=main --source $argv[1] &| grep -o "failed to find source.*" | grep bamboo -m 1 | string trim)
+    if test -n "$bamboo_warning"
+        set prefix_path (string match -g -r '(/.*)/s1xy/' $bamboo_warning)
+        set -l prefix_strip (string split '/' "$prefix_path" | count)
+        set prefix_arg --prefix ./ --prefix-strip $prefix_strip
+        echo "Detected CI binary, using source from cwd instead ($prefix_arg)."
+        echo "Make sure the checked-out code matches the build exactly!"
+    end
+
+    # $objdump --disassemble --line-numbers --source --prefix ./ --prefix-strip 7 $argv[1] > "$argv[1].dis"; or return
+    $objdump --disassemble --line-numbers --source $prefix_arg $argv[1] > "$argv[1].dis"; or return
     echo "disassembly written to [$argv[1].dis]"
     $objdump --syms "$argv[1]" | sort > "$argv[1].sym"; or return
     echo "symbol table written to [$argv[1].sym]"
