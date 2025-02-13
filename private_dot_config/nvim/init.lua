@@ -176,10 +176,10 @@ vim.o.virtualedit = "block,onemore"
 -- Detect when a file is changed
 vim.o.autoread = true
 
--- Use treesitter for folding
-vim.o.foldmethod = 'expr'
-vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
-vim.o.foldenable = false
+-- -- Use indentation for folding
+vim.o.foldmethod = 'indent'
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
 
 -- Make marks always go to the marked column
 vim.keymap.set('n', "'", "`")
