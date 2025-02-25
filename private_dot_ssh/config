@@ -32,5 +32,5 @@ Host *.skobeloff.eu
     ForwardAgent yes
 
 Host zebu
-    Hostname vsv010001.nxdi.us-aus01.nxp.com
+    Hostname vsv0180001.nxdi.us-aus01.nxp.com
     ForwardAgent yes
