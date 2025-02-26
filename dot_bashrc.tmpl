@@ -175,8 +175,8 @@ fi
 # This must be after set -o vi (https://github.com/junegunn/fzf/issues/39)!
 if command -v fzf &> /dev/null ; then 
     fzf_version=$( fzf --version )
-    major=$( echo $version | cut -d. -f1 )
-    minor=$( echo $version | cut -d. -f2 )
+    major=$( echo $fzf_version | cut -d. -f1 )
+    minor=$( echo $fzf_version | cut -d. -f2 )
     if [[ $major -gt 0 || $minor -gt 48 ]]; then
         eval "$( fzf --bash )"
     fi
