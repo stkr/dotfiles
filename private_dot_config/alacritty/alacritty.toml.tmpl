@@ -1,4 +1,9 @@
 
+{{- if not (contains "nxdi.kr-aws" .chezmoi.fqdnHostname) }}
+[general]
+{{- end }}
+import = ['~/.config/alacritty/themes/one_half_light.toml']
+
 [env]
 TERM = "alacritty"
 
@@ -15,6 +20,3 @@ family = "JetBrainsMono Nerd Font"
 [font.offset]
 x = 1
 y = 1
-
-[general]
-import = ['~/.config/alacritty/themes/one_half_light.toml']
