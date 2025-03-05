@@ -1,0 +1,4 @@
+README.md
+{{ if not (contains "nxdi.kr-aws" .chezmoi.fqdnHostname) }}
+.tcshrc.user
+{{ end }}
