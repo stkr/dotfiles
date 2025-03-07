@@ -261,9 +261,12 @@ vim.keymap.set('n', '<leader>rr', function() vim.lsp.buf.rename() end, { desc = 
 vim.keymap.set('v', '<leader>rf', function() require("conform").format() end, { desc = "Format selection" })
 vim.keymap.set('v', '<leader>rm', '<cmd>FzfLua lsp_code_actions<cr>', { desc = "Display code actions menu" })
 
-vim.keymap.set('n', '<leader>sse', nmap_subst('\\', '\\\\'), { desc = "Escape slashes" })
-vim.keymap.set('n', '<leader>ssu', nmap_subst('\\', '/'), { desc = "Convert slashes to unix format" })
-vim.keymap.set('n', '<leader>ssw', nmap_subst('/', '\\'), { desc = "Convert slashes to windows format" })
+
+vim.keymap.set('n', '<leader>spe', nmap_subst('\\', '\\\\'), { desc = "Escape slashes" })
+vim.keymap.set('n', '<leader>spu', nmap_subst('\\', '/'), { desc = "Convert slashes to unix format" })
+vim.keymap.set('n', '<leader>spw', nmap_subst('/', '\\'), { desc = "Convert slashes to windows format" })
+
+vim.keymap.set('n', '<leader>ss', function() require("rip-substitute").sub() end, { desc = "Substitute with ripgrep", })
 
 vim.keymap.set('n', '<leader>shc', nmap_subst('(%x%x)', '0x%1, '),
     { desc = "Convert hex number to c-style array of bytes" })
@@ -284,8 +287,11 @@ vim.keymap.set('n', '<leader>swe', nmap_subst('%s+$', ''), { desc = "Delete whit
 vim.keymap.set('n', '<leader>swu', "<cmd>set ff=unix<cr>", { desc = "Set file format to unix (eol)" })
 vim.keymap.set('n', '<leader>sww', "<cmd>set ff=dos<cr>", { desc = "Set file format to dos/windows (eol)" })
 
-vim.keymap.set('v', '<leader>ssu', vmap_subst('\\', '/'), { desc = "Convert slashes to unix format" })
-vim.keymap.set('v', '<leader>ssw', vmap_subst('/', '\\'), { desc = "Convert slashes to windows format" })
+vim.keymap.set('v', '<leader>spu', vmap_subst('\\', '/'), { desc = "Convert slashes to unix format" })
+vim.keymap.set('v', '<leader>spw', vmap_subst('/', '\\'), { desc = "Convert slashes to windows format" })
+
+vim.keymap.set('x', '<leader>ss', function() require("rip-substitute").sub() end, { desc = "Substitute with ripgrep", })
+
 vim.keymap.set('v', '<leader>shc', vmap_subst('(%x%x)', '0x%1, '),
     { desc = "Convert hex number to c-style array of bytes" })
 vim.keymap.set('v', '<leader>shj', vmap_subst('(%x%x)', '(byte) 0x%1, '),
