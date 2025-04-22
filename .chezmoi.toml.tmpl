@@ -1,0 +1,20 @@
+{{/* boolean feature tags */}}
+{{- $work := false -}}{{/* true if this machine is a work machine */}}
+{{- $nxdi := false -}}{{/* true if this machine is a nxdi machine */}}
+{{- $offline := false -}}{{/* true if this machine has no internet connection */}}
+
+
+{{- if contains "nxdi" .chezmoi.fqdnHostname -}}
+{{-     $work = true -}}
+{{-     $nxdi = true -}}
+{{- end -}}
+
+{{- if contains "nxdi.kr-aws" .chezmoi.fqdnHostname -}}
+{{-     $offline = true -}}
+{{- end -}}
+
+[data]
+    work = {{ $work }}
+    nxdi = {{ $nxdi }}
+    offline = {{ $offline }}
+
