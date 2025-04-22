@@ -36,7 +36,7 @@
     df = !git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME
 
     unstage = restore --staged .
-    delete-nontracking-branches = "! git branch --list --format \"%(if:equals=[gone])%(upstream:track)%(then)%(refname:short)%(end)\" | sed '/^$/d' | xargs git branch -d "
+    delete-nontracking-branches = "! git branch --list --format \"%(if:equals=[gone])%(upstream:track)%(then)%(refname:short)%(end)\" | sed '/^$/d' | xargs git branch -D "
     sync = "!f() { git checkout --quiet --detach; git fetch origin $1:$1; git checkout --quiet -; }; f"
 
 [difftool "gvim"]
