@@ -1,5 +1,5 @@
 local function lsp_progress()
-    if #vim.lsp.buf_get_clients() > 0 then
+    if #vim.lsp.get_clients() > 0 then
         local buf_messages = require('lsp-status/messaging').messages()
         local seen_clients = {}
         local msgs = {}
