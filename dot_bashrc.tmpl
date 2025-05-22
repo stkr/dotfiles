@@ -161,7 +161,7 @@ set -o vi
 #
 
 {{- if or (contains "nxdi.us-aus" .chezmoi.fqdnHostname) (contains "nxdi.kr-aws" .chezmoi.fqdnHostname) }}
-# nxdi specific Tools Repoistory (TR) setup for Austin
+# nxdi specific Tools Repoistory (TR) setup for Austin and Korea
 unset CADENV_HOME
 export EDA_ENV=TR
 export PATH="/pkg/fs-foundation-/dynamic/bin:${PATH}"
@@ -172,10 +172,14 @@ if [ -z "$TRPOLICYFILE" ]; then
 fi
 {{- end }}
 
-
 {{- if contains "lsvm05us0000033" .chezmoi.fqdnHostname }}
 # host specific transmft installation path
 export PATH="${PATH}:$HOME/.local/opt/transmft-5.7.0_rhel8"
+{{- end }}
+
+{{- if contains "nxdi.kr-aws" .chezmoi.fqdnHostname }}
+# Project specific tools for Korea
+export PATH="/home/imxrt2660_de/stec/bin:${PATH}"
 {{- end }}
 
 # This must be after set -o vi (https://github.com/junegunn/fzf/issues/39)!
