@@ -19,6 +19,11 @@ end
 local utils = require("utils")
 local version = vim.version()
 
+
+{{ if contains "nxdi.kr-aws" .chezmoi.fqdnHostname }}
+vim.g.python3_host_prog = "tr.dynamic --package=OSS-python-/3.13.1 python3"
+{{ end }}
+
 -- unpack() is deprecated in favor of table.unpack()
 -- https://github.com/neovim/neovim/issues/30928
 -- https://github.com/hrsh7th/nvim-cmp/issues/1017
