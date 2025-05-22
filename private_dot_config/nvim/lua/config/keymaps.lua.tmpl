@@ -400,9 +400,11 @@ vim.keymap.set('t', "<esc><esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" }
 --- with gr. However I am so used to useing gr+textobject for replacing text (using
 --- nvim substitute plugin), I won't be able to unlearn that. Therefore those new
 --- default mappings need to be unmapped.
-vim.keymap.del('n', 'grn')
-vim.keymap.del('n', 'grr')
-vim.keymap.del('n', 'gri')
-vim.keymap.del('n', 'gra')
-vim.keymap.del('x', 'gra')
+if vim.fn.has('nvim-0.11') == 1 then
+    vim.keymap.del('n', 'grn')
+    vim.keymap.del('n', 'grr')
+    vim.keymap.del('n', 'gri')
+    vim.keymap.del('n', 'gra')
+    vim.keymap.del('x', 'gra')
+end
 
