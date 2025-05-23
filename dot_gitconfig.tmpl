@@ -83,5 +83,10 @@
        path = C:/LocalData/data/sdk-next/bifrost/.gitconfig
 {{ end }}
 
+{{ if eq .chezmoi.os "linux" }}
 [credential]
-       helper = manager-core
+    helper = cache --timeout=57600
+{{ else }}
+[credential]
+    helper = manager-core
+{{ end }}
