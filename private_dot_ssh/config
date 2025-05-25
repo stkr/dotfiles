@@ -28,6 +28,10 @@ Host gr-lo
     Hostname 10.0.0.142
     ForwardAgent yes
 
+Host blinds
+    Hostname 10.0.0.130
+    ForwardAgent yes
+
 Host *.skobeloff.eu
     ForwardAgent yes
 
