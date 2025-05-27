@@ -11,8 +11,10 @@ if status is-interactive
 
 {{ if eq .chezmoi.hostname "graz-pi3" "ardning-pi3" }}
     alias cm='snap run chezmoi'
+    alias ce='snap run chezmoi edit --apply'
 {{ else }}
     alias cm='chezmoi'
+    alias ce='chezmoi edit --apply'
 {{ end }}
 
 {{- if lookPath "fzf" }}
