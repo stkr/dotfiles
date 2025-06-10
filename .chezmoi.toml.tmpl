@@ -2,21 +2,55 @@
 {{- $work := false -}}{{/* true if this machine is a work machine */}}
 {{- $nxdi := false -}}{{/* true if this machine is a nxdi machine */}}
 {{- $offline := false -}}{{/* true if this machine has no internet connection */}}
+{{- $host_color := "none" -}} 
 
 
-{{- if contains "nxdi" .chezmoi.fqdnHostname -}}
+{{- if contains "nxdi" (lower .chezmoi.fqdnHostname) -}}
 {{-     $work = true -}}
 {{-     $nxdi = true -}}
 {{- end -}}
 
-{{- if contains "nxdi.kr-aws" .chezmoi.fqdnHostname -}}
+{{- if contains "nxdi.kr-aws" (lower .chezmoi.fqdnHostname) -}}
 {{-     $offline = true -}}
+{{-     $host_color = "blue" -}} 
 {{- end -}}
+
+{{- if contains "swis-sde.eu-west-1.aws" (lower .chezmoi.fqdnHostname) -}}
+{{-     $offline = true -}}
+{{-     $host_color = "green" -}} 
+{{- end -}}
+
+{{- if contains "nxl38689" (lower .chezmoi.fqdnHostname ) -}}
+{{-     $host_color = "cyan" -}} 
+{{- end -}}
+
+
+{{- if contains "ardning-pi3" (lower .chezmoi.fqdnHostname ) -}}
+{{-     $host_color = "green" -}} 
+{{- end -}}
+
+{{- if contains "graz-pi3" (lower .chezmoi.fqdnHostname ) -}}
+{{-     $host_color = "blue" -}} 
+{{- end -}}
+
+{{- if contains "atlanta" (lower .chezmoi.fqdnHostname ) -}}
+{{-     $host_color = "yellow" -}} 
+{{- end -}}
+
+{{- if contains "asrock" (lower .chezmoi.fqdnHostname ) -}}
+{{-     $host_color = "cyan" -}} 
+{{- end -}}
+
+{{- if contains "la5410" (lower .chezmoi.fqdnHostname ) -}}
+{{-     $host_color = "cyan" -}} 
+{{- end -}}
+
 
 [data]
     work = {{ $work }}
     nxdi = {{ $nxdi }}
     offline = {{ $offline }}
+    host_color = "{{ $host_color }}"
 
 [edit]
     command = "nvim"

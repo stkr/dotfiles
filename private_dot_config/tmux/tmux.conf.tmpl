@@ -39,17 +39,23 @@ bind-key -T copy-mode-vi 'y'               send -X copy-selection               
 bind-key -T copy-mode-vi C-c               send-keys -X cancel
 bind-key -T copy-mode-vi Escape            send-keys -X cancel
 
-{{ if eq .chezmoi.hostname "graz-pi3" }}
+{{ if eq .host_color "blue" }}
 set -g status-bg blue
 set -g status-fg colour255
-{{ else if eq .chezmoi.hostname "ardning-pi3" }}
+{{ else if eq .host_color "cyan" }}
+set -g status-bg cyan
+set -g status-fg colour255
+{{ else if eq .host_color "green" }}
 set -g status-bg green
 set -g status-fg colour255
-{{ else if eq .chezmoi.hostname "atlanta" }}
-set -g status-bg yellow
+{{ else if eq .host_color "magenta" }}
+set -g status-bg magenta
 set -g status-fg colour255
-{{ else if eq .chezmoi.hostname "asrock" "NXL38689" }}
-set -g status-bg cyan
+{{ else if eq .host_color "red" }}
+set -g status-bg red
+set -g status-fg colour255
+{{ else if eq .host_color "yellow" }}
+set -g status-bg yellow
 set -g status-fg colour255
 {{ else }}
 set -g status-bg black
