@@ -1,2 +1,3 @@
 .config/nvim/lua/plugins/obsession.lua
 .config/nvim/lua/plugins/toggleterm.lua
+.config/nvim/lua/plugins/rust-tools.lua
