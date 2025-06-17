@@ -201,19 +201,20 @@ fi
 # Start an ssh agent if not already running or forwarded
 [ -n "$SSH_AUTH_SOCK" ] || eval "$(ssh-agent -s)"
 
+{{ $fdfind := lookPath "fd" }}
+{{- if eq $fdfind "" }}
+{{-     $fdfind = lookPath "fdfind" }}
+{{-     if not (eq $fdfind "") }}
 # Some distributions (ubuntu) deliver fd as fdfind to avoid conflicts. 
 # For those alias fd to fdfind.
-if command -v fdfind &> /dev/null ; then 
-    alias fd=fdfind
-fi
+alias fd=fdfind
+{{-     end }}
+{{- end }}
 
+{{ if not (eq $fdfind "") }}
 # if fd is available, use it per default for fzf finds
-if command -v fd &> /dev/null ; then 
-    export FZF_DEFAULT_COMMAND='fd --type f'
-fi
-if command -v fdfind &> /dev/null ; then 
-    export FZF_DEFAULT_COMMAND='fdfind --type f'
-fi
+export FZF_DEFAULT_COMMAND='{{ $fdfind }} --type f'
+{{- end }}
 
 # chezmoi alias
 alias cm=chezmoi

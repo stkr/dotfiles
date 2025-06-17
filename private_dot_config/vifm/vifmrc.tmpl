@@ -1,3 +1,8 @@
+{{- $fdfind := lookPath "fd" }}
+{{- if eq $fdfind "" }}
+{{-     $fdfind = lookPath "fdfind" }}
+{{- end }}
+
 " vim: filetype=vifm :
 " Sample configuration file for vifm (last updated: 9 September, 2020)
 " You can edit this file by hand.
@@ -529,3 +534,7 @@ nnoremap <c-b> :bmarks<cr>
 "     vifm --server-name "$VIFM_SERVER_NAME" --remote +"cd '$PWD'"
 "
 " let $VIFM_SERVER_NAME = v:servername
+
+{{- if not (eq $fdfind "") }}
+set findprg="{{ $fdfind }} \"%p\" \"%s\"" 
+{{- end }}
