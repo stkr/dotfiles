@@ -40,5 +40,4 @@ return
             dapui.close()
         end
     end,
-    version = "*",
 }

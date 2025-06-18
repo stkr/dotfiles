@@ -1,7 +1,6 @@
 return
 {
         'echasnovski/mini.nvim',
-        version = "0.14.0",
         config = function()
             require("mini.basics").setup({
                 mappings = {

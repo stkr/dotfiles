@@ -14,7 +14,6 @@ end
 return
 {
     'nvim-telescope/telescope.nvim',
-    version = "0.1.8",
     dependencies = {
         {
             'nvim-telescope/telescope-fzf-native.nvim',
@@ -22,7 +21,6 @@ return
         },
         {
             "nvim-telescope/telescope-live-grep-args.nvim",
-            version = "^1.0.0",
         },
         {
             'nvim-telescope/telescope-ui-select.nvim',

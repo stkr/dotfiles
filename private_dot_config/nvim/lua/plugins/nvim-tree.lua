@@ -1,7 +1,6 @@
 return
 {
     'nvim-tree/nvim-tree.lua',
-    version = "v1.7",
     cmd = { "NvimTreeOpen", "NvimTreeClose", "NvimTreeToggle", "NvimTreeFocus", "NvimTreeRefresh",
         "NvimTreeFindFile",
         "NvimTreeFindFileToggle", "NvimTreeClipboard", "NvimTreeResize", "NvimTreeCollapse",

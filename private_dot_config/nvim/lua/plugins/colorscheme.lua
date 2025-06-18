@@ -8,7 +8,6 @@ return {
     --     2023-06: neanias/everforest-nvim: Very nice theme, the differentiation in statusline between modes is not visible enough
     {
         "catppuccin/nvim",
-        version = "1.9.x",
         name = "catppuccin",
         priority = math.huge, -- make sure to load this before all the other start plugins
         config = function()

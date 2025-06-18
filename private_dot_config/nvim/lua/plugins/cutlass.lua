@@ -1,7 +1,6 @@
 return
 {
     "gbprod/cutlass.nvim",
-    version = "1.0.1",
     config = function()
         require("cutlass").setup({
             -- ns = jump/search

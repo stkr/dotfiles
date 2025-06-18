@@ -1,7 +1,6 @@
 return
 {
     'folke/which-key.nvim',
-    version = "3.x",
     opts = {
         presets = {
             g = false,
