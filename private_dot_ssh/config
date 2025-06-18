@@ -1,3 +1,4 @@
+Include config.d/*
 AddKeysToAgent yes
 
 # The f**ing A1 wlan box does not allow to forward port 22, so this is a
