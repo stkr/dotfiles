@@ -1,6 +1,6 @@
 alias vicd 'cd `vifm --choose-dir -`'
 
 alias wa2k 'source /home/imxrt2660_de/setup/fusemap_expender/w.csh'
-cd /home/imxrt2660_de/stefan_nxp29037/tb_1.26/
-wa2k V_SS_RT2660_SOC_TB_1.26 
-cd V_SS_RT2660_SOC_TB_1.26
+cd /home/imxrt2660_de/stefan_nxp29037/tb_1.36/
+# wa2k V_SS_RT2660_SOC_TB_1.36 
+# cd V_SS_RT2660_SOC_TB_1.36
