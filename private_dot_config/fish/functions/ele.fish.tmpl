@@ -1,7 +1,7 @@
 function _ele_init
     set -g -x JIRA_PROJECT "ESE"
     set -g -x BASE_PATH "/home/$USER/projects/s1xy"
-    set -g -x LLVM_BIN_PATH $BASE_PATH/src/riscv32-nxp-elf_0.7.2_cssi/bin
+    set -g -x LLVM_BIN_PATH /home/$USER/toolchains/riscv32-nxp-elf_0.8.7_cssi/bin
 
 {{ if contains "nxdi.us-aus" .chezmoi.fqdnHostname }}
     # from /home/mcu_zebu_scr1/stec.seco/setup_nxdi/setup.bash
@@ -23,7 +23,7 @@ function _ele_cd
         _ele_init
     end
 
-    cd "$BASE_PATH/src/s1xy"
+    cd "$BASE_PATH/acme-gen3/s1xy"
 end
 
 function _ele_edit
