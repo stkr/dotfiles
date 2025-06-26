@@ -2,6 +2,9 @@
 	eol = lf
 	autocrlf = input
 	editor = nvim -f
+{{- if lookPath "delta" }}
+    pager = delta
+{{- end }}
 	fscache = true
 [alias]
     co = checkout
@@ -89,4 +92,15 @@
 {{ else }}
 [credential]
     helper = manager-core
+{{ end }}
+
+{{- if lookPath "delta" }}
+[delta]
+    light = true
+    line-numbers = true
+    file-style = "omit"
+    hunk-label = "@@"
+    hunk-header-style = "file line-number"
+    hunk-header-decoration-style = "blue"
+    navigate = true
 {{ end }}
