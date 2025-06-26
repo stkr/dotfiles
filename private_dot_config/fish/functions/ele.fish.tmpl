@@ -16,6 +16,14 @@ function _ele_init
     if test -e "$BASE_PATH/.venv/bin/activate.fish"
         source "$BASE_PATH/.venv/bin/activate.fish"
     end
+
+    if test -e "/home/$USER/.local/opt/liboqs/build/lib"
+        set -g -x --path -a LD_LIBRARY_PATH "/home/$USER/.local/opt/liboqs/build/lib"
+    end
+
+    if test -e "/home/$USER/.local/opt/liboqs-python"
+        set -g -x --path -a PYTHONPATH "/home/$USER/.local/opt/liboqs-python"
+    end
 end
 
 function _ele_cd
