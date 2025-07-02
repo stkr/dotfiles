@@ -2,7 +2,7 @@
 	eol = lf
 	autocrlf = input
 	editor = nvim -f
-{{- if lookPath "delta" }}
+{{- if (and (not .nxdi) (lookPath "delta")) }}
     pager = delta
 {{- end }}
 	fscache = true
