@@ -1,3 +1,5 @@
 .config/nvim/lua/plugins/obsession.lua
 .config/nvim/lua/plugins/toggleterm.lua
 .config/nvim/lua/plugins/rust-tools.lua
+.local/bin/download_and_play.py
+.local/bin/tmp-clean.sh
