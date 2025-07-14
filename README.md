@@ -1,18 +1,14 @@
 # Dotfiles repository
 
-A neat way of managing dotfiles that is usable cross-platform is described at [1].
+Dotfiles are managed with chezmoi [].
 
-Essentially the idea is to have the home directory a git workspace but to keep the repository data 
-not in .git but in a separate folder and define an alias to access the combination of workspace and 
-repository.
+After installing chezmoi (from package manager or binary release, see [1]), the
+configuration can be bootstrapped using:
 
-Summarizing, to bootstrap:
-
-    git clone --bare ssh://git@github.com/stkr/dotfiles.git $HOME/.dotfiles
-    git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME checkout
-    git df config --local status.showUntrackedFiles no
-    git df config --local user.name "stkr"
-    git df config --local user.email "stkr@users.noreply.github.com"
+    chezmoi init --apply ssh://git@github.com/stkr/dotfiles.git
+    chezmoi cd
+    git config --local user.name "stkr"
+    git config --local user.email "stkr@users.noreply.github.com"
 
 In case files are existing, move them out of the way and redo the checkout.
 
