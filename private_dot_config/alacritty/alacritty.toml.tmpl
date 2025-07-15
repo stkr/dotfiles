@@ -1,5 +1,5 @@
 
-{{- if not (contains "nxdi.kr-aws" .chezmoi.fqdnHostname) }}
+{{- if not (or (contains "nxdi.us-aus01" .chezmoi.fqdnHostname) (contains "nxdi.kr-aws" .chezmoi.fqdnHostname)) }}
 [general]
 {{- end }}
 import = ['~/.config/alacritty/themes/one_half_light.toml']
