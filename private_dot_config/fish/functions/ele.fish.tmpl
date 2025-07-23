@@ -1,6 +1,7 @@
 function _ele_init
     set -g -x JIRA_PROJECT "ESE"
     set -g -x BASE_PATH "/home/$USER/projects/s1xy"
+    set -g -x SRC_PATH "/home/$USER/projects/s1xy/acme-gen3/s1xy"
     set -g -x LLVM_BIN_PATH /home/$USER/toolchains/riscv32-nxp-elf_0.8.7_cssi/bin
 
 {{ if contains "nxdi.us-aus" .chezmoi.fqdnHostname }}
@@ -31,7 +32,7 @@ function _ele_cd
         _ele_init
     end
 
-    cd "$BASE_PATH/acme-gen3/s1xy"
+    cd "$SRC_PATH"
 end
 
 function _ele_edit
@@ -90,6 +91,21 @@ function _ele_bininfo -a objectfile
     echo "symbol table written to [$argv[1].sym]"
 end
 
+function _ele_pub -a config
+    if test -z "$JIRA_PROJECT"
+        _ele_init
+    end
+
+    if test (count $argv) -lt 1
+        set config "$SRC_PATH/.publish"
+    end
+
+    set -l dst (head -n 1 "$config")
+    tail -n+2 "$config" > /tmp/files
+    
+    rsync -v --files-from /tmp/files . "$dst"
+end
+
 function ele -d "Functions specific to ele project"
     # We tell argparse about -h/--help and others -these are short and long
     # forms of the same option. The "--" here is mandatory, it tells it from
@@ -126,6 +142,8 @@ function ele -d "Functions specific to ele project"
             _ele_branch $argv[2..-1]
         case bininfo
             _ele_bininfo $argv[2..-1]
+        case pub
+            _ele_pub $argv[2..-1]
         case '*'
             echo Unsupported command \"$argv[1]\"
             return 1
