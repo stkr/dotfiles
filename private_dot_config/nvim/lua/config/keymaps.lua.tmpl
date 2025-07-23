@@ -341,12 +341,12 @@ vim.keymap.set('n', '<leader>ty', function() require("copyright-updater").toggle
 
 
 
--------------  Yanking
+-------------  Windows
 
+vim.keymap.set('n', '<leader>wg', "<cmd>LazyGit<cr>", { desc = "Window toggle lazygit" })
 vim.keymap.set('n', '<leader>wo', "<cmd>Outline<cr>", { desc = "Window toggle outline" })
 vim.keymap.set('n', '<leader>wt', "<cmd>NvimTreeFindFileToggle<cr>", { desc = "Window toggle file tree" })
 vim.keymap.set('n', '<leader>wl', "<cmd>OverseerToggle<cr>", { desc = "Window toggle overseer" })
-
 
 -------------  Yanking
 
@@ -397,7 +397,7 @@ vim.keymap.set('n', '<leader>,', "<cmd>w<cr>", { desc = "Save file" })
 vim.keymap.set('t', "<esc><esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
 ------------- since v0.11.0, nvim comes with a few default lsp mappings starting
---- with gr. However I am so used to useing gr+textobject for replacing text (using
+--- with gr. However I am so used to using gr+textobject for replacing text (using
 --- nvim substitute plugin), I won't be able to unlearn that. Therefore those new
 --- default mappings need to be unmapped.
 if vim.fn.has('nvim-0.11') == 1 then
