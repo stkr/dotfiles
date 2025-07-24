@@ -3,21 +3,28 @@
 import argparse
 import datetime
 import json
+import logging
 import pathlib
 import pprint
-import string
-import subprocess
+import queue
 import re
-import logging
+import socket
+import subprocess
 import sys
+import threading
+import time
 
-YT_DLP_PATH='yt-dlp'
-MPV_PATH='mpv'
+YT_DLP_PATH = 'yt-dlp'
+MPV_PATH = 'mpv'
 
 VIDEO_DIR_PATH = '/home/stefan/.tmp/videos'
 LOG_FILE_PATH = VIDEO_DIR_PATH + '/download_and_play.log'
+MPV_IPC_SOCKET_PATH = pathlib.Path('/tmp/mpvsocket')
+
+NEWLINE = "\n".encode("utf-8")
 
 logger = logging.getLogger(__name__)
+
 
 def setup_logging():
     pathlib.Path(LOG_FILE_PATH).parent.mkdir(parents=True, exist_ok=True)
@@ -39,8 +46,10 @@ def setup_logging():
 def get_video_path(video_dir, filename):
     return [f for f in video_dir.glob(filename + "*") if not f.name.endswith("info.json")][0]
 
+
 def sane_filename(filename):
-    return re.sub(r'[^\s\w\d-]','_',filename)
+    return re.sub(r'[^\s\w\d-]', '_', filename)
+
 
 def download(url):
     now = datetime.datetime.now()
@@ -52,17 +61,106 @@ def download(url):
     video_path = get_video_path(video_dir, filename)
     with open(info_path, "r") as fp:
         video_info = json.load(fp)
-    new_filename = (now.strftime("%Y-%m-%d-%H-%M-%S") + 
-        " - " + sane_filename(video_info['id']) +
-        " - " + sane_filename(video_info['title']) +
-        video_path.suffix)
+    new_filename = (now.strftime("%Y-%m-%d-%H-%M-%S") +
+                    " - " + sane_filename(video_info['id']) +
+                    " - " + sane_filename(video_info['title']) +
+                    video_path.suffix)
     new_path = video_dir.joinpath(new_filename)
     info_path.unlink()
     video_path.rename(new_path)
     return new_path
 
-def play(video_path):
-    subprocess.run([MPV_PATH, video_path])
+
+class MpvIpc:
+    def __init__(self):
+        self.process = None
+        self.rx_queue = queue.SimpleQueue()
+        self.tx_queue = queue.SimpleQueue()
+
+        self.terminated = False
+        self.recv_thread = None
+
+    @staticmethod
+    def _is_mpv_server_socket_alive():
+        if MPV_IPC_SOCKET_PATH.is_socket():
+            try:
+                with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
+                    sock.connect(str(MPV_IPC_SOCKET_PATH))
+                    return True
+            except ConnectionRefusedError:
+                pass
+        return False
+
+    def start(self):
+        if self._is_mpv_server_socket_alive():
+            self._start_recv_thread()
+            return
+
+        start = datetime.datetime.now()
+        timeout = start + datetime.timedelta(seconds=5)
+        self.process = subprocess.Popen([MPV_PATH, f'--input-ipc-server={str(MPV_IPC_SOCKET_PATH)}', '--idle'])
+        while datetime.datetime.now() < timeout:
+            if self._is_mpv_server_socket_alive():
+                self._start_recv_thread()
+                return
+            time.sleep(0.01)
+        raise ValueError("Unable to spawn and connect to mpv.")
+
+    def _start_recv_thread(self):
+        self.recv_thread = threading.Thread(None, self._recv_thread_func, "recv_thread")
+        self.recv_thread.start()
+
+    def _try_recv(self, sock, rx_buf):
+        try:
+            return rx_buf + sock.recv(1024)
+        except TimeoutError:
+            return rx_buf
+
+    def _try_get_tx(self):
+        try:
+            return self.tx_queue.get(block=False)
+        except queue.Empty:
+            return None
+
+    def _recv_thread_func(self):
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
+            sock.connect(str(MPV_IPC_SOCKET_PATH))
+            sock.settimeout(1)
+            rx_buf = b""
+            while not self.terminated:
+                rx_buf = self._try_recv(sock, rx_buf)
+                lines = rx_buf.split(NEWLINE)
+                rx_buf = lines.pop()
+                for line in lines:
+                    obj = json.loads(line.decode("utf-8"))
+                    if not "event" in obj:
+                        self.rx_queue.put(obj)
+                tx = self._try_get_tx()
+                if tx is not None:
+                    tx_buf = (json.dumps(tx) + "\n").encode("utf-8")
+                    sock.sendall(tx_buf)
+
+    def communicate(self, tx):
+        self.tx_queue.put(tx)
+        print(f"tx: {pprint.pformat(tx)}")
+        rx = self.rx_queue.get()
+        print(f"rx: {pprint.pformat(rx)}")
+        return rx
+
+    def wait(self):
+        if self.process is not None:
+            self.process.wait()
+        self.terminated = True
+        self.recv_thread.join()
+
+
+def enqueue(ipc, video_path):
+    return ipc.communicate({"command": ["loadfile", str(video_path), "append"]})
+
+
+def play(ipc, video_path):
+    return ipc.communicate({"command": ["loadfile", str(video_path), "append-play"]})
+
 
 def main():
     setup_logging()
@@ -70,14 +168,21 @@ def main():
     parser.add_argument("url")
     parser.add_argument("--play", default=True, action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
+    ipc = MpvIpc()
     try:
         video_path = download(args.url)
         logger.info(f"Successfully downloaded [{video_path}]")
+        ipc.start()
         if args.play:
-            play(video_path)
+            play(ipc, video_path)
+        else:
+            enqueue(ipc, video_path)
     except Exception as ex:
         logger.fatal(ex)
-        raise(ex)
+        raise (ex)
+    finally:
+        ipc.wait()
+
 
 if __name__ == "__main__":
     main()
