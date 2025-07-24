@@ -39,3 +39,7 @@ Host *.skobeloff.eu
 Host zebu
     Hostname vsv0180001.nxdi.us-aus01.nxp.com
     ForwardAgent yes
+
+Host graz-pi5
+    Hostname pi5
+    ForwardAgent yes
