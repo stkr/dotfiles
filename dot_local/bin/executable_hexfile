@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+
+for arg in "$@"; do
+    if [ -f "$arg" ]; then
+        if [[ "$arg" == *.hex ]]; then
+            dst="${arg%.hex}"
+            xxd -r "$1" > "${dst}"
+            echo "Binary written to ${dst}"
+        else
+            dst="${arg}.hex"
+            xxd -g 1 "$1" > "$1.hex"
+            echo "Hexdump written to ${dst}"
+        fi
+    else
+        echo "Warning: '$arg' is not a valid file. Skipping."
+    fi
+done
