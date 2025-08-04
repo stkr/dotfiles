@@ -26,7 +26,7 @@ Host gr
     ForwardAgent yes
 
 Host gr-lo
-    Hostname 10.0.0.142
+    Hostname 10.84.1.41
     ForwardAgent yes
 
 Host blinds
@@ -40,6 +40,6 @@ Host zebu
     Hostname vsv0180001.nxdi.us-aus01.nxp.com
     ForwardAgent yes
 
-Host graz-pi5
-    Hostname pi5
+Host graz-main
+    Hostname main
     ForwardAgent yes
