@@ -22,6 +22,14 @@ local function toggle_autocomplete()
     end
 end
 
+local function toggle_format_on_save()
+    if vim.g.disable_autoformat then
+        vim.g.disable_autoformat = false
+    else
+        vim.g.disable_autoformat = true
+    end
+end
+
 -------------  Helpers for substitution mappings
 
 local function subst(line_nr, columns, pat, repl)
@@ -335,6 +343,7 @@ vim.keymap.set('n', 'c0', function() _choose_and_move_on({ "none" }) end,
 --- - `s` - |'spell'|.
 --- - `w` - |'wrap'|.
 vim.keymap.set('n', '<leader>tc', toggle_autocomplete, { desc = "Toggle (auto-)completion" })
+vim.keymap.set('n', '<leader>tf', toggle_format_on_save, { desc = "Toggle format on save" })
 vim.keymap.set('n', '<leader>tq', function() require("autosave").toggle() end, { desc = "Toggle autosave" })
 vim.keymap.set('n', '<leader>ty', function() require("copyright-updater").toggle() end,
     { desc = "Toggle auto update of copyright year" })
@@ -407,4 +416,3 @@ if vim.fn.has('nvim-0.11') == 1 then
     vim.keymap.del('n', 'gra')
     vim.keymap.del('x', 'gra')
 end
-
