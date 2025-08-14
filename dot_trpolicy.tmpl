@@ -6,6 +6,12 @@
 # returns
 #   2.17.0  2.20.1  2.21.0  2.29.1  2.3.2  2.37.4  2.7.2
 
+OSS-nvim-/0.11.1
+OSS-tmux-/3.5a
+OSS-alacritty-/0.13.0-dev
+OSS-python-/3.13.1
+nxp-mft-/5.8.1
+
 {{- if contains "nxdi.us-aus" .chezmoi.fqdnHostname }}
 TWW-libevent-/1.4.14
 OSS-cmake-/3.28.4
@@ -14,14 +20,5 @@ OSS-glibc-/2.74
 OSS-ninja-/1.12.1
 OSS-ccache-/4.7.3
 OSS-git-/2.37.4
-OSS-tmux-/3.4
 OSS-xz-/5.4.1
-{{- end }}
-
-{{- if contains "nxdi.kr-aws" .chezmoi.fqdnHostname }}
-OSS-nvim-/0.11.1
-OSS-tmux-/3.5a
-OSS-alacritty-/0.13.0-dev
-OSS-python-/3.13.1
-nxp-mft-/5.7.0
 {{- end }}
