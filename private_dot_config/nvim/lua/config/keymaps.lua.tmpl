@@ -124,7 +124,12 @@ end
 
 -- ############# Leader key mappings
 
--------------  Context information
+-------------  Context information and Conflict resolution:
+
+local function _choose_and_move_on(all_selected)
+    require('diff_utils').choose(all_selected)
+    require('mini.bracketed').conflict("forward")
+end
 
 vim.keymap.set('n', '<leader>cd', vim.diagnostic.setqflist, { desc = "Load diagnostics to quickfix window" })
 
@@ -146,6 +151,19 @@ vim.keymap.set('n', '<leader>cfr', function() utils.info(vim.fn.fnamemodify(vim.
 
 vim.keymap.set('n', '<leader>ci', vim.lsp.buf.hover, { desc = "Display lsp hover context information" })
 vim.keymap.set('n', '<leader>cs', vim.lsp.buf.signature_help, { desc = "Display lsp signature context help" })
+
+
+vim.keymap.set('n', '<leader>co', function() _choose_and_move_on({ "ours" }) end,
+    { desc = "Resolve conflict using ours" })
+
+vim.keymap.set('n', '<leader>ct', function() _choose_and_move_on({ "theirs" }) end,
+    { desc = "Resolve conflict using theirs" })
+
+vim.keymap.set('n', '<leader>cb', function() _choose_and_move_on({ "theirs", "ours" }) end,
+    { desc = "Resolve conflict using both (theirs first)" })
+
+vim.keymap.set('n', '<leader>c0', function() _choose_and_move_on({ "none" }) end,
+    { desc = "Resolve conflict using none" })
 
 
 -------------  Diffing files
@@ -308,25 +326,6 @@ vim.keymap.set('v', '<leader>shs', vmap_subst('(%x%x)', '%1 '),
     { desc = "Convert hex number to space separated bytes" })
 
 vim.keymap.set('v', '<leader>swe', vmap_subst('%s+$', ''), { desc = "Delete whitespace before eol" })
-
--------------  Conflict resolution:
-
-local function _choose_and_move_on(all_selected)
-    require('diff_utils').choose(all_selected)
-    require('mini.bracketed').conflict("forward")
-end
-
-vim.keymap.set('n', 'co', function() _choose_and_move_on({ "ours" }) end,
-    { desc = "Resolve conflict using ours" })
-
-vim.keymap.set('n', 'ct', function() _choose_and_move_on({ "theirs" }) end,
-    { desc = "Resolve conflict using theirs" })
-
-vim.keymap.set('n', 'cb', function() _choose_and_move_on({ "theirs", "ours" }) end,
-    { desc = "Resolve conflict using both (theirs first)" })
-
-vim.keymap.set('n', 'c0', function() _choose_and_move_on({ "none" }) end,
-    { desc = "Resolve conflict using none" })
 
 -------------  Toggle
 
