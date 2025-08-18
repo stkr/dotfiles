@@ -343,6 +343,7 @@ vim.keymap.set('v', '<leader>swe', vmap_subst('%s+$', ''), { desc = "Delete whit
 --- - `w` - |'wrap'|.
 vim.keymap.set('n', '<leader>tc', toggle_autocomplete, { desc = "Toggle (auto-)completion" })
 vim.keymap.set('n', '<leader>tf', toggle_format_on_save, { desc = "Toggle format on save" })
+vim.keymap.set('n', '<leader>tg', "<cmd>BlameToggle<cr>", { desc = "Toggle git blame window" })
 vim.keymap.set('n', '<leader>tq', function() require("autosave").toggle() end, { desc = "Toggle autosave" })
 vim.keymap.set('n', '<leader>ty', function() require("copyright-updater").toggle() end,
     { desc = "Toggle auto update of copyright year" })
