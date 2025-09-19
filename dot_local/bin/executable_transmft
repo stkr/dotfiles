@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-transmft_dir_path="/home/${USER}/.local/stow/transmft-5.8.1_rhel8/"
+transmft_dir_path="/home/${USER}/.local/opt/transmft-5.8.1_rhel8/"
 PATH="${transmft_dir_path}:${transmft_dir_path}/_internal:${PATH}"
 
 ${transmft_dir_path}/transmft "$@"
