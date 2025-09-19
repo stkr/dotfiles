@@ -47,7 +47,7 @@ elif [ -f /mingw64/share/git/completion/git-completion.bash ]; then
 fi
 
 if [ -d ~/.bashrc.d/ ]; then
-    # nullglob returns an empty set if file no file found - this prevents 
+    # nullglob returns an empty set if file no file found - this prevents
     # an error message here.
     shopt -s nullglob
     for f in ~/.bashrc.d/*.sh; do source "$f"; done
@@ -103,7 +103,7 @@ alias la='ls -A'
 # The following alias takes use of that compiled terminfo, makes man use less for
 # the output and shall result in a colored man page that is readable on all
 # sane terminal colorschemes.
-alias man="TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man" 
+alias man="TERMINFO=~/.terminfo/ LESS=C TERM=mostlike PAGER=less man"
 
 # By convention, for coding projects done with nvim, we keep the project settings
 # in a file called .project.vim. This allows us to use a nice shortcut to open
@@ -172,11 +172,6 @@ if [ -z "$TRPOLICYFILE" ]; then
 fi
 {{- end }}
 
-{{- if contains "lsvm05us0000033" .chezmoi.fqdnHostname }}
-# host specific transmft installation path
-export PATH="${PATH}:$HOME/.local/opt/transmft-5.7.0_rhel8"
-{{- end }}
-
 {{- if contains "nxdi.kr-aws" .chezmoi.fqdnHostname }}
 # Project specific tools for Korea
 export PATH="/home/imxrt2660_de/stec/bin:${PATH}"
@@ -184,7 +179,7 @@ source /home/imxrt2660_de/stec/share/bash_completion.d/*
 {{- end }}
 
 # This must be after set -o vi (https://github.com/junegunn/fzf/issues/39)!
-if command -v fzf &> /dev/null ; then 
+if command -v fzf &> /dev/null ; then
     fzf_version=$( fzf --version )
     major=$( echo $fzf_version | cut -d. -f1 )
     minor=$( echo $fzf_version | cut -d. -f2 )
@@ -205,7 +200,7 @@ fi
 {{- if eq $fdfind "" }}
 {{-     $fdfind = lookPath "fdfind" }}
 {{-     if not (eq $fdfind "") }}
-# Some distributions (ubuntu) deliver fd as fdfind to avoid conflicts. 
+# Some distributions (ubuntu) deliver fd as fdfind to avoid conflicts.
 # For those alias fd to fdfind.
 alias fd=fdfind
 {{-     end }}
@@ -265,10 +260,10 @@ function vicd()
 
 {{- if not (eq (env "USER") "root") }}
 # We keep the user's shell to be bash (to get all the benefits of .bashrc and .profile etc.), but in
-# case of an interactive shell we drop to fish. 
+# case of an interactive shell we drop to fish.
 # This aproach is inspired by ArchWiki:
 # https://wiki.archlinux.org/title/Fish#Setting_fish_as_default_shell
-if command -v fish &> /dev/null ; then 
+if command -v fish &> /dev/null ; then
      if [[ $(ps --no-header --pid=$PPID --format=cmd) != "fish" && -z ${BASH_EXECUTION_STRING} ]]; then
         exec fish
     fi
@@ -278,4 +273,3 @@ fi
 # Now we only do reach this point in case we did not exec to fish, so this applies ONLY in case of
 # remaining in bash!
 {{- end }}
-
