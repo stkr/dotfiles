@@ -11,7 +11,7 @@ Host ardning-pi3.skobeloff.eu
     Hostname ardning-pi3.skobeloff.eu
     Port 32109
     ForwardAgent yes
-    
+
 Host ar
     Hostname ardning-pi3.skobeloff.eu
     Port 32109
@@ -40,6 +40,6 @@ Host zebu
     Hostname vsv0180001.nxdi.us-aus01.nxp.com
     ForwardAgent yes
 
-Host graz-main
-    Hostname main
+Host graz-pi5
+    Hostname 10.84.1.40
     ForwardAgent yes
