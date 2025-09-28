@@ -46,6 +46,14 @@
 {{-     $host_color = "yellow" -}}
 {{- end -}}
 
+{{- if contains "graz-pi5" (lower .chezmoi.fqdnHostname ) -}}
+{{-     $host_color = "magenta" -}}
+{{- end -}}
+
+{{- if contains "vps-germany" (lower .chezmoi.fqdnHostname ) -}}
+{{-     $host_color = "red" -}}
+{{- end -}}
+
 {{- if contains "asrock" (lower .chezmoi.fqdnHostname ) -}}
 {{-     $host_color = "cyan" -}}
 {{- end -}}
