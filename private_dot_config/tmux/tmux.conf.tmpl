@@ -39,38 +39,82 @@ bind-key -T copy-mode-vi 'y'               send -X copy-selection               
 bind-key -T copy-mode-vi C-c               send-keys -X cancel
 bind-key -T copy-mode-vi Escape            send-keys -X cancel
 
-{{ if eq .host_color "blue" }}
-set -g status-bg blue
-set -g status-fg colour255
+{{- $bg_status_left               := "white" }}
+{{- $fg_status_left               := "black" }}
+{{- $bg_status                    := "lightgray" }}
+{{- $fg_status                    := "white" }}
+{{- $bg_window_status             := "lightgray" }}
+{{- $fg_window_status             := "black" }}
+{{- $bg_window_status_current     := "lightgray" }}
+{{- $fg_window_status_current     := "cyan" }}
+{{- $bg_window_status_bell        := "lightgray" }}
+{{- $fg_window_status_bell        := "orange" }}
+{{- $bg_window_status_activity    := "lightgray" }}
+{{- $fg_window_status_activity    := "yellow" }}
+{{- $fg_status                    := "white" }}
+{{- $bg_status_right              := "white" }}
+{{- $fg_status_right              := "black" }}
+
+{{- if eq .host_color "blue" }}
+{{-     $bg_status_left  = "blue" }}
+{{-     $fg_status_left  = "white" }}
+{{-     $bg_status_right = "blue" }}
+{{-     $fg_status_right = "white" }}
 {{ else if eq .host_color "cyan" }}
-set -g status-bg cyan
-set -g status-fg colour255
+{{-     $bg_status_left  = "cyan" }}
+{{-     $fg_status_left  = "white" }}
+{{-     $bg_status_right = "cyan" }}
+{{-     $fg_status_right = "white" }}
 {{ else if eq .host_color "green" }}
-set -g status-bg green
-set -g status-fg colour255
+{{-     $bg_status_left  = "green" }}
+{{-     $fg_status_left  = "white" }}
+{{-     $bg_status_right = "green" }}
+{{-     $fg_status_right = "white" }}
 {{ else if eq .host_color "magenta" }}
-set -g status-bg magenta
-set -g status-fg colour255
+{{-     $bg_status_left  = "magenta" }}
+{{-     $fg_status_left  = "white" }}
+{{-     $bg_status_right = "magenta" }}
+{{-     $fg_status_right = "white" }}
 {{ else if eq .host_color "red" }}
-set -g status-bg red
-set -g status-fg colour255
+{{-     $bg_status_left  = "red" }}
+{{-     $fg_status_left  = "white" }}
+{{-     $bg_status_right = "red" }}
+{{-     $fg_status_right = "white" }}
 {{ else if eq .host_color "yellow" }}
-set -g status-bg yellow
-set -g status-fg colour255
-{{ else }}
-set -g status-bg black
-set -g status-fg white
-{{ end }}
+{{-     $bg_status_left  = "yellow" }}
+{{-     $fg_status_left  = "white" }}
+{{-     $bg_status_right = "yellow" }}
+{{-     $fg_status_right = "white" }}
+{{- end }}
+
+set -g status-left-style bg={{$bg_status_left}},fg={{$fg_status_left}}
+set -g status-style bg={{$bg_status}},fg={{$fg_status}}
+set -g status-right-style bg={{$bg_status_right}},fg={{$fg_status_right}}
+set -g status-style bg={{$bg_status}},fg={{$fg_status}}
+
+set -g window-status-style bg={{$bg_window_status}},fg={{$fg_window_status}}
+set -g window-status-current-style bg={{$bg_window_status_current}},fg={{$fg_window_status_current}},bold
+set -g window-status-activity-style bg={{$bg_window_status_activity}},fg={{$fg_window_status_activity}}
+set -g window-status-bell-style bg={{$bg_window_status_bell}},fg={{$fg_window_status_bell}}
+set -g window-status-separator "| "
+
+
+# Display session name on the left
+set -g status-left ' [#{=10:session_name}]  #[bg={{$bg_status}},fg={{$bg_status_right}}]#[fg={{$fg_status}}]  '
 
 # Display hostname in the statusline on the right
-set -g status-right '#[fg=white]#(hostname)'
+set -g status-right '#[bg={{$bg_status}}]#[fg={{$bg_status_right}}]#[default]  #{host} | %H:%M '
 
-# Automatically set window title
-set-option -g automatic-rename on
-set-option -g automatic-rename-format "#{=12:pane_title}"
+# Automatically set pane title
+set -g automatic-rename on
+set -g automatic-rename-format "#{=32:pane_title}"
+
+
+# Make the terminal window show some useful information
 set-option -g set-titles on
+set-option -g set-titles-string "#{host}"
 
-setw -g monitor-activity on
+set -g monitor-activity on
 
 bind-key v split-window -h -c "#{pane_current_path}"
 bind-key s split-window -v -c "#{pane_current_path}"
