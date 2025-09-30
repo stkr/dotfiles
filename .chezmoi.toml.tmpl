@@ -3,11 +3,13 @@
 {{- $nxdi := false -}}{{/* true if this machine is a nxdi machine */}}
 {{- $offline := false -}}{{/* true if this machine has no internet connection */}}
 {{- $host_color := "none" -}}
+{{- $ssh_supports_localnetwork := true -}}
 
 
 {{- if contains "nxdi" (lower .chezmoi.fqdnHostname) -}}
 {{-     $work = true -}}
 {{-     $nxdi = true -}}
+{{-     $ssh_supports_localnetwork = false -}}
 {{- end -}}
 
 {{- if contains "nxdi.kr-aws" (lower .chezmoi.fqdnHostname) -}}
@@ -26,6 +28,7 @@
 {{-     $work = true -}}
 {{-     $offline = true -}}
 {{-     $host_color = "green" -}}
+{{-     $ssh_supports_localnetwork = false -}}
 {{- end -}}
 
 {{- if contains "nxl38689" (lower .chezmoi.fqdnHostname ) -}}
@@ -68,6 +71,7 @@
     nxdi = {{ $nxdi }}
     offline = {{ $offline }}
     host_color = "{{ $host_color }}"
+    ssh_supports_localnetwork = {{ $ssh_supports_localnetwork }}
 
 [edit]
     command = "nvim"

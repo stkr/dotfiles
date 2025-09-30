@@ -40,7 +40,7 @@ Host zebu
     Hostname vsv0180001.nxdi.us-aus01.nxp.com
     ForwardAgent yes
 
-
+{{ if .ssh_supports_localnetwork }}
 # This does select the best route to a host. It checks for a
 # particular network and checks whehter a port is opened at
 # a particular address and if it is, it uses that as HostName.
@@ -57,10 +57,12 @@ Match host graz-pi5 localnetwork 10.84.1.0/24 exec "nc -w 1 -z 10.84.1.40 %p"
 #     HostName 10.10.1.40
 # Fallback to the public (internet) address.
 # Also, all other directives (that were not set by any match above) are applied!
+{{- end -}}
 Host graz-pi5
     HostName graz.it-for-fun.eu
     ForwardAgent yes
 
+{{ if .ssh_supports_localnetwork }}
 Match host graz-pi3 localnetwork 10.84.1.0/24 exec "nc -w 1 -z 10.84.1.41 %p"
     HostName 10.84.1.41
     Port 22
@@ -73,6 +75,7 @@ Match host graz-pi3 localnetwork 10.84.1.0/24 exec "nc -w 1 -z 10.84.1.41 %p"
 # Fallback to the public (internet) address. Note, it has to use a different
 # port as multiple hosts are exposed via a single public ip address.
 # Also, all other directives (that were not set by any match above) are applied!
+{{- end -}}
 Host graz-pi3
     HostName graz.it-for-fun.eu
     Port 2222
