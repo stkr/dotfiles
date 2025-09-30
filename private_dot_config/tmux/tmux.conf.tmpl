@@ -99,8 +99,7 @@ we do some static translation to get to a useful value */}}
 {{-     if contains "us-aus01" (lower .chezmoi.fqdnHostname) }}
 {{-         $static_hostname = "nxdi-austin" }}
 {{-     end }}
-{{- else if contains "nxdi" (lower .chezmoi.fqdnHostname) }}
-{{-     if contains "us-awsc1" (lower .chezmoi.fqdnHostname) }}
+{{-     if contains "kr-awsc1" (lower .chezmoi.fqdnHostname) }}
 {{-         $static_hostname = "nxdi-seoul" }}
 {{-     end }}
 {{- end }}
