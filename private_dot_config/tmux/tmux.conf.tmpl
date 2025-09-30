@@ -60,31 +60,49 @@ bind-key -T copy-mode-vi Escape            send-keys -X cancel
 {{-     $fg_status_left  = "white" }}
 {{-     $bg_status_right = "blue" }}
 {{-     $fg_status_right = "white" }}
-{{ else if eq .host_color "cyan" }}
+{{- else if eq .host_color "cyan" }}
 {{-     $bg_status_left  = "cyan" }}
 {{-     $fg_status_left  = "white" }}
 {{-     $bg_status_right = "cyan" }}
 {{-     $fg_status_right = "white" }}
-{{ else if eq .host_color "green" }}
+{{- else if eq .host_color "green" }}
 {{-     $bg_status_left  = "green" }}
 {{-     $fg_status_left  = "white" }}
 {{-     $bg_status_right = "green" }}
 {{-     $fg_status_right = "white" }}
-{{ else if eq .host_color "magenta" }}
+{{- else if eq .host_color "magenta" }}
 {{-     $bg_status_left  = "magenta" }}
 {{-     $fg_status_left  = "white" }}
 {{-     $bg_status_right = "magenta" }}
 {{-     $fg_status_right = "white" }}
-{{ else if eq .host_color "red" }}
+{{- else if eq .host_color "red" }}
 {{-     $bg_status_left  = "red" }}
 {{-     $fg_status_left  = "white" }}
 {{-     $bg_status_right = "red" }}
 {{-     $fg_status_right = "white" }}
-{{ else if eq .host_color "yellow" }}
+{{- else if eq .host_color "yellow" }}
 {{-     $bg_status_left  = "yellow" }}
 {{-     $fg_status_left  = "white" }}
 {{-     $bg_status_right = "yellow" }}
 {{-     $fg_status_right = "white" }}
+{{- end }}
+
+{{- /* As for the hostname - some environments use a ridiculously convoluted
+hostname construct that would fill the whole status bar on its own, therefore,
+we do some static translation to get to a useful value */}}
+{{- $static_hostname              := .chezmoi.hostname }}
+{{- if contains "swis" (lower .chezmoi.fqdnHostname) }}
+{{-     if contains "eu-west" (lower .chezmoi.fqdnHostname) }}
+{{-         $static_hostname = "swis-ireland" }}
+{{-     end }}
+{{- else if contains "nxdi" (lower .chezmoi.fqdnHostname) }}
+{{-     if contains "us-aus01" (lower .chezmoi.fqdnHostname) }}
+{{-         $static_hostname = "nxdi-austin" }}
+{{-     end }}
+{{- else if contains "nxdi" (lower .chezmoi.fqdnHostname) }}
+{{-     if contains "us-awsc1" (lower .chezmoi.fqdnHostname) }}
+{{-         $static_hostname = "nxdi-seoul" }}
+{{-     end }}
 {{- end }}
 
 set -g status-left-style bg={{$bg_status_left}},fg={{$fg_status_left}}
@@ -98,12 +116,11 @@ set -g window-status-activity-style bg={{$bg_window_status_activity}},fg={{$fg_w
 set -g window-status-bell-style bg={{$bg_window_status_bell}},fg={{$fg_window_status_bell}}
 set -g window-status-separator "| "
 
-
 # Display session name on the left
 set -g status-left ' [#{=10:session_name}]  #[bg={{$bg_status}},fg={{$bg_status_right}}]#[fg={{$fg_status}}]  '
 
 # Display hostname in the statusline on the right
-set -g status-right '#[bg={{$bg_status}}]#[fg={{$bg_status_right}}]#[default]  #{host} | %H:%M '
+set -g status-right '#[bg={{$bg_status}}]#[fg={{$bg_status_right}}]#[default]  {{$static_hostname}} | %H:%M '
 
 # Automatically set pane title
 set -g automatic-rename on
@@ -112,7 +129,7 @@ set -g automatic-rename-format "#{=32:pane_title}"
 
 # Make the terminal window show some useful information
 set-option -g set-titles on
-set-option -g set-titles-string "#{host}"
+set-option -g set-titles-string "{{$static_hostname}}"
 
 set -g monitor-activity on
 
