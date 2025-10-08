@@ -33,6 +33,7 @@ return
             capabilities = lsp_utils.get_capabilities(),
             cmd = {
                 "clangd",
+                "--header-insertion=never",
                 "--header-insertion-decorators=false",
             }
         }
