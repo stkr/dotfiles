@@ -183,6 +183,13 @@ bind -n M-7 "select-window -t:7"
 bind -n M-8 "select-window -t:8"
 bind -n M-9 "select-window -t:9"
 
+{{- if contains "swis" (lower .chezmoi.fqdnHostname) }}
+{{-     if contains "eu-west" (lower .chezmoi.fqdnHostname) }}
+bind M-1 "attach-session -t def"
+bind M-2 "attach-session -t rom"
+bind M-3 "attach-session -t tst"
+{{-     end }}
+{{- end }}
 
 bind-key -T copy-mode-vi 'C-h' select-pane -L
 bind-key -T copy-mode-vi 'C-j' select-pane -D
