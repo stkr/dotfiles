@@ -61,8 +61,8 @@ Match host graz-pi5 localnetwork 10.84.1.0/24 exec "nc -w 1 -z 10.84.1.40 %p"
 #     HostName 10.101.1.40
 # If we are in the global VPN, use this. This can also be used to bypass
 # rate limits, but is an additional indirection and not so quick - therefore disabled.
-# Match host graz-pi5 localnetwork 10.10.0.0/16 exec "nc -w 1 -z 10.10.1.40 %p"
-#     HostName 10.10.1.40
+Match host graz-pi5 localnetwork 10.10.0.0/16 exec "nc -w 1 -z 10.10.2.40 %p"
+    HostName 10.10.2.40
 # Fallback to the public (internet) address.
 # Also, all other directives (that were not set by any match above) are applied!
 {{- end -}}
@@ -77,9 +77,9 @@ Match host graz-pi3 localnetwork 10.84.1.0/24 exec "nc -w 1 -z 10.84.1.41 %p"
 # Match host graz-pi3 localnetwork 10.101.0.0/16 exec "nc -w 1 -z 10.101.1.41 %p"
 #     HostName 10.101.1.41
 #     Port 22
-# Match host graz-pi3 localnetwork 10.10.0.0/16 exec "nc -w 1 -z 10.10.1.41 %p"
-#     HostName 10.10.1.41
-#     Port 22
+Match host graz-pi3 localnetwork 10.10.0.0/16 exec "nc -w 1 -z 10.10.1.41 %p"
+    HostName 10.10.1.41
+    Port 22
 # Fallback to the public (internet) address. Note, it has to use a different
 # port as multiple hosts are exposed via a single public ip address.
 # Also, all other directives (that were not set by any match above) are applied!
@@ -87,4 +87,11 @@ Match host graz-pi3 localnetwork 10.84.1.0/24 exec "nc -w 1 -z 10.84.1.41 %p"
 Host graz-pi3
     HostName graz.it-for-fun.eu
     Port 2222
+    ForwardAgent yes
+
+# Prefer connection over vpn if available
+Match host vps-germany localnetwork 10.10.0.0/16 exec "nc -w 1 -z 10.10.10.10 %p"
+    HostName 10.10.10.10
+Host vps-germany
+    HostName www.it-for-fun.eu
     ForwardAgent yes
