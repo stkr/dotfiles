@@ -1,3 +1,11 @@
+{{- $ssh_supports_localnetwork := false }}
+{{- if lookPath "ssh" }}
+{{-     $ssh_version_major := output "bash" "-c" "ssh -V 2>&1 | grep -o -e '[0-9]*' | head -n1" | trim | int }}
+{{-     $ssh_version_minor := output "bash" "-c" "ssh -V 2>&1 | grep -o -e '[0-9]*' | head -n2 | tail -n1" | trim |int }}
+{{- /* ssh supports localnetwork statemet since version 9.3 */ -}}
+{{-     $ssh_supports_localnetwork = or (gt $ssh_version_major 9) (and (eq $ssh_version_major 9) (gt $ssh_version_minor 2)) }}
+{{- end -}}
+
 Include config.d/*
 AddKeysToAgent yes
 
@@ -40,7 +48,7 @@ Host zebu
     Hostname vsv0180001.nxdi.us-aus01.nxp.com
     ForwardAgent yes
 
-{{ if .ssh_supports_localnetwork }}
+{{ if $ssh_supports_localnetwork }}
 # This does select the best route to a host. It checks for a
 # particular network and checks whehter a port is opened at
 # a particular address and if it is, it uses that as HostName.
@@ -62,7 +70,7 @@ Host graz-pi5
     HostName graz.it-for-fun.eu
     ForwardAgent yes
 
-{{ if .ssh_supports_localnetwork }}
+{{ if $ssh_supports_localnetwork }}
 Match host graz-pi3 localnetwork 10.84.1.0/24 exec "nc -w 1 -z 10.84.1.41 %p"
     HostName 10.84.1.41
     Port 22
