@@ -1,4 +1,17 @@
+{{- if stat "/usr/share/terminfo/t/tmux-256color" }}
 set -g default-terminal "tmux-256color"
+{{- else if stat "/usr/share/terminfo/t/tmux" }}
+set -g default-terminal "tmux"
+{{- else if stat "/usr/share/terminfo/t/tmux-direct" }}
+set -g default-terminal "tmux-direct"
+{{- else if stat "/usr/share/terminfo/t/screen-256color" }}
+set -g default-terminal "screen-256color"
+{{- else if stat "/usr/share/terminfo/t/screen" }}
+set -g default-terminal "screen"
+{{- else }}
+Unable to find a terminfo file to use!!
+{{- end }}
+
 set -ga terminal-overrides ",*256color*:Tc"
 set -ga terminal-overrides ",xterm-termite:Tc"
 set -ga terminal-overrides ",alacritty:Tc"
