@@ -90,6 +90,20 @@ Host graz-pi3
     ForwardAgent yes
 
 {{ if $ssh_supports_localnetwork }}
+Match host ardning-pi3 localnetwork 10.10.0.0/16 exec "nc -w 1 -z 10.10.2.40 %p"
+    HostName 10.10.2.40
+    Port 22
+# Fallback to the public (internet) address. Note, it has to use a different
+# port as multiple hosts are exposed via a single public ip address.
+# Also, all other directives (that were not set by any match above) are applied!
+{{- end }}
+Host ardning-pi3
+    HostName ardning.it-for-fun.eu
+    Port 32109
+    ForwardAgent yes
+
+
+{{ if $ssh_supports_localnetwork }}
 # Prefer connection over vpn if available
 Match host vps-germany localnetwork 10.10.0.0/16 exec "nc -w 1 -z 10.10.10.10 %p"
     HostName 10.10.10.10
