@@ -11,6 +11,8 @@ return
                 -- have other formatters configured.
                 ["_"] = {},
                 ['json'] = { "jq" },
+                ['bash'] = { "shfmt" },
+                ['sh'] = { "shfmt" },
             },
             default_format_opts = {
                 lsp_format = "fallback",
