@@ -15,6 +15,9 @@ if vim.env.USER ~= "root" then
     vim.opt.rtp:prepend(lazypath)
 end
 
+-- include useful optional built-in plugins
+vim.cmd.packadd('cfilter')
+
 -- require important helper functions
 local utils = require("utils")
 local version = vim.version()
