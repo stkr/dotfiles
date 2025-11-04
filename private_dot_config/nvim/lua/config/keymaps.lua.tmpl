@@ -404,15 +404,3 @@ vim.keymap.set('n', '<leader>.', "<cmd>e#<cr>", { desc = "Edit alternate/most re
 vim.keymap.set('n', '<leader>,', "<cmd>w<cr>", { desc = "Save file" })
 
 vim.keymap.set('t', "<esc><esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-
-------------- since v0.11.0, nvim comes with a few default lsp mappings starting
---- with gr. However I am so used to using gr+textobject for replacing text (using
---- nvim substitute plugin), I won't be able to unlearn that. Therefore those new
---- default mappings need to be unmapped.
-if vim.fn.has('nvim-0.11') == 1 then
-    vim.keymap.del('n', 'grn')
-    vim.keymap.del('n', 'grr')
-    vim.keymap.del('n', 'gri')
-    vim.keymap.del('n', 'gra')
-    vim.keymap.del('x', 'gra')
-end

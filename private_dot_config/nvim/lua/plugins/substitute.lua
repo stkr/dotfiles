@@ -1,7 +1,7 @@
 return
 {
     "gbprod/substitute.nvim",
-    enabled = true,
+    enabled = false,
     opts = {
         -- would be nice, but is buggy for dotrepeat (always jumps back to the first replacement)
         preserve_cursor_position = false,

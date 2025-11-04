@@ -29,5 +29,6 @@ return
                 file = ".session.vim",
             })
             require("mini.icons").setup({})
+            require("mini.operators").setup({})
         end
     }
