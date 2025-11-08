@@ -20,7 +20,6 @@ return
             vim.keymap.set("n", "l", api.node.open.edit, opts("Edit or Open"))
             vim.keymap.set("n", "h", api.node.navigate.parent_close, opts("Close directory"))
             vim.keymap.set("n", "dd", api.fs.remove, opts("Delete"))
-
         end
 
         local tree = require("nvim-tree")

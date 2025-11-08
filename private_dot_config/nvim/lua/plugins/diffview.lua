@@ -8,10 +8,10 @@ return
     },
     opts = {
         hooks = {
-                diff_buf_read = function(bufnr)
-                    vim.opt_local.wrap = false
-                end,
-            },
+            diff_buf_read = function(bufnr)
+                vim.opt_local.wrap = false
+            end,
+        },
         view = {
             merge_tool = {
                 layout = "diff3_mixed",

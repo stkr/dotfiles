@@ -13,7 +13,7 @@ return
 
         -- ##################### generic server configuration ################
         --
-        local servers = { }
+        local servers = {}
         for _, lsp in ipairs(servers) do
             lspconfig[lsp].setup {
                 on_attach = lsp_utils.on_attach,

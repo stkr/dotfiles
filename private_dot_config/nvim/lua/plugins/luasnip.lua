@@ -1,6 +1,6 @@
-return 
+return
 {
-	"L3MON4D3/LuaSnip",
-	build = "make install_jsregexp",
+    "L3MON4D3/LuaSnip",
+    build = "make install_jsregexp",
     lazy = true,
 }

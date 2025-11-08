@@ -92,9 +92,9 @@ function diff_utils.choose(all_selected)
     local buffer_indices, options = _get_options()
     if buffer_indices ~= nil and options ~= nil then
         local combined = {}
-        for _,selected in ipairs(all_selected) do
+        for _, selected in ipairs(all_selected) do
             if options[selected] == nil then
-                utils.warn("Invalid selection ["..selected.."].")
+                utils.warn("Invalid selection [" .. selected .. "].")
             else
                 combined = utils.concat(combined, options[selected])
             end

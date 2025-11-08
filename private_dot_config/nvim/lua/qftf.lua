@@ -64,8 +64,8 @@ function _G.qftf(info)
         local str
         if e.valid == 1 then
             local qtype = e.type == '' and '' or ' ' .. e.type:sub(1, 1):upper()
-            -- string.format limits the length of a %s string to 99 characters which is 
-            -- not always enough (%100s is invalid!). So instead, we pad the fname 
+            -- string.format limits the length of a %s string to 99 characters which is
+            -- not always enough (%100s is invalid!). So instead, we pad the fname
             -- manually here
             local fname_padded = e.fname .. string.rep(" ", fname_limit - #e.fname)
             str = fmt:format(fname_padded, e.lnum, e.col, qtype, e.text)
