@@ -22,7 +22,26 @@ return
         })
         require("mini.cursorword").setup({})
         require("mini.align").setup({})
-        require("mini.ai").setup({ search_method = "cover" })
+        require("mini.ai").setup({
+            search_method = "cover",
+            mappings = {
+                -- This is a bit clumsy way to disable those by assigning them
+                -- a crazy unused binding.
+                around_last = 'a#',
+                inside_last = 'i#',
+            },
+            custom_textobjects = {
+                l = function()
+                    local current_line_nr = vim.api.nvim_win_get_cursor(0)[1]
+                    local from = { line = current_line_nr, col = 1, }
+                    local to = {
+                        line = current_line_nr,
+                        col = math.max(vim.fn.col('$') - 1, 1),
+                    }
+                    return { from = from, to = to, }
+                end,
+            },
+        })
         require("mini.bracketed").setup({})
         require("mini.sessions").setup({
             autoread = false,
