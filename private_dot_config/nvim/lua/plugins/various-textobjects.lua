@@ -2,6 +2,7 @@ return
 {
     "chrisgrieser/nvim-various-textobjs",
     commit = '069f11ecabd18a170da96ad112498374dda57a31',
+    enabled = false,
     config = function()
         require("various-textobjs").setup({
             forwardLooking = {
