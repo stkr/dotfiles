@@ -313,6 +313,18 @@ vim.keymap.set('n', '<leader>swe', nmap_subst('%s+$', ''), { desc = "Delete whit
 vim.keymap.set('n', '<leader>swu', "<cmd>set ff=unix<cr>", { desc = "Set file format to unix (eol)" })
 vim.keymap.set('n', '<leader>sww', "<cmd>set ff=dos<cr>", { desc = "Set file format to dos/windows (eol)" })
 
+vim.keymap.set('n', '<leader>sqw', function()
+    local line_nr = vim.api.nvim_win_get_cursor(0)[1] - 1
+    local bufline = vim.api.nvim_buf_get_lines(0, line_nr, line_nr + 1, true)[1]
+    local quoted_words = {}
+    for word in string.gmatch(bufline, "[^%s]+") do
+        table.insert(quoted_words, '"' .. word .. '"')
+    end
+    bufline = table.concat(quoted_words, " ")
+    vim.api.nvim_buf_set_lines(0, line_nr, line_nr + 1, true, { bufline })
+end, { desc = "Quote words" })
+
+
 vim.keymap.set('v', '<leader>spu', vmap_subst('\\', '/'), { desc = "Convert slashes to unix format" })
 vim.keymap.set('v', '<leader>spw', vmap_subst('/', '\\'), { desc = "Convert slashes to windows format" })
 
