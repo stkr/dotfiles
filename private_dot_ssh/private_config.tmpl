@@ -74,9 +74,6 @@ Host graz-pi5
 Match host graz-pi3 localnetwork 10.84.1.0/24 exec "nc -w 1 -z 10.84.1.41 %p"
     HostName 10.84.1.41
     Port 22
-# Match host graz-pi3 localnetwork 10.101.0.0/16 exec "nc -w 1 -z 10.101.1.41 %p"
-#     HostName 10.101.1.41
-#     Port 22
 Match host graz-pi3 localnetwork 10.10.0.0/16 exec "nc -w 1 -z 10.10.1.41 %p"
     HostName 10.10.1.41
     Port 22
@@ -95,6 +92,9 @@ Host graz-pi3
     ForwardAgent yes
 
 {{ if $ssh_supports_localnetwork }}
+Match host ardning-pi3 localnetwork 10.0.0.0/16 exec "nc -w 1 -z 10.0.0.99 %p"
+    HostName 10.0.0.99
+    Port 22
 Match host ardning-pi3 localnetwork 10.10.0.0/16 exec "nc -w 1 -z 10.10.2.40 %p"
     HostName 10.10.2.40
     Port 22
