@@ -1,11 +1,11 @@
 customCommands:
-  - key: 'x'
-    context: 'files'
+  - key: "x"
+    context: "files"
     command: "rm {{.SelectedFile.Name | quote}}"
-    prompts: 
-    - type: 'confirm'
-      title: "Delete file"
-      body: 'Are you sure you want to delete {{.SelectedFile.Name | quote}}?'
+    prompts:
+      - type: "confirm"
+        title: "Delete file"
+        body: "Are you sure you want to delete {{.SelectedFile.Name | quote}}?"
 
 git:
   commit:
@@ -14,6 +14,10 @@ git:
 #     colorArg: always
 #     pager: delta --dark --paging=never
 #     # externalDiffCommand: git diff --color=always
+gui:
+  theme:
+    selectedLineBgColor:
+      -  '#CCCCCC'
 keybinding:
   universal:
     prevBlock-alt: ""
@@ -21,4 +25,3 @@ keybinding:
   files:
     commitChanges: C
     commitChangesWithEditor: c
-    
