@@ -3,6 +3,7 @@
 {{- $nxdi := false -}}{{/* true if this machine is a nxdi machine */}}
 {{- $offline := false -}}{{/* true if this machine has no internet connection */}}
 {{- $host_color := "none" -}}
+{{- $dlp_proxy := "none" -}}
 
 
 {{- if contains "nxdi" (lower .chezmoi.fqdnHostname) -}}
@@ -14,6 +15,7 @@
 {{-     $work = true -}}
 {{-     $offline = true -}}
 {{-     $host_color = "blue" -}}
+{{-     $dlp_proxy = "dlp-proxy-ap-northeast-2.irm.nxp.com:8080" -}}
 {{- end -}}
 
 {{- if contains ".nxdi.us-aus" (lower .chezmoi.fqdnHostname) -}}
@@ -26,6 +28,7 @@
 {{-     $work = true -}}
 {{-     $offline = true -}}
 {{-     $host_color = "green" -}}
+{{-     $dlp_proxy = "dlp-proxy-eu-west-1.irm.nxp.com:8080" -}}
 {{- end -}}
 
 {{- if contains "nxl38689" (lower .chezmoi.fqdnHostname ) -}}
@@ -68,6 +71,7 @@
     nxdi = {{ $nxdi }}
     offline = {{ $offline }}
     host_color = "{{ $host_color }}"
+    dlp_proxy = "{{ $dlp_proxy }}"
 
 [edit]
     command = "nvim"
