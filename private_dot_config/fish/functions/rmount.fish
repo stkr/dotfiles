@@ -58,6 +58,7 @@ function rmount -d "SSH mount remote file system"
 
     while read -la line
         sshfs $line "$rmount_destination_path"
+        pushd "$rmount_destination_path"
         break
     end < "$rmount_config_file_path"
 
