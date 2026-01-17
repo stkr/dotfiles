@@ -9,7 +9,7 @@ customCommands:
 
 git:
   commit:
-    signOff: true
+    signOff: false
 #   paging:
 #     colorArg: always
 #     pager: delta --dark --paging=never
@@ -17,7 +17,7 @@ git:
 gui:
   theme:
     selectedLineBgColor:
-      -  '#CCCCCC'
+      - "#CCCCCC"
 keybinding:
   universal:
     prevBlock-alt: ""
