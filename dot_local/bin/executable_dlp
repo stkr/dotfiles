@@ -13,12 +13,15 @@ import subprocess
 import sys
 import threading
 import time
+import os
 
 YT_DLP_PATH = 'yt-dlp'
 MPV_PATH = 'mpv'
 
-VIDEO_DIR_PATH = '/home/stefan/.tmp/videos'
-LOG_FILE_PATH = VIDEO_DIR_PATH + '/download_and_play.log'
+HOME_PATH = pathlib.Path(os.environ['HOME'])
+VIDEO_DIR_PATH = HOME_PATH / '.tmp/video'
+VIDEO_DIR_PATH_SHARED = HOME_PATH / 'remote/player/Videos'
+LOG_FILE_PATH = VIDEO_DIR_PATH / 'download_and_play.log'
 MPV_IPC_SOCKET_PATH = pathlib.Path('/tmp/mpvsocket')
 
 NEWLINE = "\n".encode("utf-8")
@@ -51,21 +54,20 @@ def sane_filename(filename):
     return re.sub(r'[^\s\w\d-]', '_', filename)
 
 
-def download(url):
+def download(url, video_dir_path):
     now = datetime.datetime.now()
     filename = str(now.strftime("%Y-%m-%d-%H-%M-%S-%f"))
-    subprocess.run([YT_DLP_PATH, '-P', VIDEO_DIR_PATH, '-o', filename, '--write-info-json', url], check=True)
+    subprocess.run([YT_DLP_PATH, '-P', video_dir_path, '-o', filename, '--write-info-json', url], check=True)
 
-    video_dir = pathlib.Path(VIDEO_DIR_PATH)
-    info_path = video_dir.joinpath(filename + ".info.json")
-    video_path = get_video_path(video_dir, filename)
+    info_path = video_dir_path.joinpath(filename + ".info.json")
+    video_path = get_video_path(video_dir_path, filename)
     with open(info_path, "r") as fp:
         video_info = json.load(fp)
     new_filename = (now.strftime("%Y-%m-%d-%H-%M-%S") +
                     " - " + sane_filename(video_info['id']) +
                     " - " + sane_filename(video_info['title']) +
                     video_path.suffix)
-    new_path = video_dir.joinpath(new_filename)
+    new_path = video_dir_path.joinpath(new_filename)
     info_path.unlink()
     video_path.rename(new_path)
     return new_path
@@ -167,10 +169,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("url")
     parser.add_argument("--play", default=True, action=argparse.BooleanOptionalAction)
+    parser.add_argument("--shared", default=False, action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
     ipc = MpvIpc()
     try:
-        video_path = download(args.url)
+        video_dir_path = VIDEO_DIR_PATH_SHARED if args.shared else VIDEO_DIR_PATH
+        video_path = download(args.url, video_dir_path)
         logger.info(f"Successfully downloaded [{video_path}]")
         ipc.start()
         if args.play:
