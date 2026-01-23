@@ -185,14 +185,6 @@ export PATH="/home/imxrt2660_de/stec/bin:${PATH}"
 source /home/imxrt2660_de/stec/share/bash_completion.d/*
 {{- end }}
 
-{{- if ne .dlp_proxy "none" }}
-source ~/.private_env
-export https_proxy=https://$nxpid:$nxppwd@{{ .dlp_proxy }}
-export http_proxy=http://$nxpid:$nxppwd@{{ .dlp_proxy }}
-export HTTP_PROXY=http://$nxpid:$nxppwd@{{ .dlp_proxy }}
-export HTTPS_PROXY=http://$nxpid:$nxppwd@{{ .dlp_proxy }}
-{{- end }}
-
 {{- if $fzf_supports_config_gen }}
 # This must be after set -o vi (https://github.com/junegunn/fzf/issues/39)!
 eval "$( fzf --bash )"
