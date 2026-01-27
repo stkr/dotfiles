@@ -267,7 +267,7 @@ local function map_repeat_keys()
     if find_match_under_cursor() then
       jump_next_same(cnt)
     else
-      vim.cmd('normal! ' .. cnt .. 'n')
+      vim.api.nvim_feedkeys(cnt .. 'n', 'n', false)
     end
   end, { silent = true, noremap = true, desc = "Next occurrence of highlight under cursor (or default n)" })
 
@@ -276,7 +276,7 @@ local function map_repeat_keys()
     if find_match_under_cursor() then
       jump_prev_same(cnt)
     else
-      vim.cmd('normal! ' .. cnt .. 'N')
+      vim.api.nvim_feedkeys(cnt .. 'N', 'n', false)
     end
   end, { silent = true, noremap = true, desc = "Prev occurrence of highlight under cursor (or default N)" })
 end
