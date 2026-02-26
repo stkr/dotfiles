@@ -1,5 +1,6 @@
 .config/nvim/lua/plugins/obsession.lua
 .config/nvim/lua/plugins/toggleterm.lua
 .config/nvim/lua/plugins/rust-tools.lua
+.config/fish/functions/key-bindings.fish
 .local/bin/download_and_play.py
 .local/bin/tmp-clean.sh

@@ -20,15 +20,8 @@ if status is-interactive
     alias ce='chezmoi edit --apply'
 {{ end }}
 
-{{- if lookPath "fzf" }}
-    fzf --fish | source
-{{- end }}
-
-    # Load the fzf keybindings. Note, this relies on git_fzf.fish being
-    # installed in ~/.config/fish/functions!
-    if test -f ~/.config/fish/functions/git_fzf.fish
-        source ~/.config/fish/functions/git_fzf.fish
-        git_fzf_key_bindings
+    if test -f ~/.config/fish/functions/fzf_configure_bindings.fish
+        fzf_configure_bindings --git_status=\cgs --history=\cr --git_log=\cgl --variables=\v --processes=\cp --directory=\cd
     end
 
     # Use ctrl+l to complete one word of autosuggestion
