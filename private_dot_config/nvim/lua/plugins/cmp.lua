@@ -30,6 +30,7 @@ return
 {
     "hrsh7th/nvim-cmp",
     commit = "3403e2e",
+    enabled = false,
     event = "InsertEnter",
     dependencies = {
         { "hrsh7th/cmp-nvim-lsp", },

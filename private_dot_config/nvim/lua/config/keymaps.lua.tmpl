@@ -13,12 +13,10 @@
 
 local utils = require("utils")
 local function toggle_autocomplete()
-    local cmp = require('cmp')
-    if (cmp.get_config()['completion']['autocomplete'] == false) then
-        local types = require('cmp.types')
-        cmp.setup({ completion = { autocomplete = { types.cmp.TriggerEvent.TextChanged, } } })
+    if vim.b.completion == nil then
+        vim.b.completion = false
     else
-        cmp.setup({ completion = { autocomplete = false } })
+        vim.b.completion = not vim.b.completion
     end
 end
 
