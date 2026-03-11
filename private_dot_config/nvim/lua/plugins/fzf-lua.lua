@@ -48,5 +48,8 @@ return
             ["header"]  = { "fg", "Comment" },
             ["gutter"]  = "-1",
         },
+        files = {
+            formatter = "path.filename_first",
+        },
     },
 }
