@@ -1,0 +1,59 @@
+#!/usr/bin/bash
+
+# Check if no arguments were passed
+if [ $# -lt 1 ]; then
+    session="def"
+else
+    session="$1"
+fi
+
+window=1
+
+tmux has-session -t $session &>/dev/null
+if [[ "$?" != 0 ]]; then
+    # The session does not exist, create it
+    case $session in
+    def)
+        tmux new-session -s $session -d
+        ;;
+{{- if contains "swis" (lower .chezmoi.fqdnHostname) }}
+{{-     if contains "eu-west" (lower .chezmoi.fqdnHostname) }}
+    rom)
+        cd /home/${USER}/projects/s1xy/acme-gen3/s1xy/
+        tmux new-session -s $session -n vifm -d
+        tmux new-window -t $session:2 -n edit
+        tmux new-window -t $session:3 -n shell
+        tmux new-window -t $session:4 -n lazygit
+        tmux send-keys -t $sesion:1 "vifm ." C-m
+        tmux send-keys -t $sesion:2 "ele edit" C-m
+        tmux send-keys -t $sesion:4 "lazygit" C-m
+        window=2
+        ;;
+
+    tst)
+        cd /home/${USER}/projects/s1xy/ele-test
+        tmux new-session -s $session -n vifm -d
+        tmux new-window -t $session:2 -n edit
+        tmux new-window -t $session:3 -n shell
+        tmux new-window -t $session:4 -n lazygit
+        tmux send-keys -t $sesion:1 "vifm ." C-m
+        tmux send-keys -t $sesion:2 "ele init && nvim -S .session.vim" C-m
+        tmux send-keys -t $sesion:4 "lazygit" C-m
+        window=2
+        ;;
+
+    tp)
+        cd /home/${USER}/projects/s1xy/
+        tmux new-session -s $session -n vifm -d
+        tmux new-window -t $session:2 -n edit
+        tmux new-window -t $session:3 -n shell
+        tmux new-window -t $session:4 -n lazygit
+        window=2
+        ;;
+{{-     end }}
+{{- end }}
+    esac
+fi
+
+tmux attach-session -t $session:$window
+exit 0
