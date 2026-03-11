@@ -357,6 +357,8 @@ vim.keymap.set('n', '<leader>tg', "<cmd>BlameToggle<cr>", { desc = "Toggle git b
 vim.keymap.set('n', '<leader>tq', function() require("autosave").toggle() end, { desc = "Toggle autosave" })
 vim.keymap.set('n', '<leader>ty', function() require("copyright-updater").toggle() end,
     { desc = "Toggle auto update of copyright year" })
+-- The following is not working, no clue why not, it's not worth spending time to investigate
+-- vim.keymap.set('n', '<leader>tH', "<cmd>Hexmode<cr>", { desc = "Toggle hexmode" })
 
 
 
