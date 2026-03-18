@@ -14,6 +14,10 @@ return
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
     opts = {
+        enabled = function()
+            return vim.bo.buftype ~= "prompt"
+        end,
+
         -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
         -- 'super-tab' for mappings similar to vscode (tab to accept)
         -- 'enter' for enter to accept
@@ -49,7 +53,15 @@ return
         sources = {
             default = { 'lsp', 'path', 'snippets', 'buffer' },
         },
-        fuzzy = { implementation = "prefer_rust_with_warning" }
+        fuzzy = { implementation = "prefer_rust_with_warning" },
+        cmdline = {
+            keymap = {
+                preset = 'inherit',
+                ['<C-k>'] = { 'select_prev', 'fallback' },
+                ['<C-j>'] = { 'select_next', 'fallback' },
+            },
+            completion = { menu = { auto_show = false } },
+        },
     },
     opts_extend = { "sources.default" }
 }
