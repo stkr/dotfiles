@@ -29,8 +29,6 @@ local function lsp_progress()
     return ''
 end
 
-local palette = require("catppuccin.palettes").get_palette("latte")
-
 return
 {
     'nvim-lualine/lualine.nvim',
@@ -38,7 +36,6 @@ return
     opts = {
         options = {
             icons_enabled = true,
-            theme = 'catppuccin',
             component_separators = '|',
             section_separators = '',
             always_divide_middle = false,
@@ -53,7 +50,6 @@ return
             lualine_c = { {
                 "filename",
                 padding = 1,
-                color = { fg = palette['text'], bg = palette['surface1'], },
             }, },
             lualine_x = {},
             lualine_y = {},
