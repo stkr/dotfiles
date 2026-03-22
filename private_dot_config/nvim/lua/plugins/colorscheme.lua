@@ -16,7 +16,6 @@ return {
                     diffview = true,
                     notify = true,
                     telekasten = true,
-                    lsp_trouble = true,
                     which_key = true,
                 },
             })
