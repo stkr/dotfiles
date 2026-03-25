@@ -1,6 +1,7 @@
 return
 {
     'neovim/nvim-lspconfig',
+    enabled = true,
     dependencies = {
         'nvim-lua/lsp-status.nvim',
         'ray-x/lsp_signature.nvim',
@@ -8,17 +9,17 @@ return
         'williamboman/mason-lspconfig.nvim',
     },
     config = function()
-        local lspconfig = require("lspconfig")
         local lsp_utils = require("lsp_utils")
 
         -- ##################### generic server configuration ################
         --
         local servers = {}
         for _, lsp in ipairs(servers) do
-            lspconfig[lsp].setup {
+            vim.lsp.config(lsp, {
                 on_attach = lsp_utils.on_attach,
                 capabilities = lsp_utils.get_capabilities(),
-            }
+            })
+            vim.lsp.enable(server)
         end
 
 
@@ -28,7 +29,7 @@ return
         -- would result in an included header or not. This messes up formatting and deduplication
         -- of the code completion. Therefore, we need to disable that behaviour via command-line
         -- option.
-        lspconfig["clangd"].setup {
+        vim.lsp.config('clangd', {
             on_attach = lsp_utils.on_attach,
             capabilities = lsp_utils.get_capabilities(),
             cmd = {
@@ -36,7 +37,8 @@ return
                 "--header-insertion=never",
                 "--header-insertion-decorators=false",
             }
-        }
+        })
+        vim.lsp.enable('clangd')
 
 
         -- ##################### pylsp ################
@@ -46,7 +48,7 @@ return
         -- is launched from that shell.
         -- This allows to access the language servers as well as to run python
         -- code from within nvim with the same environment.
-        lspconfig.pylsp.setup {
+        vim.lsp.config('pylsp', {
             on_attach = lsp_utils.on_attach,
             capabilities = lsp_utils.get_capabilities(),
             settings = {
@@ -73,7 +75,8 @@ return
                     }
                 }
             }
-        }
+        })
+        vim.lsp.enable('pylsp')
 
         -- ##################### lua_ls ################
         --
@@ -83,7 +86,7 @@ return
         table.insert(runtime_path, 'lua/?.lua')
         table.insert(runtime_path, 'lua/?/init.lua')
 
-        lspconfig.lua_ls.setup({
+        vim.lsp.config('lua_ls', {
             on_attach = lsp_utils.on_attach,
             capabilities = lsp_utils.get_capabilities(),
             settings = {
@@ -110,8 +113,9 @@ return
                 },
             },
         })
+        vim.lsp.enable('lua_ls')
 
-        lspconfig.yamlls.setup({
+        vim.lsp.config('yamlls', {
             on_attach = function(client, bufnr)
                 client.server_capabilities.documentFormattingProvider = true
                 lsp_utils.on_attach(client, bufnr)
@@ -129,5 +133,7 @@ return
                 }
             }
         })
+
+        vim.lsp.enable("yamlls")
     end,
 }
