@@ -129,6 +129,10 @@ fi
 export PATH="$HOME/bin:$HOME/.local/bin:$HOME/.local/scripts:$PATH"
 export LD_LIBRARY_PATH="$HOME/lib:$HOME/.local/lib:$LD_LIBRARY_PATH"
 
+{{ if stat (joinPath .chezmoi.homeDir "/.local/opt/lua-language-server-3.16.2-linux-x64/bin") -}}
+export PATH="$HOME/.local/opt/lua-language-server-3.16.2-linux-x64/bin:$PATH"
+{{ end }}
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
