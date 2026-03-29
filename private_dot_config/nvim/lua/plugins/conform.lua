@@ -13,6 +13,7 @@ return
                 ['json'] = { "jq" },
                 ['bash'] = { "shfmt" },
                 ['sh'] = { "shfmt" },
+                ['python'] = { "black" },
             },
             default_format_opts = {
                 lsp_format = "first",
