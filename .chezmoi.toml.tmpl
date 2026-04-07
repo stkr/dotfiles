@@ -2,8 +2,28 @@
 {{- $work := false -}}{{/* true if this machine is a work machine */}}
 {{- $nxdi := false -}}{{/* true if this machine is a nxdi machine */}}
 {{- $offline := false -}}{{/* true if this machine has no internet connection */}}
+
+{{/* more host specific information */}}
 {{- $host_color := "none" -}}
 {{- $dlp_proxy := "none" -}}
+
+{{- $nvim_path := "" }}
+{{- $nvim := false }}
+{{- $nvim_version_major := 0 }}
+{{- $nvim_version_minor := 0 }}
+{{- $nvim_version_patch := 0 }}
+{{- if stat (joinPath .chezmoi.homeDir "/.local/opt/nvim-v0.12.1/bin") -}}
+{{-     $nvim_path = joinPath .chezmoi.homeDir "/.local/opt/nvim-v0.12.1/bin" -}}
+{{-     $nvim = true }}
+{{-     $nvim_version_major = 0 }}
+{{-     $nvim_version_minor = 12 }}
+{{-     $nvim_version_patch = 1 }}
+{{- else if lookPath "nvim" }}
+{{-     $nvim = true }}
+{{-     $nvim_version_major = output "bash" "-c" "nvim --version 2>&1 | grep 'NVIM' | grep -o -e '[0-9]*' | head -n1" | trim | int }}
+{{-     $nvim_version_minor = output "bash" "-c" "nvim --version 2>&1 | grep 'NVIM' | grep -o -e '[0-9]*' | head -n2 | tail -n1" | trim | int }}
+{{-     $nvim_version_patch = output "bash" "-c" "nvim --version 2>&1 | grep 'NVIM' | grep -o -e '[0-9]*' | head -n3 | tail -n1" | trim | int }}
+{{- end -}}
 
 
 {{- if contains "nxdi" (lower .chezmoi.fqdnHostname) -}}
@@ -72,6 +92,11 @@
     offline = {{ $offline }}
     host_color = "{{ $host_color }}"
     dlp_proxy = "{{ $dlp_proxy }}"
+    nvim_path = "{{ $nvim_path }}"
+    nvim = {{ $nvim }}
+    nvim_version_major = {{ $nvim_version_major }}
+    nvim_version_minor = {{ $nvim_version_minor }}
+    nvim_version_patch = {{ $nvim_version_patch }}
 
 [edit]
     command = "nvim"
