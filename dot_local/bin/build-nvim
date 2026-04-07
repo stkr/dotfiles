@@ -1,0 +1,52 @@
+#!/usr/bin/bash
+
+set -x
+set -e
+
+# Nvim version to build
+nvim_version="0.12.1"
+
+# Set to 1 to transmft the sources + downloaded dependencies
+prepare_for_offline_build=0
+
+# If sources are available on transmft, set the corresponding
+# id here to trigger oflline build.
+# transmft_id="uQRx5087o"
+
+
+build_dir="${HOME}/.tmp/nvim_build"
+tar_filename="v${nvim_version}.tar.gz"
+tar_url="https://github.com/neovim/neovim/archive/refs/tags/${tar_filename}"
+source_dir_name="neovim-${nvim_version}"
+install_prefix="${HOME}/.local/opt/nvim-v${nvim_version}"
+
+mkdir -p "${build_dir}"
+mkdir -p "${install_prefix}"
+
+pushd "${build_dir}"
+
+if [[ -n "${transmft_id}" ]]; then
+    echo "### Offline install from transmft sources"
+    transmft -g "${transmft_id}"
+else
+    echo "### Online install from github sources"
+    if [[ ! -f "$tar_filename" ]]; then
+        wget "$tar_url"
+    fi
+
+    tar -xf "$tar_filename"
+
+    mkdir -p "${source_dir_name}/.deps"
+    git clone "https://github.com/neovim/deps" "${source_dir_name}/.deps/build"
+
+    if [[ "$prepare_for_offline_build" -eq 1 ]]; then
+        transmft -p "${source_dir_name}"
+    fi
+fi
+
+pushd "${source_dir_name}"
+make deps DEPS_CMAKE_FLAGS=-DUSE_EXISTING_SRC_DIR=ON
+make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=${install_prefix}" install
+popd
+
+popd
