@@ -34,6 +34,7 @@ return
             preset = 'enter',
             ['<C-k>'] = { 'select_prev', 'fallback' },
             ['<C-j>'] = { 'select_next', 'fallback' },
+            ['<Esc>'] = { 'hide', 'fallback' },
         },
 
         appearance = {
