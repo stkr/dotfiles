@@ -3,6 +3,7 @@ return
     'nvim-treesitter/nvim-treesitter-textobjects',
     commit = "ad8f0a4",
     lazy = true,
+    enabled = false,
     cond = function() return require('utils').is_plugin_registered('nvim-treesitter') end,
     config = function()
         require('nvim-treesitter.configs').setup({

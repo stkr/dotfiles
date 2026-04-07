@@ -1,14 +1,13 @@
+
+{{- if lt .nvim_version_minor 12 }}
+
 return
 {
     'nvim-treesitter/nvim-treesitter',
-{{- if lt .nvim_version_minor 12 }}
     branch = 'master',
-{{- else }}
-    branch = 'main',
-{{- end }}
     config = function()
         require("nvim-treesitter.install").prefer_git = true
-{{- if .offline }}
+{{-     if .offline }}
         local vendor_path = os.getenv('HOME') .. '/.tmp/treesitter-source/'
         local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
         parser_config["bash"].install_info.url = vendor_path .. "tree-sitter-bash"
@@ -73,47 +72,60 @@ return
         parser_config["vimdoc"].install_info.url = vendor_path .. "tree-sitter-vimdoc"
         parser_config["xml"].install_info.url = vendor_path .. "tree-sitter-xml"
         parser_config["yaml"].install_info.url = vendor_path .. "tree-sitter-yaml"
-{{- end }}
-
-        require('nvim-treesitter.configs').setup {
-            ensure_installed = { "bash", "c", "c_sharp", "cmake", "cpp", "css", "csv", "devicetree",
-                "dockerfile", "dot", "doxygen", "dtd", "fish", "gdscript", "git_config", "git_rebase",
-                "gitattributes", "gitcommit", "gitignore", "godot_resource", "gpg", "html", "http",
-                "java", "javascript", "json5", "kconfig", "kotlin", "lua", "luap", "make", "markdown",
-                "markdown_inline", "matlab", "ninja", "objdump", "pem", "perl", "proto", "python",
-                "regex", "rst", "ruby", "rust", "sql", "ssh_config", "toml", "verilog",
-                "vim", "vimdoc", "xml", "yaml", },
-            auto_install = false,
-            highlight = {
-                enable = true,
-                disable = function(lang, buf)
-                    local max_filesize = 500 * 1024
-                    local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-                    if ok and stats and stats.size > max_filesize then
-                        return true
-                    end
-                end,
-            },
-            incremental_selection = {
-                enable = true,
-                keymaps = {
-                    init_selection = nil,
-                    node_incremental = nil,
-                    scope_incremental = 'ga',
-                    node_decremental = nil,
-                },
-            },
-            indent = {
-                enable = true,
-                disable = {
-                    -- https://www.reddit.com/r/neovim/comments/1agynre/how_to_make_markdown_list_items_indent_behind_the/
-                    "markdown",     -- indentation at bullet points is worse than native neovim indentation
-                },
-            },
-        }
-    end,
+{{-     end }}
     build = ":TSUpdate",
     dependencies = {
         'nvim-treesitter/nvim-treesitter-textobjects',
     },
 }
+
+{{- else }}
+
+return
+{
+    'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
+    build = ":TSUpdate",
+    config = function(plugin)
+      ---@param buf integer
+      ---@param language string
+      local function treesitter_try_attach(buf, language)
+        -- check if parser exists and load it
+        if not vim.treesitter.language.add(language) then
+          return false
+        end
+        -- enables syntax highlighting and other treesitter features
+
+        vim.treesitter.start(buf, language)
+
+        -- enables treesitter based folds
+        vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+        vim.wo.foldmethod = "expr"
+        -- ensure folds are open to begin with
+        vim.o.foldlevel = 99
+
+        -- enables treesitter based indentation
+        vim.b.did_indent = 1 -- this right here prevents built-in indent scripts from loading
+        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+
+
+        return true
+      end
+
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function(args)
+          local buf, filetype = args.buf, args.match
+          local language = vim.treesitter.language.get_lang(filetype)
+          if not language then
+            return
+          end
+
+          if not treesitter_try_attach(buf,language) then
+          end
+
+        end,
+      })
+    end,
+}
+
+{{- end }}
