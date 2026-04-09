@@ -273,6 +273,14 @@ function utils.deep_copy(original)
     return copy
 end
 
+function utils.values(tbl)
+    local result = {}
+    for _, v in pairs(tbl) do
+        table.insert(result, v)
+    end
+    return result
+end
+
 function utils.get_python_path(workspace)
     local util = require('lspconfig/util')
     local path = util.path
