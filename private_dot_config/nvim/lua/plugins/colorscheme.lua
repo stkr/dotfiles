@@ -15,13 +15,11 @@ return {
                 integrations = {
                     diffview = true,
                     notify = true,
-                    telekasten = true,
                     which_key = true,
                 },
             })
             vim.o.termguicolors = true
-            vim.api.nvim_command 'colorscheme catppuccin'
-            vim.o.background = 'light'
+            vim.api.nvim_command 'colorscheme catppuccin-latte'
         end,
     },
 }
