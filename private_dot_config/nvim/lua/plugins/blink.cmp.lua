@@ -38,7 +38,18 @@ return
             preset = 'none',
             ['<C-j>'] = { 'select_next', 'fallback' },
             ['<Down>'] = { 'select_next', 'fallback' },
-            ['<Tab>'] = { 'show', 'select_next', 'fallback' },
+            ['<Tab>'] = {
+                function(cmp)
+                    local utils = require("utils")
+
+
+                    if utils.is_text_before_cursor() then
+                        return cmp.show()
+                    else
+                        return false
+                    end
+                end,
+                'select_next', 'fallback' },
             ['<C-k>'] = { 'select_prev', 'fallback' },
             ['<Up>'] = { 'select_prev', 'fallback' },
             ['<S-Tab>'] = { 'select_prev', 'fallback' },
