@@ -31,10 +31,25 @@ return
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
         keymap = {
-            preset = 'enter',
-            ['<C-k>'] = { 'select_prev', 'fallback' },
+            -- Note, for tab and s-tab the fallback action
+            -- includes snippet_forward and snippet_backward
+            -- implicitly, so if the completion menu is not open,
+            -- tab jumps through snippets.
+            preset = 'none',
             ['<C-j>'] = { 'select_next', 'fallback' },
-            ['<Esc>'] = { 'hide', 'fallback' },
+            ['<Down>'] = { 'select_next', 'fallback' },
+            ['<Tab>'] = { 'show', 'select_next', 'fallback' },
+            ['<C-k>'] = { 'select_prev', 'fallback' },
+            ['<Up>'] = { 'select_prev', 'fallback' },
+            ['<S-Tab>'] = { 'select_prev', 'fallback' },
+            ['<Esc>'] = { 'cancel', 'fallback' },
+            ['<CR>'] = { function(cmp)
+                if cmp.snippet_active() then
+                    return { cmp.accept(), cmp.snippet_forward() }
+                else
+                    return cmp.accept()
+                end
+            end, 'fallback' },
         },
 
         appearance = {
@@ -48,7 +63,10 @@ return
             -- on menu.auto_show == true! If you change that here, they will get out of sync!
             documentation = {
                 auto_show = false,
-            }
+            },
+            list = {
+                selection = { preselect = false, auto_insert = true },
+            },
         },
 
         sources = {
@@ -57,11 +75,21 @@ return
         fuzzy = { implementation = "prefer_rust_with_warning" },
         cmdline = {
             keymap = {
-                preset = 'inherit',
-                ['<C-k>'] = { 'select_prev', 'fallback' },
+                preset = 'none',
                 ['<C-j>'] = { 'select_next', 'fallback' },
+                ['<Down>'] = { 'select_next', 'fallback' },
+                ['<Tab>'] = { 'show', 'select_next', 'fallback' },
+                ['<C-k>'] = { 'select_prev', 'fallback' },
+                ['<Up>'] = { 'select_prev', 'fallback' },
+                ['<S-Tab>'] = { 'select_prev', 'fallback' },
+                ['<CR>'] = { 'accept', 'fallback' },
             },
-            completion = { menu = { auto_show = false } },
+            completion = {
+                menu = { auto_show = false },
+                list = {
+                    selection = { preselect = false, auto_insert = true },
+                },
+            },
         },
     },
     opts_extend = { "sources.default" }
