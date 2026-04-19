@@ -12,7 +12,13 @@
 {{- $nvim_version_major := 0 }}
 {{- $nvim_version_minor := 0 }}
 {{- $nvim_version_patch := 0 }}
-{{- if stat (joinPath .chezmoi.homeDir "/.local/opt/nvim-v0.12.1/bin") -}}
+{{- if stat "/opt/nvim-v0.12.1/bin" -}}
+{{-     $nvim_path = "/opt/nvim-v0.12.1/bin" -}}
+{{-     $nvim = true }}
+{{-     $nvim_version_major = 0 }}
+{{-     $nvim_version_minor = 12 }}
+{{-     $nvim_version_patch = 1 }}
+{{- else if stat (joinPath .chezmoi.homeDir "/.local/opt/nvim-v0.12.1/bin") -}}
 {{-     $nvim_path = joinPath .chezmoi.homeDir "/.local/opt/nvim-v0.12.1/bin" -}}
 {{-     $nvim = true }}
 {{-     $nvim_version_major = 0 }}
