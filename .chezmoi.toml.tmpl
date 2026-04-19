@@ -25,6 +25,17 @@
 {{-     $nvim_version_patch = output "bash" "-c" "nvim --version 2>&1 | grep 'NVIM' | grep -o -e '[0-9]*' | head -n3 | tail -n1" | trim | int }}
 {{- end -}}
 
+{{- $alacritty_path := "" }}
+{{- $alacritty := false }}
+{{- $alacritty_version_major := 0 }}
+{{- $alacritty_version_minor := 0 }}
+{{- $alacritty_version_patch := 0 }}
+{{- if lookPath "alacritty" }}
+{{-     $alacritty = true }}
+{{-     $alacritty_version_major = output "bash" "-c" "alacritty --version | grep -o -e '[0-9]*' | head -n1" | trim | int }}
+{{-     $alacritty_version_minor = output "bash" "-c" "alacritty --version | grep -o -e '[0-9]*' | head -n2 | tail -n1" | trim | int }}
+{{-     $alacritty_version_patch = output "bash" "-c" "alacritty --version | grep -o -e '[0-9]*' | head -n3 | tail -n1" | trim | int }}
+{{- end -}}
 
 {{- if contains "nxdi" (lower .chezmoi.fqdnHostname) -}}
 {{-     $work = true -}}
@@ -92,11 +103,18 @@
     offline = {{ $offline }}
     host_color = "{{ $host_color }}"
     dlp_proxy = "{{ $dlp_proxy }}"
+
     nvim_path = "{{ $nvim_path }}"
     nvim = {{ $nvim }}
     nvim_version_major = {{ $nvim_version_major }}
     nvim_version_minor = {{ $nvim_version_minor }}
     nvim_version_patch = {{ $nvim_version_patch }}
+
+    alacritty_path = "{{ $alacritty_path }}"
+    alacritty = {{ $alacritty }}
+    alacritty_version_major = {{ $alacritty_version_major }}
+    alacritty_version_minor = {{ $alacritty_version_minor }}
+    alacritty_version_patch = {{ $alacritty_version_patch }}
 
 [edit]
     command = "nvim"
