@@ -504,8 +504,15 @@ nnoremap <a-o> :sync %c<cr>
 " Swap panes
 " nnoremap <c-u> <c-w>x
 
-nnoremap <m-h> <tab>
-nnoremap <m-l> <tab>
+:if $TERM_PROGRAM == "tmux"
+    nnoremap <silent> <m-h> :if paneisat('left')   | execute '!tmux select-pane -L %i' | else | execute 'wincmd h' | endif<cr>
+    nnoremap <silent> <m-j> :if paneisat('bottom') | execute '!tmux select-pane -D %i' | else | execute 'wincmd j' | endif<cr>
+    nnoremap <silent> <m-k> :if paneisat('top')    | execute '!tmux select-pane -U %i' | else | execute 'wincmd k' | endif<cr>
+    nnoremap <silent> <m-l> :if paneisat('right')  | execute '!tmux select-pane -R %i' | else | execute 'wincmd l' | endif<cr>
+:else
+    nnoremap <silent> <m-h> :execute 'wincmd h'<cr>
+    nnoremap <silent> <m-l> :execute 'wincmd l'<cr>
+:end
 
 " Use / for filtering instead of =
 nmap / =
