@@ -20,6 +20,14 @@ local function toggle_autocomplete()
     end
 end
 
+local function toggle_pairs()
+    if vim.b.pairs == nil then
+        vim.b.pairs = false
+    else
+        vim.g.pairs = not vim.g.pairs
+    end
+end
+
 local function toggle_format_on_save()
     if vim.g.disable_autoformat then
         vim.g.disable_autoformat = false
@@ -359,6 +367,7 @@ vim.keymap.set('n', '<leader>ty', function() require("copyright-updater").toggle
     { desc = "Toggle auto update of copyright year" })
 -- The following is not working, no clue why not, it's not worth spending time to investigate
 -- vim.keymap.set('n', '<leader>tH', "<cmd>Hexmode<cr>", { desc = "Toggle hexmode" })
+vim.keymap.set('n', '<leader>tp', toggle_pairs, { desc = "Toggle pairs" })
 
 
 
