@@ -14,10 +14,10 @@ if status is-interactive
 
 {{ if eq .chezmoi.hostname "graz-pi3" "ardning-pi3" }}
     alias cm='snap run chezmoi'
-    alias ce='snap run chezmoi edit --apply'
+    alias ce='snap run chezmoi edit --watch'
 {{ else }}
     alias cm='chezmoi'
-    alias ce='chezmoi edit --apply'
+    alias ce='chezmoi edit --watch'
 {{ end }}
 
     # Enable vi keybindings.
