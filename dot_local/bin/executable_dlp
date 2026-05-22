@@ -23,6 +23,7 @@ VIDEO_DIR_PATH = HOME_PATH / ".tmp/video"
 VIDEO_DIR_PATH_SHARED = HOME_PATH / "remote/player/Videos"
 LOG_FILE_PATH = VIDEO_DIR_PATH / "download_and_play.log"
 MPV_IPC_SOCKET_PATH = pathlib.Path("/tmp/mpvsocket")
+COOKIE_PATH = None
 
 NEWLINE = "\n".encode("utf-8")
 
@@ -61,8 +62,22 @@ def sane_filename(filename):
 def download(url, video_dir_path):
     now = datetime.datetime.now()
     filename = str(now.strftime("%Y-%m-%d-%H-%M-%S-%f"))
+    args = [
+        YT_DLP_PATH,
+        "-P",
+        video_dir_path,
+        "-o",
+        filename,
+        "--write-info-json",
+    ]
+    if COOKIE_PATH is not None and COOKIE_PATH.is_dir():
+        args += [
+            "--cookies-from-browser",
+            COOKIE_PATH,
+        ]
+    args += [url]
     subprocess.run(
-        [YT_DLP_PATH, "-P", video_dir_path, "-o", filename, "--write-info-json", url],
+        args,
         check=True,
     )
 
