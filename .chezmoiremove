@@ -4,3 +4,5 @@
 .config/fish/functions/key-bindings.fish
 .local/bin/download_and_play.py
 .local/bin/tmp-clean.sh
+.config/plasma-workspace/env/ssh-agent-startup.sh
+.config/plasma-workspace/shutdown/ssh-agent-shutdown.sh
