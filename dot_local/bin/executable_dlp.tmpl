@@ -23,7 +23,11 @@ VIDEO_DIR_PATH = HOME_PATH / ".tmp/video"
 VIDEO_DIR_PATH_SHARED = HOME_PATH / "remote/player/Videos"
 LOG_FILE_PATH = VIDEO_DIR_PATH / "download_and_play.log"
 MPV_IPC_SOCKET_PATH = pathlib.Path("/tmp/mpvsocket")
+{{- if eq (lower .chezmoi.hostname) "asrock" }}
+COOKIE_PATH = "firefox:/home/stefan/.mozilla/firefox/w9h4cwfp.identified"
+{{- else }}
 COOKIE_PATH = None
+{{- end}}
 
 NEWLINE = "\n".encode("utf-8")
 
@@ -70,7 +74,7 @@ def download(url, video_dir_path):
         filename,
         "--write-info-json",
     ]
-    if COOKIE_PATH is not None and COOKIE_PATH.is_dir():
+    if COOKIE_PATH is not None:
         args += [
             "--cookies-from-browser",
             COOKIE_PATH,
