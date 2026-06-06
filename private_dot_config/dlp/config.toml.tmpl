@@ -1,0 +1,16 @@
+
+[general]
+version = 1
+
+[paths]
+mpv = "mpv"
+mpv_ipc_socket = "/tmp/mpvsocket"
+yt_dlp = "yt-dlp"
+videos = "~/.tmp/video"
+videos_shared = "~/remote/player/Videos"
+log_file = "~/.tmp/video/download_and_play.log"
+{{- if eq (lower .chezmoi.hostname) "asrock" }}
+cookies = "firefox:/home/stefan/.mozilla/firefox/w9h4cwfp.identified"
+{{- else }}
+cookies = "firefox:/home/stefan/.mozilla/firefox/w9h4cwfp.identified"
+{{- end }}
