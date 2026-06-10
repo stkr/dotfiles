@@ -1,5 +1,6 @@
 return {
   'saghen/blink.pairs',
+  enabled = true,
   version = '*', -- (recommended) only required with prebuilt binaries
 
   -- download prebuilt binaries from github releases
@@ -28,8 +29,10 @@ return {
 
     },
     highlights = {
-
-      enabled = true,
+      -- Highlighting is very slow on large files. Unfortunately there is
+      -- no way to dynamically enable/disable the highlighting. Only mappings
+      -- can be enabled dynamically.
+      enabled = false,
 
       -- requires require('vim._extui').enable({}), otherwise has no effect
       cmdline = true,
