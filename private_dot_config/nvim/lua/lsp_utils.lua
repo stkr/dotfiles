@@ -10,7 +10,10 @@ function _M.on_attach(client, bufnr)
     end
     local lsp_signature = utils.safe_require("lsp_signature")
     if lsp_signature ~= nil then
-        lsp_signature.on_attach({}, bufnr)
+        -- lsp-signature seems to be broken currently for lua (2026-04-09/a65b38f)
+        if vim.bo.filetype ~= 'lua' then
+            lsp_signature.on_attach({}, bufnr)
+        end
     end
 end
 
