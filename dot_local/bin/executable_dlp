@@ -80,11 +80,7 @@ class Config:
             videos=Path(config["paths"]["videos"]).expanduser(),
             videos_shared=Path(config["paths"]["videos_shared"]).expanduser(),
             log_file=Path(config["paths"]["log_file"]).expanduser(),
-            cookies=(
-                Path(config["paths"]["cookies"]).expanduser()
-                if Path(config["paths"]["cookies"]).expanduser().is_dir()
-                else None
-            ),
+            cookies=config["paths"]["cookies"],
         )
 
 
