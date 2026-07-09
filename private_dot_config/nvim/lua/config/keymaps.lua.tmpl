@@ -29,10 +29,10 @@ local function toggle_pairs()
 end
 
 local function toggle_format_on_save()
-    if vim.g.disable_autoformat then
-        vim.g.disable_autoformat = false
+    if vim.b.disable_autoformat then
+        vim.b.disable_autoformat = false
     else
-        vim.g.disable_autoformat = true
+        vim.b.disable_autoformat = true
     end
 end
 
