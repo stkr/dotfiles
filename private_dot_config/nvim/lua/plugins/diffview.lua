@@ -1,10 +1,19 @@
 return
 {
-    'sindrets/diffview.nvim',
-    dependencies = { "nvim-lua/plenary.nvim", },
-    cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose",
-        "DiffviewToggleFiles", "DiffviewFocusFiles",
-        "DiffviewRefresh", "DiffviewLog",
+    "dlyongemallo/diffview-plus.nvim",
+    version = "0.36",
+    cmd = {
+        "DiffviewOpen",
+        "DiffviewDiffFiles",
+        "DiffviewDiffDirs",
+        "DiffviewMergeFiles",
+        "DiffviewFileHistory",
+        "DiffviewClose",
+        "DiffviewToggle",
+        "DiffviewToggleFiles",
+        "DiffviewFocusFiles",
+        "DiffviewRefresh",
+        "DiffviewLog",
     },
     opts = {
         hooks = {
