@@ -42,7 +42,9 @@ return
                 end,
             },
         })
-        require("mini.bracketed").setup({})
+        require("mini.bracketed").setup({
+            comment = { suffix = "" },
+        })
         require("mini.sessions").setup({
             autoread = false,
             file = ".session.vim",
