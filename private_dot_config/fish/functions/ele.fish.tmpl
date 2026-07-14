@@ -52,7 +52,7 @@ function _ele_branch -a nr -a text
 
     set -l owner "sk"
     set -l branch "$owner/$JIRA_PROJECT-$nr-$text"
-    
+
     git checkout -b "$branch"; or return
     git push --set-upstream origin "$branch"; or return
 end
@@ -75,7 +75,7 @@ function _ele_bininfo -a objectfile
 
     # To check whether this is a bamboo build, we do try to disassemble main and capture warnings.
     set -l prefix_arg ""
-    set -l bamboo_warning ($objdump --disassemble-symbols=main --source $argv[1] &| grep -o "failed to find source.*" | grep bamboo -m 1 | string trim)
+    set -l bamboo_warning ($objdump --source $argv[1] &| grep -o "failed to find source.*" | grep bamboo -m 1 | string trim)
     if test -n "$bamboo_warning"
         set prefix_path (string match -g -r '(/.*)/s1xy/' $bamboo_warning)
         set -l prefix_strip (string split '/' "$prefix_path" | count)
@@ -102,7 +102,7 @@ function _ele_pub -a config
 
     set -l dst (head -n 1 "$config")
     tail -n+2 "$config" > /tmp/files
-    
+
     rsync -v --files-from /tmp/files . "$dst"
 end
 
