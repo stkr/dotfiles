@@ -13,7 +13,7 @@
 " ------------------------------------------------------------------------------
 
 " Enable tmux integration
-screen!
+" screen!
 
 " Command used to edit files in various contexts.  The default is vim.
 " If you would like to use another vi clone such as Elvis or Vile
@@ -367,6 +367,12 @@ filextype *.pro qtcreator %f &
 filextype */
         \ {View in thunar}
         \ Thunar %f &,
+
+" Default fallback for all other files is to open with nvim This is necessary
+" because the integrated tmux integration which can be enabled with `screen`
+" hardcodes the filename in the tmux window name but since tmux 3.7, no dots
+" and other special characters are allowed in window titles any more.
+filetype * vifm-edit.sh "%f"
 
 " Syntax highlighting in preview
 "
