@@ -12,17 +12,8 @@ return {
                 end
 
                 -- Navigation
-                map('n', ']c', function()
-                    if vim.wo.diff then return ']c' end
-                    vim.schedule(function() gs.next_hunk() end)
-                    return '<Ignore>'
-                end, { expr = true })
-
-                map('n', '[c', function()
-                    if vim.wo.diff then return '[c' end
-                    vim.schedule(function() gs.prev_hunk() end)
-                    return '<Ignore>'
-                end, { expr = true })
+                map('n', ']h', function() gs.nav_hunk("next") end, { desc = "Hunk forward" })
+                map('n', '[h', function() gs.nav_hunk("prev") end, { desc = "Hunk backward" })
 
                 -- Actions
                 map('n', '<leader>dn', utils.dotrepeat_create_func(
