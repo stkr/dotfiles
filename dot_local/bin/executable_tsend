@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+# tsend
+# Compresses a file or directory and sends via transmft.
+# Optionally encrypts with GPG when -e / --encrypt is given.
+
+set -euo pipefail
+
+# --- parse options ---
+ENCRYPT=0
+POSITIONAL=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+    -e | --encrypt)
+        ENCRYPT=1
+        shift
+        ;;
+    *)
+        POSITIONAL+=("$1")
+        shift
+        ;;
+    esac
+done
+set -- "${POSITIONAL[@]}"
+
+# --- GPG recipients (only needed when encrypting) ---
+if [[ $ENCRYPT -eq 1 ]]; then
+    RECIPIENTS_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/tsend/recipients"
+    if [[ ! -f "$RECIPIENTS_FILE" ]]; then
+        echo "Error: recipients file not found: $RECIPIENTS_FILE" >&2
+        echo "Create it with one GPG recipient per line, e.g.:" >&2
+        echo "  Alice <alice@example.com>" >&2
+        exit 1
+    fi
+    mapfile -t GPG_RECIPIENTS < <(grep -v '^\s*#' "$RECIPIENTS_FILE" | grep -v '^\s*$')
+    if [[ ${#GPG_RECIPIENTS[@]} -eq 0 ]]; then
+        echo "Error: no recipients found in $RECIPIENTS_FILE" >&2
+        exit 1
+    fi
+fi
+
+# --- argument check ---
+if [[ $# -ne 1 ]]; then
+    echo "Usage: $0 [-e|--encrypt] <file|directory>" >&2
+    exit 1
+fi
+
+INPUT="$1"
+
+if [[ ! -e "$INPUT" ]]; then
+    echo "Error: '$INPUT' does not exist." >&2
+    exit 1
+fi
+
+# Strip trailing slash so basename works correctly for directories
+INPUT="${INPUT%/}"
+BASENAME="$(basename "$INPUT")"
+TARFILE="${BASENAME}.tar.xz"
+ENCFILE="${TARFILE}.gpg"
+
+# --- step 1: compress ---
+echo "Compressing '$INPUT' -> '$TARFILE' ..."
+tar -cJf "$TARFILE" "$INPUT"
+
+# --- step 2: encrypt (optional) ---
+if [[ $ENCRYPT -eq 1 ]]; then
+    echo "Encrypting '$TARFILE' -> '$ENCFILE' ..."
+    GPG_RECIPIENT_ARGS=()
+    for RECIPIENT in "${GPG_RECIPIENTS[@]}"; do
+        GPG_RECIPIENT_ARGS+=(--recipient "$RECIPIENT")
+    done
+    gpg --encrypt-files "${GPG_RECIPIENT_ARGS[@]}" "$TARFILE"
+    SENDFILE="$ENCFILE"
+else
+    SENDFILE="$TARFILE"
+fi
+
+# --- step 3: send via transmft ---
+echo "Sending '$SENDFILE' via transmft ..."
+TRANSMFT_OUTPUT="$(transmft -p "$SENDFILE" 2>/dev/null)"
+echo "$TRANSMFT_OUTPUT"
+
+# --- extract file keyword and copy to clipboard ---
+FILE_KEYWORD="$(echo "$TRANSMFT_OUTPUT" | grep -oP 'File keyword is \K\S+')"
+if [[ -n "$FILE_KEYWORD" ]]; then
+    if command -v xclip &>/dev/null; then
+        echo -n "$FILE_KEYWORD" | xclip -selection clipboard
+        echo "File keyword '$FILE_KEYWORD' copied to clipboard (xclip)."
+    elif command -v xsel &>/dev/null; then
+        echo -n "$FILE_KEYWORD" | xsel --clipboard --input
+        echo "File keyword '$FILE_KEYWORD' copied to clipboard (xsel)."
+    else
+        echo "Warning: neither xclip nor xsel found. File keyword: $FILE_KEYWORD"
+    fi
+else
+    echo "Warning: could not extract file keyword from transmft output."
+fi
+
+# --- step 4: cleanup intermediates ---
+echo "Cleaning up intermediates ..."
+if [[ $ENCRYPT -eq 1 ]]; then
+    rm -f "$TARFILE" "$ENCFILE"
+else
+    rm -f "$TARFILE"
+fi
+
+echo "Done."

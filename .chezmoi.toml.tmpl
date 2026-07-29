@@ -2,6 +2,7 @@
 {{- $work := false -}}{{/* true if this machine is a work machine */}}
 {{- $nxdi := false -}}{{/* true if this machine is a nxdi machine */}}
 {{- $offline := false -}}{{/* true if this machine has no internet connection */}}
+{{- $transmft := false -}}{{/* true if the machine needs/has transmft for file transfer */}}
 
 {{/* more host specific information */}}
 {{- $host_color := "none" -}}
@@ -53,12 +54,14 @@
 {{-     $offline = true -}}
 {{-     $host_color = "blue" -}}
 {{-     $dlp_proxy = "dlp-proxy-ap-northeast-2.irm.nxp.com:8080" -}}
+{{-     $transmft = true -}}
 {{- end -}}
 
 {{- if contains ".nxdi.us-aus" (lower .chezmoi.fqdnHostname) -}}
 {{-     $work = true -}}
 {{-     $offline = true -}}
 {{-     $host_color = "yellow" -}}
+{{-     $transmft = true -}}
 {{- end -}}
 
 {{- if contains "swis-sde.eu-west-1.aws" (lower .chezmoi.fqdnHostname) -}}
@@ -66,11 +69,15 @@
 {{-     $offline = true -}}
 {{-     $host_color = "green" -}}
 {{-     $dlp_proxy = "dlp-proxy-eu-west-1.irm.nxp.com:8080" -}}
+{{-     $transmft = true -}}
 {{- end -}}
 
 {{- if contains "nxl38689" (lower .chezmoi.fqdnHostname ) -}}
 {{-     $work = true -}}
 {{-     $host_color = "cyan" -}}
+{{-     if contains "linux" (lower .chezmoi.os) -}} {{/* for wsl */}}
+{{-         $transmft = true -}}
+{{-     end -}}
 {{- end -}}
 
 
@@ -109,6 +116,7 @@
     offline = {{ $offline }}
     host_color = "{{ $host_color }}"
     dlp_proxy = "{{ $dlp_proxy }}"
+    transmft = "{{ $transmft }}"
 
     nvim_path = "{{ $nvim_path }}"
     nvim = {{ $nvim }}

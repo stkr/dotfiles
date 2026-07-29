@@ -1,3 +1,7 @@
 {{ if not (contains "nxdi.kr-aws" .chezmoi.fqdnHostname) }}
 .tcshrc.user
 {{ end }}
+{{ if not .transmft }}
+tsend
+trecv
+{{ end }}

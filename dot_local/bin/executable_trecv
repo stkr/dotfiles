@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# receive_and_decrypt.sh
+# Downloads a file via transmft, then decrypts (GPG) and/or decompresses (tar.xz).
+
+set -euo pipefail
+
+usage() {
+    echo "Usage: $0 <file-keyword>" >&2
+    exit 1
+}
+
+if [[ $# -ne 1 ]]; then
+    usage
+fi
+
+KEYWORD="$1"
+
+# --- step 1: download via transmft ---
+echo "Downloading file with keyword '$KEYWORD' via transmft ..."
+
+TRANSMFT_OUT=$(transmft -g "$KEYWORD" 2>&1)
+printf '%s\n' "$TRANSMFT_OUT"
+
+# Parse the downloaded filename from transmft output line:
+#   File '<name>' (<size>) retrieved from TransMFT.
+DOWNLOADED=$(printf '%s\n' "$TRANSMFT_OUT" | grep -oP "(?<=File ').*(?=' \()")
+
+if [[ -z "$DOWNLOADED" ]]; then
+    echo "Error: could not determine downloaded filename from transmft output." >&2
+    exit 1
+fi
+
+echo "Downloaded file: '$DOWNLOADED'"
+
+# --- step 2: decrypt if GPG-encrypted ---
+if [[ "$DOWNLOADED" == *.gpg ]]; then
+    DECRYPTED="${DOWNLOADED%.gpg}"
+    echo "Decrypting '$DOWNLOADED' -> '$DECRYPTED' ..."
+    gpg --output "$DECRYPTED" --decrypt "$DOWNLOADED"
+    TARFILE="$DECRYPTED"
+else
+    TARFILE="$DOWNLOADED"
+fi
+
+# --- step 3: decompress ---
+if [[ "$TARFILE" == *.tar.xz ]]; then
+    echo "Decompressing '$TARFILE' ..."
+    tar -xJf "$TARFILE"
+else
+    echo "Warning: '$TARFILE' does not have a recognised extension (.tar.xz); skipping decompression." >&2
+fi
+
+# --- step 4: cleanup intermediates ---
+echo "Cleaning up intermediates ..."
+if [[ "$DOWNLOADED" == *.gpg ]]; then
+    rm -f "$DOWNLOADED" "$TARFILE"
+else
+    rm -f "$TARFILE"
+fi
+
+echo "Done."
