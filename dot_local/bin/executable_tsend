@@ -2,6 +2,10 @@
 # tsend
 # Compresses a file or directory and sends via transmft.
 # Optionally encrypts with GPG when -e / --encrypt is given.
+# When encrypting, the tar archive is given a random filename to avoid
+# leaking the original name.
+# Files larger than 1 MiB are split into 1 MiB chunks and sent
+# individually; all keywords are printed as a comma-separated list.
 
 set -euo pipefail
 
@@ -54,16 +58,26 @@ fi
 # Strip trailing slash so basename works correctly for directories
 INPUT="${INPUT%/}"
 BASENAME="$(basename "$INPUT")"
-TARFILE="${BASENAME}.tar.xz"
+
+# When encrypting, use a random basename to avoid leaking the original name.
+# The "|| true" suppresses the SIGPIPE exit code that tr receives when head
+# closes the pipe after reading 16 bytes, which would otherwise abort the
+# script under set -euo pipefail.
+if [[ $ENCRYPT -eq 1 ]]; then
+    RAND_NAME="$(tr -dc 'a-f0-9' </dev/urandom | head -c 16 || true)"
+    TARFILE="${RAND_NAME}.tar.xz"
+else
+    TARFILE="${BASENAME}.tar.xz"
+fi
 ENCFILE="${TARFILE}.gpg"
 
 # --- step 1: compress ---
-echo "Compressing '$INPUT' -> '$TARFILE' ..."
+echo "Compressing '$INPUT' -> '$TARFILE' ..." >&2
 tar -cJf "$TARFILE" "$INPUT"
 
 # --- step 2: encrypt (optional) ---
 if [[ $ENCRYPT -eq 1 ]]; then
-    echo "Encrypting '$TARFILE' -> '$ENCFILE' ..."
+    echo "Encrypting '$TARFILE' -> '$ENCFILE' ..." >&2
     GPG_RECIPIENT_ARGS=()
     for RECIPIENT in "${GPG_RECIPIENTS[@]}"; do
         GPG_RECIPIENT_ARGS+=(--recipient "$RECIPIENT")
@@ -74,33 +88,91 @@ else
     SENDFILE="$TARFILE"
 fi
 
-# --- step 3: send via transmft ---
-echo "Sending '$SENDFILE' via transmft ..."
-TRANSMFT_OUTPUT="$(transmft -p "$SENDFILE" 2>/dev/null)"
-echo "$TRANSMFT_OUTPUT"
+# --- helper: send a file via transmft with up to 10 retries (exponential back-off) ---
+# Sets TRANSMFT_OUTPUT on success; prints an error and returns 1 after all
+# attempts are exhausted.
+send_with_retry() {
+    local file="$1"
+    local attempt=0
+    local max_attempts=10
+    local wait=1
+    while true; do
+        TRANSMFT_OUTPUT="$(transmft -p "$file" 2>/dev/null)" && return 0
+        attempt=$((attempt + 1))
+        if [[ $attempt -ge $max_attempts ]]; then
+            echo "Error: transmft failed after $max_attempts attempts for '$file'." >&2
+            return 1
+        fi
+        echo "Warning: transmft failed for '$file' (attempt $attempt/$max_attempts); retrying in ${wait}s ..." >&2
+        sleep "$wait"
+        wait=$((wait * 2))
+    done
+}
 
-# --- extract file keyword and copy to clipboard ---
-FILE_KEYWORD="$(echo "$TRANSMFT_OUTPUT" | grep -oP 'File keyword is \K\S+')"
-if [[ -n "$FILE_KEYWORD" ]]; then
-    if command -v xclip &>/dev/null; then
-        echo -n "$FILE_KEYWORD" | xclip -selection clipboard
-        echo "File keyword '$FILE_KEYWORD' copied to clipboard (xclip)."
-    elif command -v xsel &>/dev/null; then
-        echo -n "$FILE_KEYWORD" | xsel --clipboard --input
-        echo "File keyword '$FILE_KEYWORD' copied to clipboard (xsel)."
+# --- step 3: send via transmft ---
+# If the file is larger than 1 MiB, split into 1 MiB chunks and send each
+# individually, collecting all keywords. Otherwise send the file as-is.
+
+ONE_MIB=1048576
+FILESIZE="$(stat -c '%s' "$SENDFILE")"
+KEYWORDS=()
+
+if [[ $FILESIZE -gt $ONE_MIB ]]; then
+    echo "File is larger than 1 MiB ($FILESIZE bytes); splitting into 1 MiB chunks ..." >&2
+    CHUNK_PREFIX="${SENDFILE}.part_"
+    split -b "${ONE_MIB}" "$SENDFILE" "$CHUNK_PREFIX"
+
+    for CHUNK in "${CHUNK_PREFIX}"*; do
+        echo "Sending chunk '$CHUNK' via transmft ..." >&2
+        send_with_retry "$CHUNK"
+        echo "$TRANSMFT_OUTPUT" >&2
+        CHUNK_KEYWORD="$(echo "$TRANSMFT_OUTPUT" | grep -oP 'File keyword is \K\S+' || true)"
+        if [[ -n "$CHUNK_KEYWORD" ]]; then
+            KEYWORDS+=("$CHUNK_KEYWORD")
+        else
+            echo "Warning: could not extract file keyword for chunk '$CHUNK'." >&2
+        fi
+        rm -f "$CHUNK"
+    done
+else
+    echo "Sending '$SENDFILE' via transmft ..." >&2
+    send_with_retry "$SENDFILE"
+    echo "$TRANSMFT_OUTPUT" >&2
+    FILE_KEYWORD="$(echo "$TRANSMFT_OUTPUT" | grep -oP 'File keyword is \K\S+' || true)"
+    if [[ -n "$FILE_KEYWORD" ]]; then
+        KEYWORDS+=("$FILE_KEYWORD")
     else
-        echo "Warning: neither xclip nor xsel found. File keyword: $FILE_KEYWORD"
+        echo "Warning: could not extract file keyword from transmft output." >&2
+    fi
+fi
+
+# --- build keyword list and copy to clipboard ---
+KEYWORD_LIST="$(
+    IFS=','
+    echo "${KEYWORDS[*]}"
+)"
+
+if [[ -n "$KEYWORD_LIST" ]]; then
+    if command -v xclip &>/dev/null; then
+        echo -n "$KEYWORD_LIST" | xclip -selection clipboard
+        echo "Keyword list copied to clipboard (xclip)." >&2
+    elif command -v xsel &>/dev/null; then
+        echo -n "$KEYWORD_LIST" | xsel --clipboard --input
+        echo "Keyword list copied to clipboard (xsel)." >&2
+    else
+        echo "Warning: neither xclip nor xsel found." >&2
     fi
 else
-    echo "Warning: could not extract file keyword from transmft output."
+    echo "Warning: no keywords were collected." >&2
 fi
 
 # --- step 4: cleanup intermediates ---
-echo "Cleaning up intermediates ..."
+echo "Cleaning up intermediates ..." >&2
 if [[ $ENCRYPT -eq 1 ]]; then
     rm -f "$TARFILE" "$ENCFILE"
 else
     rm -f "$TARFILE"
 fi
 
-echo "Done."
+echo "Keywords: $KEYWORD_LIST"
+echo "Done." >&2

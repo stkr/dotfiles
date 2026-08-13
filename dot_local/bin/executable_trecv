@@ -1,11 +1,20 @@
 #!/usr/bin/env bash
-# receive_and_decrypt.sh
-# Downloads a file via transmft, then decrypts (GPG) and/or decompresses (tar.xz).
+# trecv
+# Downloads one or more files via transmft, then decrypts (GPG) and/or
+# decompresses (tar.xz).
+#
+# Single keyword:
+#   trecv <keyword>
+#
+# Multiple keywords (chunks produced by tsend):
+#   trecv <kw1>,<kw2>,<kw3>,...
+# All chunks are downloaded in order and reassembled before decryption /
+# decompression.
 
 set -euo pipefail
 
 usage() {
-    echo "Usage: $0 <file-keyword>" >&2
+    echo "Usage: $0 <keyword|kw1,kw2,...>" >&2
     exit 1
 }
 
@@ -13,21 +22,79 @@ if [[ $# -ne 1 ]]; then
     usage
 fi
 
-KEYWORD="$1"
+# Split the argument on commas into an array.
 
-# --- step 1: download via transmft ---
-echo "Downloading file with keyword '$KEYWORD' via transmft ..."
+IFS=',' read -ra KEYWORDS <<<"$1"
 
-TRANSMFT_OUT=$(transmft -g "$KEYWORD" 2>&1)
-printf '%s\n' "$TRANSMFT_OUT"
+# -------------------------------------------------------------------------
+# Helper: download one keyword with up to 10 retries (exponential back-off).
+# Each attempt is limited to 60 s; if transmft does not finish in time it is
+# killed and the attempt counts as a failure.
+# All progress/warning messages go to stderr so that callers can capture
+# this function's stdout to obtain the filename only.
+# Prints the downloaded filename to stdout on success.
+# -------------------------------------------------------------------------
+download_keyword() {
+    local KW="$1"
+    local attempt=0
 
-# Parse the downloaded filename from transmft output line:
-#   File '<name>' (<size>) retrieved from TransMFT.
-DOWNLOADED=$(printf '%s\n' "$TRANSMFT_OUT" | grep -oP "(?<=File ').*(?=' \()")
+    local max_attempts=10
+    local wait=1
 
-if [[ -z "$DOWNLOADED" ]]; then
-    echo "Error: could not determine downloaded filename from transmft output." >&2
-    exit 1
+    local OUT
+    echo "Downloading file with keyword '$KW' via transmft ..." >&2
+    while true; do
+        OUT="$(timeout 60 transmft -g "$KW" 2>&1)" && break
+        attempt=$((attempt + 1))
+        if [[ $attempt -ge $max_attempts ]]; then
+            echo "Error: transmft failed after $max_attempts attempts for keyword '$KW'." >&2
+
+            exit 1
+        fi
+        echo "Warning: transmft failed or timed out for keyword '$KW' (attempt $attempt/$max_attempts); retrying in ${wait}s ..." >&2
+        sleep "$wait"
+        wait=$((wait * 2))
+    done
+    printf '%s\n' "$OUT" >&2
+    # Parse filename from: File '<name>' (<size>) retrieved from TransMFT.
+    local FNAME
+    FNAME="$(printf '%s\n' "$OUT" | grep -oP "(?<=File ').*(?=' \()")"
+    if [[ -z "$FNAME" ]]; then
+        echo "Error: could not determine downloaded filename from transmft output." >&2
+        exit 1
+
+    fi
+    echo "$FNAME"
+}
+
+# -------------------------------------------------------------------------
+# Download all chunks / the single file.
+# -------------------------------------------------------------------------
+
+DOWNLOADED_FILES=()
+
+for KW in "${KEYWORDS[@]}"; do
+    FNAME="$(download_keyword "$KW")"
+    DOWNLOADED_FILES+=("$FNAME")
+done
+
+# -------------------------------------------------------------------------
+
+# Reassemble chunks when more than one keyword was given.
+# -------------------------------------------------------------------------
+if [[ ${#DOWNLOADED_FILES[@]} -gt 1 ]]; then
+    # Derive the assembled filename by stripping the .part_* suffix from the
+    # first chunk name (e.g. "foo.tar.xz.part_aa" -> "foo.tar.xz").
+    FIRST="${DOWNLOADED_FILES[0]}"
+    ASSEMBLED="${FIRST%.part_*}"
+    echo "Reassembling ${#DOWNLOADED_FILES[@]} chunks into '$ASSEMBLED' ..."
+    cat "${DOWNLOADED_FILES[@]}" >"$ASSEMBLED"
+    echo "Removing chunk files ..."
+    rm -f "${DOWNLOADED_FILES[@]}"
+    DOWNLOADED="$ASSEMBLED"
+else
+
+    DOWNLOADED="${DOWNLOADED_FILES[0]}"
 fi
 
 echo "Downloaded file: '$DOWNLOADED'"
@@ -46,13 +113,16 @@ fi
 if [[ "$TARFILE" == *.tar.xz ]]; then
     echo "Decompressing '$TARFILE' ..."
     tar -xJf "$TARFILE"
+
 else
     echo "Warning: '$TARFILE' does not have a recognised extension (.tar.xz); skipping decompression." >&2
 fi
 
 # --- step 4: cleanup intermediates ---
+
 echo "Cleaning up intermediates ..."
 if [[ "$DOWNLOADED" == *.gpg ]]; then
+
     rm -f "$DOWNLOADED" "$TARFILE"
 else
     rm -f "$TARFILE"
