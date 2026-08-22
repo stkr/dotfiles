@@ -369,11 +369,11 @@ filextype */
         \ {View in thunar}
         \ Thunar %f &,
 
-" Default fallback for all other files is to open with nvim This is necessary
+" Default fallback for all other files is to open with nvim. This is necessary
 " because the integrated tmux integration which can be enabled with `screen`
 " hardcodes the filename in the tmux window name but since tmux 3.7, no dots
 " and other special characters are allowed in window titles any more.
-filetype * vifm-edit.sh "%f"
+filetype * vifm-edit.sh %"f:p
 
 " Syntax highlighting in preview
 "
