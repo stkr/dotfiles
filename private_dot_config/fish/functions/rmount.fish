@@ -1,56 +1,102 @@
-function rmount -d "SSH mount remote file system"
-    # We tell argparse about -h/--help and others -these are short and long
-    # forms of the same option. The "--" here is mandatory, it tells it from
-    # where to read the arguments.
-    argparse h/help -- $argv; or return
+set -g rmount_unit_prefix "rmount-"
+set -g rmount_base_path "$HOME/remote"
 
-    # If -h or --help is given, we print a little help text and return
+function __rmount_units
+    systemctl --user list-unit-files --no-legend "$rmount_unit_prefix*.service" 2>/dev/null \
+        | awk '{print $1}' \
+        | string replace -r "^$rmount_unit_prefix" "" \
+        | string replace -r "\.service\$" ""
+end
+
+function rmount -d "Mount/unmount a remote file system via a systemd user service"
+    argparse h/help u/unmount s/status -- $argv; or return
+
     if set -ql _flag_help || test (count $argv) -lt 1
         echo "Usage:"
-        echo "    rmount mount_name"
+        echo "    rmount [-u|--unmount] [-s|--status] mount_name"
         echo ""
-        echo "For the given \$mount_name, the function looks for a file"
-        echo "'~/remote/\$mount_name.ssh'. This file must contain the parameters"
-        echo "which are forwarded to sshfs on the first line. This normally"
-        echo "contains hostname and the remote directory to mount (see man for"
-        echo "sshfs)."
+        echo "Options:"
+        echo "    -u, --unmount   Stop the service (unmount)."
+        echo "    -s, --status    Print the status of an rclone mount (via rclone rc)."
         echo ""
-        echo "An example for contents of such a .ssh file would be:"
-        echo "    graz-pi5:/ -o idmap=user,transform_symlinks,follow_symlinks,dir_cache=yes"
+        echo "The --status option only works for rclone mounts that have the rc"
+        echo "socket enabled, as shown in the example unit below."
         echo ""
-        echo "A folder '~/remote/\$mount_name' will be created and the remote"
-        echo "directory will be mounted to that folder."
+        echo "For the given mount_name, the function looks for a systemd user unit"
+        echo "named "$rmount_unit_prefix\$mount_name".service' (via"
+        echo "'systemctl --user list-unit-files'). It starts that service to mount,"
+        echo "and stops it to unmount."
+        echo ""
+        echo "The unit should mount to '$rmount_base_path/\$mount_name'."
+        echo ""
+        echo "Example unit (~/.config/systemd/user/"$rmount_unit_prefix"graz-pi5.service):"
+        echo "    [Service]"
+        echo "    Type=notify"
+        echo "    RuntimeDirectory=rclone-graz-pi5"
+        echo "    RuntimeDirectoryMode=0700"
+        echo "    ExecStart=rclone mount graz-pi5:/srv %h/remote/graz-pi5 \\"
+        echo "      --vfs-cache-mode writes \\"
+        echo "      --vfs-cache-max-size 10G \\"
+        echo "      --rc \\"
+        echo "      --rc-addr unix://%t/rclone-graz-pi5/rc.sock"
+        echo "    ExecStop=fusermount3 -u -z %h/remote/graz-pi5"
+        echo ""
+        echo "    [Unit]"
+        echo "    Description=rclone mount for graz-pi5"
+        echo ""
+        echo ""
+        echo "Example sshfs unit (~/.config/systemd/user/"$rmount_unit_prefix"graz-pi5.service):"
+        echo "    [Unit]"
+        echo "    Description=sshfs mount for graz-pi5"
+        echo "    After=network-online.target"
+        echo ""
+        echo "    [Service]"
+        echo "    Type=simple"
+        echo "    ExecStart=/usr/bin/sshfs graz-pi5:/ %h/remote/graz-pi5 -o idmap=user,transform_symlinks,follow_symlinks,dir_cache=yes"
+        echo "    ExecStop=/bin/fusermount -u %h/remote/graz-pi5"
+        echo "    Restart=on-failure"
+        echo ""
+        echo "    [Install]"
+        echo "    WantedBy=default.target"
+        echo ""
+        echo "A folder '$rmount_base_path/\$mount_name' will be created and used as"
+        echo "the mount point."
         return 0
     end
 
-    # The idea is to replicate what vifm does in order to reuse the same configuration files.
-    # From vifm documentation:
-    #
-    # " :filetype extensions FUSE_MOUNT2|some_mount_command using %PARAM and %DESTINATION_DIR
-    # variables
-    # " %PARAM and %DESTINATION_DIR are filled in by vifm at runtime.
-    # " A sample line might look like this:
-    # " :filetype *.ssh FUSE_MOUNT2|sshfs %PARAM %DESTINATION_DIR
-    # " %PARAM value is filled from the first line of file (whole line).
-    # " Example first line for SshMount filetype: root@127.0.0.1:/
-    #
-    # As far as %DESTINATION_DIR% is concerned, for vifm this is a temporary directory, this needs
-    # to be replaced by a static path. We chose the config filename without the .ssh extension in
-    # the directory of the configuration.
+    set mount_name $argv[1]
+    set service_name "$rmount_unit_prefix$mount_name.service"
+    set rmount_destination_path "$rmount_base_path/$mount_name"
 
-    set rmount_base_path "$HOME/remote"
+    if not systemctl --user list-unit-files --no-legend "$service_name" 2>/dev/null | string match -q "*"
+        echo "No systemd user service found for '$service_name'."
+        return 1
+    end
+
     if ! test -d "$rmount_base_path"
         echo "Base path [$rmount_base_path] is missing."
         return 1
     end
 
-    set rmount_config_file_path "$rmount_base_path/$argv[1].ssh"
-    if ! test -f "$rmount_config_file_path"
-        echo "Config file [$rmount_config_file_path] is missing."
-        return 1
+    if set -ql _flag_status
+        set -l runtime_dir "$XDG_RUNTIME_DIR"
+        if test -z "$runtime_dir"
+            set runtime_dir "/run/user/"(id -u)
+        end
+        set -l socket_path "$runtime_dir/rclone-$mount_name/rc.sock"
+        if not test -S "$socket_path"
+            echo "No rclone socket found at $socket_path. Is the mount running and is it an rclone mount?"
+            return 1
+        end
+        rclone rc --unix-socket "$socket_path" core/stats
+        return $status
     end
 
-    set rmount_destination_path "$rmount_base_path/$argv[1]"
+    if set -ql _flag_unmount
+        systemctl --user stop "$service_name"
+        return $status
+    end
+
     if ! test -d "$rmount_destination_path"
         mkdir -p "$rmount_destination_path"
         if ! test -d "$rmount_destination_path"
@@ -59,12 +105,8 @@ function rmount -d "SSH mount remote file system"
         end
     end
 
-    while read -la line
-        sshfs $line "$rmount_destination_path"
-        pushd "$rmount_destination_path"
-        break
-    end < "$rmount_config_file_path"
-
+    systemctl --user start "$service_name"
+    and pushd "$rmount_destination_path"
 end
 
-complete -c rmount -f -a "(ls -1 ~/remote/*.ssh 2>/dev/null | string replace -r '.*/' '' | string replace -r '.ssh\$' '')"
+complete -c rmount -f -a "(__rmount_units)"
