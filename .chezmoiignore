@@ -5,3 +5,6 @@
 tsend
 trecv
 {{ end }}
+{{ if ne .chezmoi.os "linux" }}
+.config/systemd/
+{{ end }}

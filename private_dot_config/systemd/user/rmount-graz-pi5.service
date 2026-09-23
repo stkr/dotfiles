@@ -1,0 +1,14 @@
+[Service]
+Type=notify
+RuntimeDirectory=rclone-graz-pi5
+RuntimeDirectoryMode=0700
+ExecStart=rclone mount graz-pi5:/srv %h/remote/graz-pi5 \
+  --vfs-cache-mode writes \
+  --vfs-cache-max-size 10G \
+  --rc \
+  --rc-addr unix://%t/rclone-graz-pi5/rc.sock \
+  --password-command 'secret-tool lookup Title "rclone config password"'
+ExecStop=fusermount3 -u -z %h/remote/graz-pi5
+
+[Unit]
+Description=rclone mount for graz-pi5
