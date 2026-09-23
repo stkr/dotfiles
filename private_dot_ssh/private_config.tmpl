@@ -9,39 +9,29 @@
 Include config.d/*
 AddKeysToAgent yes
 
-# The f**ing A1 wlan box does not allow to forward port 22, so this is a
-# workaround (using a different port).
-Host backup.skobeloff.eu
-    Port 32109
-    ForwardAgent yes
-
-Host ardning-pi3.skobeloff.eu
-    Hostname ardning-pi3.skobeloff.eu
-    Port 32109
-    ForwardAgent yes
-
-Host ar
-    Hostname ardning-pi3.skobeloff.eu
-    Port 32109
-    ForwardAgent yes
-
-Host ar-lo
-    Hostname 10.0.0.99
-    ForwardAgent yes
-
-Host gr
-    Hostname graz-pi3.skobeloff.eu
-    ForwardAgent yes
-
-Host gr-lo
-    Hostname 10.84.1.41
+{{ if $ssh_supports_localnetwork }}
+# This does select the best route to a host. It checks for a
+# particular network and checks whehter a port is opened at
+# a particular address and if it is, it uses that as HostName.
+# If we are in the LAN in graz, use this.
+Match host unisonbackup localnetwork 10.84.1.0/24 exec "nc -w 1 -z 10.84.1.40 %p"
+    HostName 10.84.1.40
+# If we are in the LAN in ardning, use this.
+Match host unisonbackup localnetwork 10.0.0.0/16 exec "nc -w 1 -z 10.0.0.99 %p"
+    HostName 10.0.0.99
+# If we are in the global VPN, use this. This can also be used to bypass
+# rate limits, but is an additional indirection and not so quick - therefore disabled.
+Match host unisonbackup localnetwork 10.10.0.0/16 exec "nc -w 1 -z 10.10.1.40 %p"
+    HostName 10.10.1.40
+# Fallback to the public (internet) address.
+# Also, all other directives (that were not set by any match above) are applied!
+{{- end }}
+Host unisonbackup
+    Hostname unisonbackup.it-for-fun.eu
     ForwardAgent yes
 
 Host blinds
     Hostname 10.0.0.130
-    ForwardAgent yes
-
-Host *.skobeloff.eu
     ForwardAgent yes
 
 Host zebu
