@@ -7,7 +7,11 @@ ExecStart=rclone mount ardning-pi3:/srv %h/remote/ardning-pi3 \
   --vfs-cache-max-size 10G \
   --rc \
   --rc-addr unix://%t/rclone-ardning-pi3/rc.sock \
-  --password-command 'secret-tool lookup Title "rclone config password"'
+  --password-command 'secret-tool lookup Title "rclone config password"' \
+  --low-level-retries 20 \
+  --timeout 5s \
+  --contimeout 5s \
+  --smb-idle-timeout 5s
 ExecStop=fusermount3 -u -z %h/remote/ardning-pi3
 
 [Unit]

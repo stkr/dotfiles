@@ -7,7 +7,11 @@ ExecStart=rclone mount graz-pi5:/srv %h/remote/graz-pi5 \
   --vfs-cache-max-size 10G \
   --rc \
   --rc-addr unix://%t/rclone-graz-pi5/rc.sock \
-  --password-command 'secret-tool lookup Title "rclone config password"'
+  --password-command 'secret-tool lookup Title "rclone config password"' \
+  --low-level-retries 20 \
+  --timeout 5s \
+  --contimeout 5s \
+  --smb-idle-timeout 5s
 ExecStop=fusermount3 -u -z %h/remote/graz-pi5
 
 [Unit]
