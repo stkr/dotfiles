@@ -124,7 +124,7 @@ def download(url, video_dir_path):
         filename,
         "--write-info-json",
     ]
-    if CONFIG.paths.cookies is not None:
+    if CONFIG.paths.cookies:
         args += [
             "--cookies-from-browser",
             CONFIG.paths.cookies,
