@@ -1,53 +1,150 @@
 #!/usr/bin/bash
+#
+# tmux-session.sh — create-or-enter a predefined tmux session.
+#
+# Usage:
+#   tmux-session.sh [session-name]
+#
+#   With no argument, the session name defaults to "def".
+#   Known session names are defined in the case statement below; the two
+#   shipped ones are:
+#
+#     def   A plain, empty session. Binds M-1 (after the tmux prefix) to
+#           switch to it.
+#     cfg   A four-window session rooted at ~/.config:
+#             window 1  vifm   (file manager, current dir)
+#             window 2  edit   (nvim -S .session.vim)
+#             window 3  shell  (empty shell)
+#             window 4  lazygit (chezmoi repo)
+#           Binds M-9 (after the prefix) to switch to it.
+#
+# Behaviour:
+#   * If the session does not exist, it is created (detached).
+#   * If the session exists, it is reused as-is.
+#   * If you are *outside* tmux, the script attaches a new client.
+#   * If you are *inside* tmux, the script switches the current client to
+#     the target session. `attach-session` would fail here because there
+#     is no free terminal for a new client to own; `switch-client` is the
+#     correct operation, and it is selected automatically by testing the
+#     $TMUX environment variable (which tmux sets for every process it
+#     spawns).
+#
+# The bind-keys are intentionally installed in the *prefix table* (i.e.
+# without `-n`): they fire after the tmux prefix (default C-b), so they
+# do not shadow any terminal-level Alt+1 / Alt+2 handling. Because the
+# binding is evaluated inside an already-running tmux client, the command
+# it runs must be `switch-client`, not `attach-session`.
 
-# Check if no arguments were passed
+# ---------------------------------------------------------------------------
+# Resolve the requested session name (default: "def").
+# ---------------------------------------------------------------------------
 if [ $# -lt 1 ]; then
     session="def"
 else
     session="$1"
 fi
 
+# Which window to focus once we get there. 1 unless overridden per-session.
 window=1
 
-tmux has-session -t $session &>/dev/null
-if [[ "$?" != 0 ]]; then
-    # The session does not exist, create it
+# ---------------------------------------------------------------------------
+# Create the session if it does not already exist.
+# ---------------------------------------------------------------------------
+tmux has-session -t "$session" &>/dev/null
+if [[ $? != 0 ]]; then
     case $session in
     def)
-        tmux new-session -s $session -d
+        # Plain empty session.
+
+        # Create the tmux windows.
+        tmux new-session -s "$session" -d
+
+        # Assign hotkey to switch to the session.
+        tmux bind-key M-1 "switch-client -t $session"
         ;;
+
+    cfg)
+        # Working tree for the whole session.
+        cd /home/${USER}/.config || exit 1
+
+        # Create the tmux windows.
+        tmux new-session -s "$session" -n vifm -d
+        tmux new-window  -t "$session":2 -n edit
+        tmux new-window  -t "$session":3 -n shell
+        tmux new-window  -t "$session":4 -n lazygit
+
+        # Seed each window with its command.
+        tmux send-keys   -t "$session":1 "vifm ." C-m
+        tmux send-keys   -t "$session":2 "nvim -S .session.vim" C-m
+        tmux send-keys   -t "$session":4 "cd /home/${USER}/.local/share/chezmoi; lazygit" C-m
+
+        # Assign hotkey to switch to the session.
+        tmux bind-key M-9 "switch-client -t $session"
+
+        # Focus the editor window when entering.
+        window=2
+        ;;
+
 {{- if contains "swis" (lower .chezmoi.fqdnHostname) }}
 {{-     if contains "eu-west" (lower .chezmoi.fqdnHostname) }}
     rom)
-        cd /home/${USER}/projects/s1xy/acme-gen3/s1xy/
-        tmux new-session -s $session -n vifm -d
-        tmux new-window -t $session:2 -n edit
-        tmux new-window -t $session:3 -n shell
-        tmux new-window -t $session:4 -n lazygit
-        tmux send-keys -t $sesion:1 "vifm ." C-m
-        tmux send-keys -t $sesion:2 "ele edit" C-m
-        tmux send-keys -t $sesion:4 "lazygit" C-m
+        # Working tree for the whole session.
+        cd /home/${USER}/projects/s1xy/acme-gen3/s1xy/ || exit 1
+
+        # Create the tmux windows.
+        tmux new-session -s "$session" -n vifm -d
+        tmux new-window  -t "$session":2 -n edit
+        tmux new-window  -t "$session":3 -n shell
+        tmux new-window  -t "$session":4 -n lazygit
+
+        # Seed each window with its command.
+        tmux send-keys   -t "$session":1 "vifm ." C-m
+        tmux send-keys   -t "$session":2 "ele edit" C-m
+        tmux send-keys   -t "$session":4 "lazygit" C-m
+
+        # Assign hotkey to switch to the session.
+        bind M-2 "attach-session -t $session"
+
+        # Focus the editor window when entering.
         window=2
         ;;
 
     tst)
-        cd /home/${USER}/projects/s1xy/ele-test
-        tmux new-session -s $session -n vifm -d
-        tmux new-window -t $session:2 -n edit
-        tmux new-window -t $session:3 -n shell
-        tmux new-window -t $session:4 -n lazygit
-        tmux send-keys -t $sesion:1 "vifm ." C-m
-        tmux send-keys -t $sesion:2 "ele init && nvim -S .session.vim" C-m
-        tmux send-keys -t $sesion:4 "lazygit" C-m
+        # Working tree for the whole session.
+        cd /home/${USER}/projects/s1xy/ele-test || exit 1
+
+        # Create the tmux windows.
+        tmux new-session -s "$session" -n vifm -d
+        tmux new-window  -t "$session":2 -n edit
+        tmux new-window  -t "$session":3 -n shell
+        tmux new-window  -t "$session":4 -n lazygit
+
+        # Seed each window with its command.
+        tmux send-keys   -t "$session":1 "vifm ." C-m
+        tmux send-keys   -t "$session":2 "ele init && nvim -S .session.vim" C-m
+        tmux send-keys   -t "$session":4 "lazygit" C-m
+
+        # Assign hotkey to switch to the session.
+        bind M-3 "attach-session -t $session"
+
+        # Focus the editor window when entering.
         window=2
         ;;
 
     tp)
-        cd /home/${USER}/projects/s1xy/
-        tmux new-session -s $session -n vifm -d
-        tmux new-window -t $session:2 -n edit
-        tmux new-window -t $session:3 -n shell
-        tmux new-window -t $session:4 -n lazygit
+        # Working tree for the whole session.
+        cd /home/${USER}/projects/s1xy/ || exit 1
+
+        # Create the tmux windows.
+        tmux new-session -s "$session" -n vifm -d
+        tmux new-window  -t "$session":2 -n edit
+        tmux new-window  -t "$session":3 -n shell
+        tmux new-window  -t "$session":4 -n lazygit
+
+        # Assign hotkey to switch to the session.
+        bind M-4 "attach-session -t $session"
+
+        # Focus the editor window when entering.
         window=2
         ;;
 {{-     end }}
@@ -55,5 +152,16 @@ if [[ "$?" != 0 ]]; then
     esac
 fi
 
-tmux attach-session -t $session:$window
+# ---------------------------------------------------------------------------
+# Bring the session into the foreground.
+#
+# $TMUX is non-empty when we are already running inside a tmux pane, in
+# which case we must *switch* the current client instead of trying to
+# attach a brand new one.
+# ---------------------------------------------------------------------------
+if [ -n "$TMUX" ]; then
+    tmux switch-client -t "$session:$window"
+else
+    tmux attach-session -t "$session:$window"
+fi
 exit 0
