@@ -14,6 +14,7 @@ return
                 ['bash'] = { "shfmt" },
                 ['sh'] = { "shfmt" },
                 ['python'] = { "black" },
+                ['markdown'] = { "rumdl" },
             },
             default_format_opts = {
                 lsp_format = "first",

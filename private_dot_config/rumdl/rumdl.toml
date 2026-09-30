@@ -1,0 +1,16 @@
+[global]
+# Exclude files/directories
+exclude = ["node_modules", "vendor", ".git"]
+
+# Set line length limit
+line-length = 100
+
+[MD013]  # Line length
+line_length = 100
+code_blocks = false  # Don't check code blocks
+reflow = true
+
+[MD060]
+enabled = true                 # Enable table formatting
+style = "aligned-no-space"     # Align columns for readability
+max-width = 0                  # Auto-compact tables exceeding 100 chars
