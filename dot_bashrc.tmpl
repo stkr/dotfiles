@@ -133,6 +133,12 @@ export LD_LIBRARY_PATH="$HOME/lib:$HOME/.local/lib:$LD_LIBRARY_PATH"
 export PATH="$HOME/.local/opt/lua-language-server-3.16.2-linux-x64/bin:$PATH"
 {{ end }}
 
+{{- if lookPath "zk" }}
+    {{- if stat (joinPath .chezmoi.homeDir "/data/notes") -}}
+export ZK_NOTEBOOK_DIR="$HOME/data/notes"
+    {{ end }}
+{{ end }}
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
