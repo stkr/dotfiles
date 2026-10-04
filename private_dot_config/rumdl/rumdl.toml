@@ -5,10 +5,21 @@ exclude = ["node_modules", "vendor", ".git"]
 # Set line length limit
 line-length = 100
 
+# Avoid cluttering folders with .rumdl-cache folder
+cache-dir = "~/.cache/rumdl"
+
 [MD013]  # Line length
 line_length = 100
 code_blocks = false  # Don't check code blocks
 reflow = true
+
+# Do not remove extra spaces in emphasis. The rationale for disabling this is
+# that often the * character is not emphasis but actually a multiplication (for
+# (simple) math in text). In those cases it is written
+# like "5 * 2 * 3 = 30". The 2 is not emhasised and it shall not be
+# changed to "5 *2* 3 = 30".
+[MD037]
+enabled = false
 
 [MD060]
 enabled = true                 # Enable table formatting
