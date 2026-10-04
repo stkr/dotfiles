@@ -50,11 +50,19 @@ function __videdit_usage --description "Print videdit usage"
     echo ""
     echo "Commands:"
     echo "  split <filename>                       Split video into separate audio and video files"
-    echo "  merge <video> <audio1> [audio2 ...]    Merge a video with one or more audio tracks"
+    echo "  merge [options] <video> <audio1> [audio2 ...]"
+    echo "                                         Merge a video with one or more audio tracks"
+    echo ""
+    echo "Merge options:"
+    echo "  -d, --delay <seconds>                  Delay the corresponding audio stream."
+    echo "                                         May be repeated: the Nth --delay applies"
+    echo "                                         to the Nth audio file. Unspecified streams"
+    echo "                                         default to 0. Negative values are allowed."
     echo ""
     echo "Examples:"
     echo "  videdit split video.mp4"
     echo "  videdit merge video.mp4 german.m4a english.m4a"
+    echo "  videdit merge -d 0.5 -d -0.25 video.mp4 ger.m4a eng.m4a"
 end
 
 # ---------------------------------------------------------------------------
@@ -74,6 +82,47 @@ function __videdit_lang_title --description "Derive an audio track title from a 
     end
 
     echo $base
+end
+
+# Parse merge-subcommand arguments. Emits one tagged line per item:
+#   D <value>   for each --delay/-d value, in order of appearance
+#   P <value>   for each positional argument, in order of appearance
+#   E <msg>     for the first error encountered (nothing else is emitted
+#               after this line)
+# Callers consume the output with a `for line in (...)` loop. Values with
+# embedded spaces are fine; only literal newlines in an argument would break
+# the protocol, which is irrelevant for real-world video/audio paths.
+function __videdit_merge_parse --description "Parse merge subcommand arguments"
+    set -l end_of_opts 0
+    set -l i 1
+    while test $i -le (count $argv)
+        set -l arg $argv[$i]
+        if test $end_of_opts -eq 1
+            echo "P $arg"
+        else
+            switch $arg
+                case -d --delay
+                    set i (math $i + 1)
+                    if test $i -gt (count $argv)
+                        echo "E '$arg' requires a value"
+                        return 1
+                    end
+                    echo "D $argv[$i]"
+                case '--delay=*'
+                    echo "D "(string replace '--delay=' '' -- $arg)
+                case '-d?*'
+                    echo "D "(string replace -r '^-d' '' -- $arg)
+                case '--'
+                    set end_of_opts 1
+                case '-*'
+                    echo "E unknown option '$arg'"
+                    return 1
+                case '*'
+                    echo "P $arg"
+            end
+        end
+        set i (math $i + 1)
+    end
 end
 
 # ---------------------------------------------------------------------------
@@ -122,14 +171,37 @@ end
 # Subcommand: merge
 # ---------------------------------------------------------------------------
 function __videdit_merge --description "Merge a video with one or more audio tracks"
-    if test (count $argv) -lt 2
+    # Consume the tagged output of __videdit_merge_parse.
+    set -l delays
+    set -l positional
+    for line in (__videdit_merge_parse $argv)
+        set -l tag (string sub -l 1 -- $line)
+        set -l val (string sub -s 3 -- $line)
+        switch $tag
+            case D
+                set -a delays $val
+            case P
+                set -a positional $val
+            case E
+                echo "Error: $val" >&2
+                echo "Usage: videdit merge [--delay <seconds>]... <video> <audio1> [audio2 ...]" >&2
+                return 1
+        end
+    end
+
+    if test (count $positional) -lt 2
         echo "Error: Missing arguments" >&2
-        echo "Usage: videdit merge <video> <audio1> [audio2 ...]" >&2
+        echo "Usage: videdit merge [--delay <seconds>]... <video> <audio1> [audio2 ...]" >&2
         return 1
     end
 
-    set -l video_file $argv[1]
-    set -l audio_files $argv[2..-1]
+    set -l video_file $positional[1]
+    set -l audio_files $positional[2..-1]
+
+    if test (count $delays) -gt (count $audio_files)
+        echo "Error: More --delay values than audio files" >&2
+        return 1
+    end
 
     if not test -f "$video_file"
         echo "Error: File '$video_file' not found" >&2
@@ -148,19 +220,35 @@ function __videdit_merge --description "Merge a video with one or more audio tra
         return 1
     end
 
+    # Resolve one delay per audio file (default 0).
+    set -l per_stream_delays
+    for idx in (seq (count $audio_files))
+        if test $idx -le (count $delays)
+            set -a per_stream_delays $delays[$idx]
+        else
+            set -a per_stream_delays 0
+        end
+    end
+
     set -l base_name (string replace -r '\.[^.]*$' '' "$video_file")
     set -l output "$base_name"_merged.mkv
 
     # Build the ffmpeg argument list:
-    #   -i <video> -i <audio1> -i <audio2> ...
+    #   -i <video>
+    #   -itsoffset <d1> -i <audio1>
+    #   -itsoffset <d2> -i <audio2> ...
     #   -map 0:v -map 1:a -map 2:a ...
     #   -metadata:s:a:0 title="<title1>"
     #   -metadata:s:a:1 title="<title2>" ...
     #   -c:v copy -c:a copy -shortest <output>
     set -l ffmpeg_args
     set -a ffmpeg_args -i "$video_file"
-    for f in $audio_files
-        set -a ffmpeg_args -i "$f"
+    for idx in (seq (count $audio_files))
+        set -l d $per_stream_delays[$idx]
+        if test "$d" != "0"
+            set -a ffmpeg_args -itsoffset "$d"
+        end
+        set -a ffmpeg_args -i "$audio_files[$idx]"
     end
 
     set -a ffmpeg_args -map 0:v
@@ -177,8 +265,13 @@ function __videdit_merge --description "Merge a video with one or more audio tra
     set -a ffmpeg_args -c:v copy -c:a copy -shortest "$output"
 
     echo "Merging '$video_file' with audio track(s):"
-    for f in $audio_files
-        echo "  + $f"
+    for idx in (seq (count $audio_files))
+        set -l d $per_stream_delays[$idx]
+        set -l suffix ""
+        if test "$d" != "0"
+            set suffix " (delay: $d s)"
+        end
+        echo "  + $audio_files[$idx]$suffix"
     end
     echo "  Output: $output"
     echo "  Track titles:"
@@ -224,12 +317,19 @@ for ext in mp4 mkv mov avi webm m4v
         -a "(__fish_complete_suffix .$ext)"
 end
 
-# `merge` takes a video file first, then one or more audio files.
+# `merge` accepts a repeatable --delay option.
+complete -c videdit -n "__fish_seen_subcommand_from merge" \
+    -s d -l delay -d "Delay the corresponding audio stream (repeatable)" -r
+
 # Helper: has the video argument already been supplied on the current line?
+# Reuses __videdit_merge_parse so it stays in lockstep with the real parser —
+# if the parsing rules ever change, both places update together.
 function __videdit_merge_has_video --description "True if 'merge' already received its video arg"
     set -l tokens (commandline -opc)
-    # tokens: videdit merge [args...]  → length >= 3 means an arg followed "merge"
-    test (count $tokens) -ge 3
+    set -l merge_idx (contains -i -- merge $tokens)
+    test -n "$merge_idx"; or return 1
+    set -l args $tokens[(math $merge_idx + 1)..-1]
+    __videdit_merge_parse $args | string match -q 'P *'
 end
 
 for ext in mp4 mkv mov avi webm m4v
