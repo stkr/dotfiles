@@ -134,5 +134,6 @@ return
 
         vim.lsp.enable("yamlls")
         vim.lsp.enable("marksman")
+        vim.lsp.enable("tombi")
     end,
 }
